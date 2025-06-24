@@ -1,6 +1,9 @@
 [mgr]
 show_hidden = true
 
+[tasks]
+image_bound = [ 10000, 10000 ]
+
 [opener]
 edit = [
   { run = '${EDITOR:-nvim} "$@"', desc = "$EDITOR", block = true, for = "unix" }
