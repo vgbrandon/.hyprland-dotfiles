@@ -1,0 +1,8 @@
+visual-studio-code-bin
+google-chrome
+hyprshot
+thunar-shares-plugin
+mirage
+nwg-displays
+nwg-look
+waypaper
