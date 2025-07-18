@@ -28,3 +28,4 @@ thunar-volman
 swww
 gvfs
 font-manager
+github-cli
