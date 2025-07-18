@@ -6,3 +6,4 @@ mirage
 nwg-displays
 nwg-look
 waypaper
+ttf-jetbrains-mono-nerd
