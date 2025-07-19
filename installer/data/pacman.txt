@@ -33,3 +33,5 @@ spotify-launcher
 bluez
 bluez-utils
 blueman
+nwg-displays
+nwg-look
