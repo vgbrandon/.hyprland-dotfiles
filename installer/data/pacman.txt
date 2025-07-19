@@ -29,3 +29,4 @@ swww
 gvfs
 font-manager
 github-cli
+spotify-launcher
