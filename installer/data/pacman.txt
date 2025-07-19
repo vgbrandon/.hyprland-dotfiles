@@ -30,3 +30,6 @@ gvfs
 font-manager
 github-cli
 spotify-launcher
+bluez
+bluez-utils
+blueman
