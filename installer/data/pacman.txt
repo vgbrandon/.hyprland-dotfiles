@@ -35,3 +35,4 @@ bluez-utils
 blueman
 nwg-displays
 nwg-look
+pnpm
