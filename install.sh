@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOTFILES_SETUP="$HOME/.hyprland-dotfiles/install
+DOTFILES_SETUP="$HOME/.hyprland-dotfiles/install"
 
 cd ~
 git clone https://github.com/vgbrandon/.hyprland-dotfiles.git
