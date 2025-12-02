@@ -1,0 +1,149 @@
+# ===========================
+# Starship + Pywal16 Theme
+# ===========================
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$fill\
+$python\
+$lua\
+$nodejs\
+$golang\
+$haskell\
+$rust\
+$ruby\
+$aws\
+$docker_context\
+$jobs\
+$cmd_duration\
+$line_break\
+$character"""
+
+add_newline = true
+palette = 'pywal16'
+
+# ─────────────────────────────
+# Prompt symbols
+# ─────────────────────────────
+[character]
+success_symbol = "[➜](color9 bold)"
+error_symbol = "[➜](color1 bold)"
+vicmd_symbol = "[➜](color11 bold)"
+
+# ─────────────────────────────
+# Directorio actual
+# ─────────────────────────────
+[directory]
+style = "bold fg:color3"
+format = "[$path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+truncate_to_repo = false
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+# ─────────────────────────────
+# Git
+# ─────────────────────────────
+[git_branch]
+style = "fg:color3"
+symbol = " "
+format = "[on](fg:color7) [$symbol$branch ]($style)"
+
+[git_status]
+style = "fg:color4"
+format = "([$all_status$ahead_behind]($style) )"
+
+# ─────────────────────────────
+# Relleno entre módulos
+# ─────────────────────────────
+[fill]
+symbol = " "
+
+# ─────────────────────────────
+# Lenguajes y entornos
+# ─────────────────────────────
+[python]
+style = "fg:color2"
+symbol = " "
+format = "[$symbol$pyenv_prefix($version )($virtualenv )]($style)"
+pyenv_version_name = true
+pyenv_prefix = ""
+
+[lua]
+format = "[$symbol($version )]($style)"
+symbol = " "
+style = "fg:color9"
+
+[nodejs]
+style = "fg:color2"
+symbol = " "
+
+[golang]
+style = "fg:color3"
+symbol = " "
+
+[haskell]
+style = "fg:color5"
+symbol = " "
+
+[rust]
+style = "fg:color6"
+symbol = " "
+
+[ruby]
+style = "fg:color3"
+symbol = " "
+
+[package]
+symbol = "󰏗 "
+
+# ─────────────────────────────
+# Cloud / Docker / Jobs / Duración
+# ─────────────────────────────
+[aws]
+symbol = " "
+style = "fg:color2"
+format = "[$symbol($profile )([$duration] )]($style)"
+
+[docker_context]
+symbol = " "
+style = "fg:color9"
+format = "[$symbol]($style) $path"
+detect_files = ["docker-compose.yml", "docker-compose.yaml", "Dockerfile"]
+detect_extensions = ["Dockerfile"]
+
+[jobs]
+symbol = " "
+style = "fg:color0"
+number_threshold = 1
+format = "[$symbol]($style)"
+
+[cmd_duration]
+min_time = 500
+style = "fg:color8"
+format = "[$duration]($style)"
+
+[palettes.pywal16]
+color0 = "#0a1419"
+color1 = "#2C3A45"
+color2 = "#5D3947"
+color3 = "#354652"
+color4 = "#3C5364"
+color5 = "#545662"
+color6 = "#AA465B"
+color7 = "#8e9598"
+color8 = "#59686e"
+color9 = "#3f7093"
+color10 = "#a7476e"
+color11 = "#447a9f"
+color12 = "#4984ac"
+color13 = "#5264b4"
+color14 = "#c27082"
+color15 = "#c1c4c5"
