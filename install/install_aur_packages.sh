@@ -1,6 +1,6 @@
 #!/bin/bash
 
-AUR_PACKAGES_FILE="aur_packages.txt"
+AUR_PACKAGES_FILE="$HOME/.hyprland-dotfiles/install/aur_packages.txt"
 
 if [ ! -f "$AUR_PACKAGES_FILE" ]; then
     echo "Error: No se encontró el archivo $AUR_PACKAGES_FILE"
