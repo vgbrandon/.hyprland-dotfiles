@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGES_FILE="packages.txt"
+PACKAGES_FILE="$HOME/.hyprland-dotfiles/install/packages.txt"
 
 if [ ! -f "$PACKAGES_FILE" ]; then
     echo "Error: No se encontró el archivo $PACKAGES_FILE"
