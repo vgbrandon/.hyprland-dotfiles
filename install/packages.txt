@@ -19,6 +19,7 @@ hyprlock
 hyprpicker
 hyprshot
 hyprsunset
+hyprlauncher
 
 # MULTIMEDIA
 mpv
@@ -38,6 +39,8 @@ zoxide
 jq
 fish
 stow
+pnpm
+npm
 
 # FUENTES
 ttf-dejavu
