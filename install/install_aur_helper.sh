@@ -1,53 +1,84 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-set -e
+echo "📦 Selección de AUR helper (yay, paru u otro)"
 
-echo "📦 Selección de AUR helper (yay o paru)"
+# ------------------------------------------------------------------------------
+# 1. Detectar helpers conocidos ya instalados
+# ------------------------------------------------------------------------------
+declare -A helpers_installed
+for h in paru yay; do
+    if command -v "$h" >/dev/null 2>&1; then
+        helpers_installed[$h]="yes"
+    else
+        helpers_installed[$h]="no"
+    fi
+done
 
-# Detectar si alguno ya está instalado
-YAY_EXISTS=$(command -v yay >/dev/null 2>&1 && echo "yes" || echo "no")
-PARU_EXISTS=$(command -v paru >/dev/null 2>&1 && echo "yes" || echo "no")
-
-echo
 echo "Detectado:"
-[ "$YAY_EXISTS" = "yes" ] && echo "  ✅ yay ya está instalado"
-[ "$PARU_EXISTS" = "yes" ] && echo "  ✅ paru ya está instalado"
+for h in "${!helpers_installed[@]}"; do
+    if [[ "${helpers_installed[$h]}" == "yes" ]]; then
+        echo "  ✅ $h ya está instalado"
+    fi
+done
 echo
 
-# Elegir helper
-read -rp "¿Qué helper de AUR quieres usar? (1) paru (2) yay [1]: " choice
-choice=${choice:-1}
+# ------------------------------------------------------------------------------
+# 2. Elegir helper (incluyendo opción “otro”)
+# ------------------------------------------------------------------------------
+while true; do
+    echo "Opciones disponibles:"
+    echo "  1) paru"
+    echo "  2) yay"
+    echo "  3) Otro"
+    read -rp "Elige AUR helper [1]: " choice
+    choice=${choice:-1}
 
-if [[ $choice == "1" ]]; then
-    HELPER="paru"
-elif [[ $choice == "2" ]]; then
-    HELPER="yay"
-else
-    echo "❌ Opción inválida. Abortando."
-    exit 1
-fi
+    case "$choice" in
+        1) HELPER="paru"; break ;;
+        2) HELPER="yay"; break ;;
+        3)
+            read -rp "Escribe el nombre del helper que quieres instalar: " HELPER
+            # Verificar si existe en AUR
+            if ! curl -s "https://aur.archlinux.org/packages/$HELPER" | grep -q "<title>$HELPER"; then
+                echo "❌ '$HELPER' no existe en AUR. Intenta otra vez."
+            else
+                break
+            fi
+            ;;
+        *) echo "❌ Opción inválida. Intenta de nuevo." ;;
+    esac
+done
 
 echo "Seleccionaste: $HELPER"
 
-# Verificar si ya está instalado
+# ------------------------------------------------------------------------------
+# 3. Instalar helper si no existe
+# ------------------------------------------------------------------------------
 if command -v "$HELPER" >/dev/null 2>&1; then
-    read -rp "🔁 $HELPER ya está instalado. ¿Quieres reinstalarlo? (S/n): " reinstall
-    reinstall=${reinstall:-n}
+    echo "ℹ️ El helper '$HELPER' ya existe en el sistema. Se seguirá usando este helper."
+else
+    echo "⬇️ Instalando $HELPER desde AUR..."
 
-    if [[ "$reinstall" =~ ^[Ss]$ ]]; then
-        echo "♻️ Reinstalando $HELPER..."
-        rm -rf "/tmp/$HELPER"
-    else
-        echo "⏭️ Saltando reinstalación de $HELPER."
-        exit 0
+    TMP_DIR="/tmp/$HELPER"
+    if [[ -d "$TMP_DIR" ]]; then
+        echo "🗑️ Eliminando carpeta temporal existente: $TMP_DIR"
+        rm -rf "$TMP_DIR"
     fi
+
+    git clone "https://aur.archlinux.org/${HELPER}.git" "$TMP_DIR"
+    cd "$TMP_DIR" || { echo "❌ No se pudo acceder a $TMP_DIR"; exit 1; }
+    makepkg -si --noconfirm
+    cd - >/dev/null
+
+    echo "✅ $HELPER instalado correctamente."
+
+    # Limpiar carpeta temporal
+    rm -rf "$TMP_DIR"
 fi
 
-# Instalar el helper seleccionado
-echo "⬇️ Clonando $HELPER desde AUR..."
-git clone "https://aur.archlinux.org/${HELPER}.git" "/tmp/${HELPER}"
-cd "/tmp/${HELPER}" || exit 1
-makepkg -si --noconfirm
-
-echo "✅ $HELPER instalado correctamente."
-
+# ------------------------------------------------------------------------------
+# 4. Exportar variable para otros scripts
+# ------------------------------------------------------------------------------
+export AUR_HELPER="$HELPER"
+echo "🟢 AUR_HELPER=$AUR_HELPER exportado para otros scripts."
