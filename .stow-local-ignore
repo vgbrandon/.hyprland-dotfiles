@@ -1,4 +1,5 @@
 .git
-install/
+install
 install.sh
 .gitignore
+README.md

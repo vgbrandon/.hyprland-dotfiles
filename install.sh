@@ -9,4 +9,4 @@ source $DOTFILES_SETUP/install_aur_helper.sh
 source $DOTFILES_SETUP/install_pacman_packages.sh
 source $DOTFILES_SETUP/install_aur_packages.sh
 source $DOTFILES_SETUP/change_shell.sh
-
+source $DOTFILES_SETUP/generate_symlinks.sh
