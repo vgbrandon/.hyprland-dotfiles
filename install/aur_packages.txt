@@ -1,2 +1,3 @@
 quickshell
 python-pywal16
+google-chrome
