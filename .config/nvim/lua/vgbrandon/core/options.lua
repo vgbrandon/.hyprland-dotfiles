@@ -44,3 +44,6 @@ vim.opt.concealcursor = "n"
 
 -- Desactivar intro nativo de neovim
 vim.opt.shortmess:append("sI")
+
+-- Reemplaza los ~ de neovim por espacios vacios
+vim.opt.fillchars = { eob = " " }
