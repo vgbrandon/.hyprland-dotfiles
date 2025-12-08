@@ -10,3 +10,5 @@ source $DOTFILES_SETUP/install_pacman_packages.sh
 source $DOTFILES_SETUP/install_aur_packages.sh
 source $DOTFILES_SETUP/change_shell.sh
 source $DOTFILES_SETUP/generate_symlinks.sh
+source $DOTFILES_SETUP/configure_grub.sh
+source $DOTFILES_SETUP/configure_git.sh
