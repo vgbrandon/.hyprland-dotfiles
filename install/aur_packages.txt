@@ -2,3 +2,4 @@ quickshell
 google-chrome
 python-pywal16
 waypaper
+onlyoffice-bin
