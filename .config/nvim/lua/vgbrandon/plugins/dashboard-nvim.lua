@@ -35,7 +35,7 @@ return {
       val = {
         { type = "text", val = "󱁤  HERRAMIENTAS", opts = { hl = "String", position = "center" } },
         { type = "padding", val = 1 },
-        dashboard.button("c", "⚙️  Configuración", ":e $MYVIMRC<CR>"),
+        dashboard.button("c", "  Configuración", ":e $MYVIMRC<CR>"),
         dashboard.button("t", "  Terminal", ":terminal<CR>"),
         dashboard.button("b", "  Navegador", ":Neotree toggle position=right<CR>"),
         dashboard.button("u", "󱑢  Actualizar", ":Lazy update<CR>"),
