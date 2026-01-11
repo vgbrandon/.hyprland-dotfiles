@@ -36,7 +36,7 @@ return {
     workspaces = {
       {
         name = "personal",
-        path = "~/Obsidian Vault",
+        path = "~/.config/obsidian-vault/vgbrandon",
       },
       --      {
       --        name = "work",
