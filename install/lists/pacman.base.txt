@@ -1,0 +1,25 @@
+# Base / tooling
+base-devel
+git
+curl
+wget
+unzip
+zip
+tar
+rsync
+stow
+
+# Shell/editor utils
+neovim
+ripgrep
+fd
+fzf
+bat
+eza
+jq
+
+# Network / system
+# networkmanager
+# openssh
+
+yazi

@@ -73,9 +73,9 @@ elif [[ "$ONLY_PACKAGES" -eq 1 ]]; then
 else
   # full run (for now only stow, you can add others later)
   [[ -f "$INSTALL_DIR/tasks/10-packages.sh" ]] && TASKS+=("$INSTALL_DIR/tasks/10-packages.sh")
-  [[ -f "$INSTALL_DIR/tasks/20-services.sh" ]] && TASKS+=("$INSTALL_DIR/tasks/20-services.sh")
-  TASKS+=("$INSTALL_DIR/tasks/30-stow.sh")
-  [[ -f "$INSTALL_DIR/tasks/40-post.sh" ]] && TASKS+=("$INSTALL_DIR/tasks/40-post.sh")
+[[ -f "$INSTALL_DIR/tasks/20-stow.sh"     ]] && TASKS+=("$INSTALL_DIR/tasks/20-stow.sh")
+[[ -f "$INSTALL_DIR/tasks/30-services.sh" ]] && TASKS+=("$INSTALL_DIR/tasks/30-services.sh")
+[[ -f "$INSTALL_DIR/tasks/40-post.sh"     ]] && TASKS+=("$INSTALL_DIR/tasks/40-post.sh")
 fi
 
 # -----------------------------

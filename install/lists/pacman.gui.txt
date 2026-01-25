@@ -1,0 +1,85 @@
+# Hyprland stack (repo versions)
+hyprland
+xdg-desktop-portal
+xdg-desktop-portal-hyprland
+polkit-kde-agent
+
+# Audio
+pipewire
+pipewire-audio
+pipewire-pulse
+wireplumber
+pavucontrol
+
+# Screenshots / clipboard (muy comunes)
+grim
+slurp
+wl-clipboard
+
+# Terminals / file manager (si usas)
+thunar
+kitty
+ghostty
+
+# Fonts rendering
+fontconfig
+freetype2
+
+# EDITORES Y HERRAMIENTAS DE DESARROLLO
+neovim
+github-cli
+lazygit
+
+# GESTOR DE ARCHIVOS Y PLUGINS
+thunar
+gvfs
+tumbler
+ffmpegthumbnailer
+file-roller
+thunar-archive-plugin
+thunar-media-tags-plugin
+thunar-shares-plugin
+thunar-volman
+
+# HYPRLAND ECOSYSTEM
+hyprlock
+hyprpicker
+hyprshot
+hyprsunset
+hyprlauncher
+
+# MULTIMEDIA
+mpv
+
+# SISTEMA Y UTILIDADES
+fastfetch
+polkit-gnome
+starship
+unzip
+ntfs-3g
+os-prober
+yazi
+swww
+zsh
+eza
+zoxide
+jq
+fish
+stow
+pnpm
+npm
+
+# FUENTES
+ttf-dejavu
+ttf-liberation
+noto-fonts
+ttf-roboto
+ttf-opensans
+noto-fonts-emoji
+ttf-font-awesome
+noto-fonts-cjk
+ttf-jetbrains-mono-nerd
+
+python-pip
+docker
+docker-compose

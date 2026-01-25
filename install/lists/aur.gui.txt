@@ -1,0 +1,11 @@
+# Ejemplos (depende de tu setup real)
+# hyprland-git
+# waybar-hyprland
+# rofi-wayland
+# ghostty-bin
+quickshell
+google-chrome
+python-pywal16
+waypaper
+onlyoffice-bin
+wl-gammarelay

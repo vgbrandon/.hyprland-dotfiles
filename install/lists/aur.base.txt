@@ -1,0 +1,3 @@
+# AUR helper (si prefieres instalarlo por AUR)
+# paru-bin
+
