@@ -14,9 +14,10 @@ build_aur_helper_paru() {
   local tmpdir
   tmpdir="$(mktemp -d)"
 
+  # TODO A STDERR para no ensuciar stdout del command substitution
   info "AUR: helper no encontrado. Se instalará 'paru' desde AUR." >&2
   info "AUR: clonando 'paru'..." >&2
-  git clone https://aur.archlinux.org/paru.git "$tmpdir/paru"
+  git clone https://aur.archlinux.org/paru.git "$tmpdir/paru" >&2
 
   info "AUR: construyendo e instalando 'paru' con makepkg (puede tardar; compila en Rust)..." >&2
   info "AUR: si aparece 'Enter a number', presiona ENTER (default)." >&2
@@ -25,9 +26,10 @@ build_aur_helper_paru() {
   pushd "$tmpdir/paru" >/dev/null
   if [[ "$noninteractive" -eq 1 ]]; then
     info "AUR: modo no interactivo: usando defaults automáticamente." >&2
-    yes | makepkg -si --noconfirm --needed
+    # makepkg imprime a stdout -> lo mandamos a stderr
+    yes | makepkg -si --noconfirm --needed >&2
   else
-    makepkg -si
+    makepkg -si >&2
   fi
   popd >/dev/null
 
@@ -73,7 +75,6 @@ aur_install_resilient() {
   local -a pkgs=("$@")
   ((${#pkgs[@]}==0)) && return 0
 
-  # Sanitiza por seguridad
   helper="${helper//$'\r'/}"
   helper="${helper//$'\n'/}"
 
@@ -94,4 +95,3 @@ aur_install_resilient() {
   warn "AUR: instalación falló." >&2
   return 1
 }
-
