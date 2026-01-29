@@ -4,14 +4,15 @@ set -Eeuo pipefail
 # ----------------------------
 # Config (ajusta a tu gusto)
 # ----------------------------
-WALL_DIR_DEFAULT="${WALL_DIR_DEFAULT:-$HOME/Pictures/wallpapers}"
+WALL_DIR_DEFAULT="${WALL_DIR_DEFAULT:-$HOME/Pictures/Wallpapers}"
 TRANSITION_DEFAULT="${TRANSITION_DEFAULT:-grow}"   # any | fade | grow | wipe | outer | wave | simple
 DURATION_DEFAULT="${DURATION_DEFAULT:-0.8}"        # segundos
 FPS_DEFAULT="${FPS_DEFAULT:-60}"
 BEZIER_DEFAULT="${BEZIER_DEFAULT:-0.1,0.9,0.2,1.0}"
 
-# Algunos transitions usan "pos"; grow/wipe/wave se ven mejor con cursor
-POS_DEFAULT="${POS_DEFAULT:-cursor}"
+# Para transitions que usan "pos". Si pones "cursor", se traduce a "x,y" usando hyprctl cursorpos.
+# Si no hay hyprctl/Hyprland, cae a "center".
+POS_DEFAULT="${POS_DEFAULT:-cursor}"  # cursor | center | top-left | ... | "x,y"
 
 # ----------------------------
 # Logging
@@ -69,6 +70,13 @@ pick_wallpaper() {
   echo "${files[$idx]}"
 }
 
+hypr_cursorpos_xy() {
+  # hyprctl cursorpos suele devolver "x, y" (con coma y/o espacios). Normalizamos a "x,y".
+  have hyprctl || return 1
+  hyprctl cursorpos >/dev/null 2>&1 || return 1
+  hyprctl cursorpos | tr -d ' ' | sed 's/,$//'
+}
+
 apply_swww() {
   local img="$1"
   local transition="${2:-$TRANSITION_DEFAULT}"
@@ -79,17 +87,30 @@ apply_swww() {
 
   ensure_swww
 
+  local invert_y=""
+  if [[ "$pos" == "cursor" ]]; then
+    if xy="$(hypr_cursorpos_xy)"; then
+      pos="$xy"
+      invert_y="--invert-y"
+      info "Usando transition-pos desde cursor: $pos (con $invert_y)"
+    else
+      pos="center"
+      info "No pude obtener cursor (hyprctl). Usando transition-pos: $pos"
+    fi
+  fi
+
   info "Aplicando wallpaper con swww..."
   info "  img: $img"
   info "  transition: $transition  duration: $duration  fps: $fps"
+  info "  pos: $pos"
 
-  # Pos aplica para algunos transitions; no hace daño si no se usa
   swww img "$img" \
     --transition-type "$transition" \
     --transition-duration "$duration" \
     --transition-fps "$fps" \
     --transition-bezier "$bezier" \
-    --transition-pos "$pos"
+    --transition-pos "$pos" \
+    $invert_y
 
   ok "Wallpaper aplicado."
 }
@@ -103,52 +124,41 @@ apply_wal() {
   fi
 
   info "Generando paleta con pywal..."
-  # -n: no set wallpaper (ya lo hace swww)
-  # -q: menos ruido
-  # -i: imagen
   wal -n -q -i "$img"
   ok "pywal aplicado (~/.cache/wal/* actualizado)."
 }
 
 reload_targets() {
-  # Hyprland: si tienes en tu hyprland.conf algo como:
-  #   source = ~/.cache/wal/colors-hyprland.conf
-  # entonces un reload aplica colores. Pero reload completo puede mover cosas.
-  # Preferimos: recargar solo decoraciones si usas "keyword" (opcional).
   if have hyprctl && hyprctl monitors >/dev/null 2>&1; then
-    # Si quieres evitar el “desaparece”, NO hacemos hyprctl reload aquí.
-    # Solo avisamos.
     info "Hyprland está activo. (No hago hyprctl reload automáticamente para evitar glitches de monitores.)"
     info "Si tus colores de wal se aplican vía 'source', reinicia sesión o ejecuta hyprctl reload manualmente."
   fi
 
-  # Kitty: si usas include wal (p.ej. include ~/.cache/wal/colors-kitty.conf)
   if have pkill; then
     pkill -USR1 kitty >/dev/null 2>&1 || true
   fi
 
-  # Waybar: recargar (si existe)
   if have waybar && have pkill; then
     pkill -SIGUSR2 waybar >/dev/null 2>&1 || true
   fi
 
-  # Rofi no necesita reload; toma tema al abrir.
   ok "Recargas enviadas (kitty/waybar si aplicaba)."
 }
 
 usage() {
   cat <<EOF
 Uso:
-  wall.sh [IMAGEN] [--dir DIR] [--transition TYPE] [--duration SEC]
+  wallset [IMAGEN] [--dir DIR] [--transition TYPE] [--duration SEC]
 
 Ejemplos:
-  wall.sh                              # random de $WALL_DIR_DEFAULT
-  wall.sh --dir ~/Pictures/Walls       # random de otro dir
-  wall.sh ~/Pictures/wall.png          # imagen específica
-  wall.sh --transition fade --duration 1.2
+  wallset
+  wallset --dir ~/Pictures/Walls
+  wallset ~/Pictures/Wallpapers/wall.png
+  wallset --transition fade --duration 1.2
 
 Notas:
   - Requiere swww + swww-daemon.
+  - Si POS_DEFAULT=cursor, se traduce a coordenadas usando 'hyprctl cursorpos'.
   - Si tienes pywal (wal), generará paleta en ~/.cache/wal/
 EOF
 }
@@ -170,7 +180,6 @@ main() {
         die "Opción desconocida: $1"
         ;;
       *)
-        # primer positional = imagen
         if [[ -z "$img_arg" ]]; then
           img_arg="$1"
           shift
@@ -192,4 +201,3 @@ main() {
 }
 
 main "$@"
-
