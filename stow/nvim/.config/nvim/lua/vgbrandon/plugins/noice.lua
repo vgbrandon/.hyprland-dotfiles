@@ -25,6 +25,8 @@ return {
     {
       "rcarriga/nvim-notify",
       opts = {
+        stages = "fade",
+        top_down = false,
         background_colour = function()
           -- Usa el color de fondo del tema activo o negro si no existe
           local normal = vim.api.nvim_get_hl_by_name("Normal", true)
