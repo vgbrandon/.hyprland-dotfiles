@@ -83,3 +83,4 @@ ttf-jetbrains-mono-nerd
 python-pip
 docker
 docker-compose
+tree-sitter-cli
