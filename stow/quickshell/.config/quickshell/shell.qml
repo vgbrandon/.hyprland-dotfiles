@@ -6,93 +6,101 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 
 ShellRoot {
-  SystemClock {
-    id: clock
-    precision: SystemClock.Minutes
-  }
+  SystemClock { id: clock; precision: SystemClock.Minutes }
 
-  // Una barra por monitor
   Variants {
-    model: Quickshell.screens  // <- en v0.2.1 es "model", no "variants" :contentReference[oaicite:1]{index=1}
+    model: Quickshell.screens
 
     PanelWindow {
       required property var modelData
       screen: modelData
 
-      anchors {
-        top: true
-        left: true
-        right: true
-      }
+      anchors { top: true; left: true; right: true }
 
-      implicitHeight: 32
-      color: "#111318"
+      implicitHeight: 26
+      exclusiveZone: implicitHeight
+      color: "transparent"
 
-      RowLayout {
+      // Ajuste óptico: baja todo 2px para “matar” el espacio del font descent
+      Item {
         anchors.fill: parent
-        anchors.margins: 8
-        spacing: 10
 
-        // IZQUIERDA: Workspaces
         RowLayout {
-          spacing: 6
-          Layout.alignment: Qt.AlignVCenter
+          anchors.left: parent.left
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          anchors.leftMargin: 14
+          anchors.rightMargin: 14
+          anchors.bottomMargin: 0
 
-          Repeater {
-            model: Hyprland.workspaces  // :contentReference[oaicite:2]{index=2}
+          spacing: 10
 
-            delegate: Rectangle {
-              required property var modelData // HyprlandWorkspace
-              height: 22
-              radius: 6
-              width: wsText.implicitWidth + 14
+          // IZQUIERDA
+          RowLayout {
+            Layout.alignment: Qt.AlignBottom | Qt.AlignLeft
+            spacing: 12
 
-              color: modelData.focused ? "#3b82f6"
-                    : modelData.active ? "#334155"
-                    : modelData.urgent ? "#ef4444"
-                    : "#1f2937"
+            Text {
+              text: ""
+              color: "#ffffff"
+              opacity: 0.92
+              font.pixelSize: 14
+              font.weight: 600
+              transform: Translate { y: 2 }   // <- baja 2px
+            }
 
-              border.width: 1
-              border.color: modelData.focused ? "#60a5fa" : "#111827"
-
-              Text {
-                id: wsText
-                anchors.centerIn: parent
+            Repeater {
+              model: Hyprland.workspaces
+              delegate: Text {
+                required property var modelData
                 text: modelData.name
-                color: "#e5e7eb"
-                font.pixelSize: 12
-              }
+                color: modelData.focused ? "#ffffff" : "#cbd5e1"
+                opacity: modelData.focused ? 0.95 : 0.75
+                font.pixelSize: 14
+                font.weight: modelData.focused ? 700 : 500
+                transform: Translate { y: 2 } // <- baja 2px
 
-              MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: modelData.activate()
+                MouseArea {
+                  anchors.fill: parent
+                  cursorShape: Qt.PointingHandCursor
+                  onClicked: modelData.activate()
+                }
               }
             }
           }
-        }
 
-        // “Separador” flexible para centrar la hora
-        Item { Layout.fillWidth: true }
+          Item { Layout.fillWidth: true }
 
-        // CENTRO: Hora
-        Text {
-          Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-          text: Qt.formatDateTime(clock.date, "HH:mm")
-          color: "#e5e7eb"
-          font.pixelSize: 13
-          font.weight: 600
-        }
+          // CENTRO
+          Text {
+            Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
+            text: Qt.formatDateTime(clock.date, "HH:mm")
+            color: "#ffffff"
+            opacity: 0.92
+            font.pixelSize: 14
+            font.weight: 600
+            transform: Translate { y: 2 }   // <- baja 2px
+          }
 
-        // “Separador” flexible para empujar la fecha a la derecha
-        Item { Layout.fillWidth: true }
+          Item { Layout.fillWidth: true }
 
-        // DERECHA: Fecha
-        Text {
-          Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-          text: Qt.formatDateTime(clock.date, "yyyy-MM-dd")
-          color: "#cbd5e1"
-          font.pixelSize: 12
+          // DERECHA
+          RowLayout {
+            Layout.alignment: Qt.AlignBottom | Qt.AlignRight
+            spacing: 12
+
+            Text { text: "󰖩"; color: "#ffffff"; opacity: 0.8; font.pixelSize: 14; transform: Translate { y: 2 } }
+            Text { text: "";  color: "#ffffff"; opacity: 0.8; font.pixelSize: 14; transform: Translate { y: 2 } }
+            Text { text: "󰁹"; color: "#ffffff"; opacity: 0.8; font.pixelSize: 14; transform: Translate { y: 2 } }
+
+            Text {
+              text: Qt.formatDateTime(clock.date, "ddd d MMM")
+              color: "#ffffff"
+              opacity: 0.85
+              font.pixelSize: 14
+              transform: Translate { y: 2 } // <- baja 2px
+            }
+          }
         }
       }
     }
