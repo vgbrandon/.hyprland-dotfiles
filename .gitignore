@@ -1,3 +1,4 @@
 stow/fish/.config/fish/conf.d/*upgrade*
 stow/fish/.config/fish/conf.d/*migrate*
 stow/fish/.config/fish/conf.d/*key_bindings*
+stow/fish/.config/fish/fish_variables
