@@ -10,3 +10,4 @@ waypaper
 onlyoffice-bin
 wl-gammarelay
 hytale-launcher-bin
+wallust
