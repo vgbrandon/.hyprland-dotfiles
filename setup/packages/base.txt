@@ -1,0 +1,4 @@
+git                         # control de versiones
+curl                        # descarga de archivos desde terminal
+base-devel                  # herramientas básicas de compilación
+stow                        # gestor de symlinks para dotfiles

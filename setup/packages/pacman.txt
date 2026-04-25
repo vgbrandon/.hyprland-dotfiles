@@ -1,0 +1,25 @@
+thunar                      # gestor de archivos gráfico
+gvfs                        # soporte para montar dispositivos y red
+tumbler                     # generador de miniaturas para Thunar
+ffmpegthumbnailer           # miniaturas de video
+file-roller                 # gestor de archivos comprimidos
+thunar-archive-plugin       # integración de archivos comprimidos en Thunar
+thunar-media-tags-plugin    # metadatos multimedia en Thunar
+thunar-shares-plugin        # compartir carpetas en red
+thunar-volman               # automontaje de dispositivos
+superfile                   # explorador de archivos en terminal
+lazygit                     # interfaz TUI para Git
+fastfetch                   # información del sistema
+github-cli                  # CLI de GitHub
+zed                         # editor de código
+xdg-desktop-portal-gtk      # integración GTK con Wayland/Flatpak
+polkit-gnome                # autenticación gráfica de permisos
+hyprpaper                   # gestor de wallpapers para Hyprland
+quickshell                  # framework de widgets para Wayland
+ttf-jetbrains-mono-nerd     # fuente Nerd Font
+neovim                      # editor de texto en terminal
+fish                        # shell moderna
+eza                         # reemplazo moderno de ls
+zoxide                      # navegación inteligente entre directorios
+starship                    # prompt personalizable
+pacman-contrib              # utilidades adicionales para pacman
