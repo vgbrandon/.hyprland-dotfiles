@@ -1,0 +1,29 @@
+*.log              # archivos de logs
+logs/              # carpeta de logs
+
+*.bak              # backups
+*.backup           # backups alternativos
+*.old              # versiones antiguas
+*.orig             # archivos originales tras merge
+*.rej              # archivos rechazados en parches
+
+*.tmp              # archivos temporales
+*.swp              # swap de vim
+*.swo              # swap alternativo de vim
+*~                 # backups de editores
+
+.DS_Store          # metadata de macOS
+Thumbs.db          # metadata de Windows
+
+.vscode/           # configuración local de VS Code
+.idea/             # configuración de IDE JetBrains
+
+.env               # variables de entorno
+.env.*             # variantes de entorno
+!.env.example      # plantilla de entorno
+
+.cache/            # cache de herramientas
+
+fish_variables     # estado generado por fish
+
+*.dump             # dumps de memoria/debug
