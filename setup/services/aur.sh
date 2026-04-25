@@ -30,5 +30,5 @@ install_aur_packages() {
 
   install_yay
 
-  yay -S --needed "${packages[@]}"
+  yay -S --needed --noconfirm "${packages[@]}"
 }
