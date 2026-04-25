@@ -7,5 +7,5 @@ install_pacman_packages() {
     return
   fi
 
-  sudo pacman -S --needed "${packages[@]}"
+  sudo pacman -S --needed --noconfirm "${packages[@]}"
 }
