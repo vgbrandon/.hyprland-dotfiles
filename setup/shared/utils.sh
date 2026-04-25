@@ -22,5 +22,5 @@ read_list_file() {
     exit 1
   fi
 
-  grep -vE '^\s*#|^\s*$' "$file"
+  sed 's/#.*//' "$file" | xargs -n1
 }
