@@ -12,18 +12,21 @@ curl -fsSL https://raw.githubusercontent.com/vgbrandon/.hyprland-dotfiles/main/i
 
 ---
 
-## Filosofía
+## Arquitectura
+
+Este proyecto usa una arquitectura modular basada en tareas.
 
 ```txt
-run.sh      → ejecuta tasks
-tasks/      → define qué hacer
-services/   → sabe cómo hacerlo
-packages/   → contiene datos
-shared/     → helpers comunes
+run.sh      → orquesta la ejecución
+tasks/      → define el flujo (qué hacer)
+services/   → implementa la lógica (cómo hacerlo)
+packages/   → contiene datos (listas de paquetes)
+shared/     → utilidades comunes
 stow/       → configuraciones (futuro)
 ```
 
-Separación clara entre lógica, datos e implementación.
+El flujo de instalación se divide en tareas ordenadas, mientras que la lógica reutilizable se mantiene en services.
+Las listas de paquetes se tratan como datos y las utilidades se centralizan en shared.
 
 ---
 
@@ -31,26 +34,10 @@ Separación clara entre lógica, datos e implementación.
 
 * Instalación automática de paquetes (pacman)
 * Soporte AUR con bootstrap automático de yay
-* Arquitectura modular y escalable
-* Código organizado por responsabilidades
+* Arquitectura modular y mantenible
+* Separación clara entre lógica, datos y flujo
 * Aplicación de dotfiles (pendiente)
 * Configuración de entorno (pendiente)
-
----
-
-## Preview (próximamente)
-
-Ruta sugerida:
-
-```txt
-assets/screenshots/
-```
-
-Ejemplo:
-
-```md
-![desktop](assets/screenshots/desktop.png)
-```
 
 ---
 
@@ -165,11 +152,12 @@ Orden de ejecución:
 
 ## Services
 
-Encapsulan herramientas externas:
+Encapsulan interacción con herramientas externas:
 
 ```txt
-pacman.sh → pacman
-aur.sh    → yay + AUR
+pacman.sh → instalación con pacman
+aur.sh    → instalación AUR con yay
+stow.sh   → aplicación de dotfiles
 ```
 
 ---
@@ -215,4 +203,3 @@ Tipos:
 * Arch Linux
 * conexión a internet
 * permisos sudo
-
