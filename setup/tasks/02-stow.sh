@@ -74,7 +74,7 @@ else
     echo "  1) backup  mover a ~/.dotfiles-backup/<timestamp>/..."
     echo "  2) delete  eliminar definitivamente"
     echo "  3) manual  abortar para resolver manualmente"
-    read -r -p "Selecciona [1/2/3]: " choice
+    read_user_input "Selecciona [1/2/3]: " choice
 
     case "${choice:-}" in
       1) action="backup"; break ;;

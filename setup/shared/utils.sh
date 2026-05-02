@@ -24,3 +24,17 @@ read_list_file() {
 
   sed 's/#.*//' "$file" | xargs -n1
 }
+
+read_user_input() {
+  local prompt="$1"
+  local __var_name="$2"
+  local value=""
+
+  if [ -r /dev/tty ]; then
+    read -r -p "$prompt" value < /dev/tty
+  else
+    read -r -p "$prompt" value
+  fi
+
+  printf -v "$__var_name" '%s' "$value"
+}
