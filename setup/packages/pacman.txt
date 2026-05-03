@@ -12,7 +12,9 @@ lazygit                     # interfaz TUI para Git
 fastfetch                   # información del sistema
 github-cli                  # CLI de GitHub
 zed                         # editor de código
-xdg-desktop-portal-gtk      # integración GTK con Wayland/Flatpak
+xdg-desktop-portal          # servicio base de portales XDG
+xdg-desktop-portal-hyprland # backend portal para Hyprland
+xdg-desktop-portal-gtk      # fallback GTK para FileChooser/OpenURI
 polkit-gnome                # autenticación gráfica de permisos
 hyprpaper                   # gestor de wallpapers para Hyprland
 quickshell                  # framework de widgets para Wayland
