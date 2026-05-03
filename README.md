@@ -187,6 +187,41 @@ Tipos:
 
 ---
 
+## Convención de descripción de PR
+
+Formato recomendado:
+
+```txt
+Se <acción principal>.
+
+Antes:
+<contexto del problema o comportamiento previo>
+
+Ahora:
+<cambios aplicados y resultado esperado>
+```
+
+Notas:
+
+* Escribir en español, claro y directo.
+* Explicar primero el problema funcional (Antes) y luego la solución (Ahora).
+* Mencionar archivos clave modificados cuando aporten contexto.
+* Cerrar indicando el impacto visible para el usuario o entorno.
+
+Ejemplo:
+
+```txt
+Se corrige una incompatibilidad de configuración en el entorno, mejorando el comportamiento de una herramienta en Hyprland.
+
+Antes:
+La integración dependía de componentes del sistema que no estaban definidos de forma explícita, lo que generaba fallos al ejecutar una acción clave dentro de la aplicación.
+
+Ahora:
+Se añade una configuración dedicada en stow para definir backends e interfaces requeridas, y se actualiza la lista de paquetes para incluir dependencias base y fallback. Con esto, la funcionalidad afectada vuelve a operar correctamente en el entorno Hyprland.
+```
+
+---
+
 ## Roadmap
 
 * Implementar GNU Stow con backup automático
