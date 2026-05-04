@@ -7,13 +7,11 @@ install_yay() {
 
   echo "[INFO] Instalando yay..."
 
-  sudo pacman -S --needed git base-devel
-
   tmp_dir=$(mktemp -d)
   git clone https://aur.archlinux.org/yay.git "$tmp_dir/yay"
 
   cd "$tmp_dir/yay"
-  makepkg -s --noconfirm
+  makepkg --noconfirm
 
   sudo pacman -U --noconfirm *.pkg.tar.zst
 
