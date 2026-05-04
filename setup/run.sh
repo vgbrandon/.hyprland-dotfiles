@@ -13,7 +13,7 @@ init_sudo_session() {
   fi
 
   while true; do
-    sudo -n true
+    sudo -n true || true
     sleep 50
   done 2>/dev/null &
   SUDO_KEEPALIVE_PID=$!
