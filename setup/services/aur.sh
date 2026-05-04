@@ -13,7 +13,9 @@ install_yay() {
   git clone https://aur.archlinux.org/yay.git "$tmp_dir/yay"
 
   cd "$tmp_dir/yay"
-  makepkg -si --noconfirm
+  makepkg -s --noconfirm
+
+  sudo pacman -U --noconfirm *.pkg.tar.zst
 
   cd -
   rm -rf "$tmp_dir"
@@ -29,6 +31,8 @@ install_aur_packages() {
   fi
 
   install_yay
+
+  sudo -v
 
   yay -S --needed --noconfirm "${packages[@]}"
 }
