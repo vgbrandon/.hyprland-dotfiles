@@ -1,1 +1,5 @@
-wl-gammarelay               # control de brillo/temperatura en Wayland
+# AUR DESHABILITADO TEMPORALMENTE
+# Motivo: prevención de seguridad tras incidente.
+# No se instalará ningún paquete de AUR hasta nuevo aviso.
+
+# wl-gammarelay               # control de brillo/temperatura en Wayland

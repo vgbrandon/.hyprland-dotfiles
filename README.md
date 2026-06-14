@@ -33,7 +33,7 @@ Las listas de paquetes se tratan como datos y las utilidades se centralizan en s
 ## Características
 
 * Instalación automática de paquetes (pacman)
-* Soporte AUR con bootstrap automático de yay
+* Soporte AUR con bootstrap automático de yay (deshabilitado por seguridad)
 * Arquitectura modular y mantenible
 * Separación clara entre lógica, datos y flujo
 * Aplicación de dotfiles (pendiente)
@@ -97,13 +97,13 @@ tasks/*
 
 ## Estado actual
 
-| Módulo     | Estado    |
-| ---------- | --------- |
-| Instalador | listo     |
-| Pacman     | listo     |
-| AUR (yay)  | listo     |
-| Stow       | pendiente |
-| Configs WM | pendiente |
+| Módulo     | Estado               |
+| ---------- | -------------------- |
+| Instalador | listo                |
+| Pacman     | listo                |
+| AUR (yay)  | no operativo         |
+| Stow       | pendiente            |
+| Configs WM | pendiente            |
 
 ---
 
