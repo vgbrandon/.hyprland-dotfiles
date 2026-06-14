@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# AUR DESHABILITADO TEMPORALMENTE
+# Motivo: prevención de seguridad tras incidente.
+# No se instalará nada proveniente de AUR hasta nuevo aviso.
+
 install_yay() {
   if command -v yay >/dev/null 2>&1; then
     return
@@ -28,9 +32,10 @@ install_aur_packages() {
     return
   fi
 
-  install_yay
+  echo "[WARN] AUR está deshabilitado por seguridad. Saltando instalación de: ${packages[*]}"
+  echo "[WARN] Motivo: prevención tras incidente de seguridad."
 
-  sudo -v
-
-  yay -S --needed --noconfirm "${packages[@]}"
+  # install_yay
+  # sudo -v
+  # yay -S --needed --noconfirm "${packages[@]}"
 }

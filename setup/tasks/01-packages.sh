@@ -20,7 +20,10 @@ install_pacman_packages "${base_packages[@]}"
 info "Instalando paquetes oficiales..."
 install_pacman_packages "${pacman_packages[@]}"
 
-info "Instalando paquetes AUR..."
-install_aur_packages "${aur_packages[@]}"
+# AUR DESHABILITADO TEMPORALMENTE
+# Motivo: prevención de seguridad tras incidente.
+# Los paquetes AUR se instalarán manualmente cuando sea seguro.
+# info "Instalando paquetes AUR..."
+# install_aur_packages "${aur_packages[@]}"
 
 success "Paquetes instalados correctamente."
