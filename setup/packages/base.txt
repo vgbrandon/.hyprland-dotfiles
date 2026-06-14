@@ -1,4 +1,5 @@
 git                         # control de versiones
 curl                        # descarga de archivos desde terminal
 base-devel                  # herramientas básicas de compilación
+go                          # toolchain para compilar software en Go
 stow                        # gestor de symlinks para dotfiles
