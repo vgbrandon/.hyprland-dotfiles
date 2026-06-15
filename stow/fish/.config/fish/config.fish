@@ -30,9 +30,6 @@ if status is-interactive
         zoxide init fish | source
     end
 
-    # DeepSeek API Key para Zed
-    set -gx DEEPSEEK_API_KEY "AQUI_TU_KEY"
-
     # opencode
     fish_add_path -m "$HOME/.opencode/bin"
 
@@ -42,6 +39,10 @@ if status is-interactive
         starship init fish | source
     end
 end
+
+# DeepSeek API Key para Zed
+# Reemplazar por tu key real
+set -gx DEEPSEEK_API_KEY "AQUI_TU_KEY"
 
 # opencode
 fish_add_path /home/vgbrandon/.opencode/bin
