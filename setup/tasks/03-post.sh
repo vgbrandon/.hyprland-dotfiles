@@ -49,4 +49,31 @@ else
   warning "fish no encontrado. Saltando configuración de Fish."
 fi
 
+# Git
+
+if command -v git >/dev/null 2>&1; then
+  info "Configurando Git..."
+
+  current_name="$(git config --global user.name || true)"
+  current_email="$(git config --global user.email || true)"
+
+  if [ "$current_name" != "vgbrandon" ]; then
+    git config --global user.name "vgbrandon"
+    info "  user.name → vgbrandon"
+  fi
+
+  if [ "$current_email" != "vgbrandon.dev@gmail.com" ]; then
+    git config --global user.email "vgbrandon.dev@gmail.com"
+    info "  user.email → vgbrandon.dev@gmail.com"
+  fi
+
+  if [ "$current_name" = "vgbrandon" ] && [ "$current_email" = "vgbrandon.dev@gmail.com" ]; then
+    success "Git ya estaba configurado correctamente."
+  else
+    success "Git configurado."
+  fi
+else
+  warning "git no encontrado. Saltando configuración de Git."
+fi
+
 success "Post-instalación completada."
