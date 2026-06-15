@@ -76,4 +76,18 @@ else
   warning "git no encontrado. Saltando configuración de Git."
 fi
 
+# opencode
+
+if command -v opencode >/dev/null 2>&1; then
+  success "opencode ya está instalado."
+else
+  info "Instalando opencode..."
+
+  if curl -fsSL https://opencode.ai/install | bash; then
+    success "opencode instalado correctamente."
+  else
+    warning "No se pudo instalar opencode. Puedes intentarlo manualmente desde https://opencode.ai"
+  fi
+fi
+
 success "Post-instalación completada."
