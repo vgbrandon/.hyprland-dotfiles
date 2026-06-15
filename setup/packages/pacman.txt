@@ -25,3 +25,6 @@ eza                         # reemplazo moderno de ls
 zoxide                      # navegación inteligente entre directorios
 starship                    # prompt personalizable
 pacman-contrib              # utilidades adicionales para pacman
+bluez                       # pila de Bluetooth
+bluez-utils                 # utilidades CLI para Bluetooth (bluetoothctl)
+blueman                     # interfaz gráfica para Bluetooth
