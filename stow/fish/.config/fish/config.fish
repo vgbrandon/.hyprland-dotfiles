@@ -41,7 +41,6 @@ if status is-interactive
 end
 
 # DeepSeek API Key para Zed
-# Reemplazar por tu key real
 set -gx DEEPSEEK_API_KEY "AQUI_TU_KEY"
 
 # opencode
