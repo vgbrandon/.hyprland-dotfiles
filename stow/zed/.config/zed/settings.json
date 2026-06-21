@@ -1,0 +1,33 @@
+{
+  "agent": {
+    "default_profile": "write",
+    "default_model": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "enable_thinking": true,
+      "effort": "high"
+    },
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "cli_default_open_behavior": "existing_window",
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "auto_install_extensions": {
+    "gruvbox-ish": true,
+    "fantasticons-icons-theme": true,
+  },
+  "vim_mode": true,
+  "icon_theme": "FantastIcons Icon Theme",
+  "ui_font_size": 16,
+  "buffer_font_size": 13.0,
+  "theme": {
+    "mode": "dark",
+    "light": "Ayu Light",
+    "dark": "Gruvbox ish Dark Hard",
+  },
+}

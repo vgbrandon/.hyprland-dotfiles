@@ -46,10 +46,5 @@ Thumbs.db
 # estado generado por fish
 fish_variables
 
-# configuraciones con valores específicos del usuario
-# (se ignoran para no trackear datos personales; la base ya está subida)
-stow/fish/.config/fish/config.fish
-stow/zed/.config/zed/settings.json
-
 # dumps de memoria/debug
 *.dump
