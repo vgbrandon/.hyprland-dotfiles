@@ -30,3 +30,4 @@ bluez                       # pila de Bluetooth
 bluez-utils                 # utilidades CLI para Bluetooth (bluetoothctl)
 blueman                     # interfaz gráfica para Bluetooth
 os-prober                   # detección de otros sistemas operativos
+refind                      # gestor de arranque UEFI

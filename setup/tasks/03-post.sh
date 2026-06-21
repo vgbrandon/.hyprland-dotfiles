@@ -90,4 +90,25 @@ else
   fi
 fi
 
+# rEFInd theme
+
+if [ -d "/boot/EFI/refind" ]; then
+  info "Configurando tema rEFInd..."
+
+  if sudo stow --dir "$STOW_DIR" --target / refind; then
+    success "Symlink del tema rEFInd creado."
+  else
+    warning "No se pudo crear el symlink del tema rEFInd."
+  fi
+
+  if ! grep -q "refind-theme/theme.conf" /boot/EFI/refind/refind.conf 2>/dev/null; then
+    echo "include refind-theme/theme.conf" | sudo tee -a /boot/EFI/refind/refind.conf >/dev/null
+    success "Tema rEFInd configurado en refind.conf."
+  else
+    success "Tema rEFInd ya estaba configurado en refind.conf."
+  fi
+else
+  warning "No se encontró /boot/EFI/refind. Ejecutá refind-install primero."
+fi
+
 success "Post-instalación completada."
