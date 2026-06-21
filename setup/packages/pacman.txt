@@ -3,6 +3,7 @@ gvfs                        # soporte para montar dispositivos y red
 ntfs-3g                     # soporte de lectura/escritura para unidades NTFS
 tumbler                     # generador de miniaturas para Thunar
 ffmpegthumbnailer           # miniaturas de video
+mpv                         # reproductor multimedia
 file-roller                 # gestor de archivos comprimidos
 thunar-archive-plugin       # integración de archivos comprimidos en Thunar
 thunar-media-tags-plugin    # metadatos multimedia en Thunar
