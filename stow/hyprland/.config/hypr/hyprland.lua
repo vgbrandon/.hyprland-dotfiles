@@ -367,7 +367,7 @@ hl.window_rule({
 -- Float filemanager by default
 hl.window_rule({
     name   = "float-filemanager",
-    match  = { class = "Thunar" },
+    match  = { class = "[Tt]hunar" },
     float  = true,
     size   = { "monitor_w * 0.65", "monitor_h * 0.75" },
     center = true,
