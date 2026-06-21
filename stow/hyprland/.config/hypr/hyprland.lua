@@ -47,7 +47,7 @@ local menu        = "wofi --show drun"
 hl.on("hyprland.start", function()
     --   hl.exec_cmd(terminal)
     --   hl.exec_cmd("nm-applet")
-    --   hl.exec_cmd("waybar & hyprpaper & firefox")
+    hl.exec_cmd("hyprpaper")
     hl.exec_cmd("quickshell")
     hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
 end)
