@@ -6,6 +6,7 @@ source "$SHARED_DIR/utils.sh"
 source "$SERVICES_DIR/stow.sh"
 
 NONINTERACTIVE="${NONINTERACTIVE:-0}"
+STOW_EXCLUDE="${STOW_EXCLUDE:-refind}"
 
 info "Aplicando dotfiles con stow..."
 
