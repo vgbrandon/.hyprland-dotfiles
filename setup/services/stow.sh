@@ -9,9 +9,7 @@ get_stow_modules() {
     return
   fi
 
-  local exclude="${STOW_EXCLUDE:-}"
-  find "$STOW_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort \
-    | grep -vFf <(echo "$exclude" | tr ',' '\n' | awk 'NF')
+  find "$STOW_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort
 }
 
 extract_stow_conflicts() {
@@ -49,12 +47,6 @@ delete_stow_conflict() {
 
 run_stow() {
   stow --dir "$STOW_DIR" --target "$HOME" "$@"
-}
-
-run_stow_at() {
-  local target="$1"
-  shift
-  stow --dir "$STOW_DIR" --target "$target" "$@"
 }
 
 reload_hyprland() {

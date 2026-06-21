@@ -92,22 +92,10 @@ fi
 
 # rEFInd theme
 
-THEME_SRC="$ROOT_DIR/stow/refind/boot/EFI/refind/refind-theme"
-THEME_DST="/boot/EFI/refind/refind-theme"
-
 if [ -d "/boot/EFI/refind" ]; then
-  info "Configurando tema rEFInd..."
+  info "Copiando tema rEFInd..."
 
-  if [ -L "$THEME_DST" ] && [ -e "$THEME_DST" ]; then
-    success "Symlink del tema rEFInd ya existe."
-  elif [ -d "$THEME_DST" ]; then
-    warning "El directorio $THEME_DST ya existe y no es un symlink. Omitiendo."
-  elif sudo ln -sf "$THEME_SRC" "$THEME_DST" 2>/dev/null; then
-    success "Symlink del tema rEFInd creado."
-  else
-    warning "No se pudo crear symlink (ESP sin soporte). Copiando archivos..."
-    sudo cp -r "$THEME_SRC" "$THEME_DST"
-  fi
+  sudo cp -r "$ASSETS_DIR/refind-theme" /boot/EFI/refind/refind-theme
 
   if ! grep -q "refind-theme/theme.conf" /boot/EFI/refind/refind.conf 2>/dev/null; then
     echo "include refind-theme/theme.conf" | sudo tee -a /boot/EFI/refind/refind.conf >/dev/null
