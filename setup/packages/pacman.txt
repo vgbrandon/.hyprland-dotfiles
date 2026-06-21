@@ -1,5 +1,6 @@
 thunar                      # gestor de archivos gráfico
 gvfs                        # soporte para montar dispositivos y red
+ntfs-3g                     # soporte de lectura/escritura para unidades NTFS
 tumbler                     # generador de miniaturas para Thunar
 ffmpegthumbnailer           # miniaturas de video
 file-roller                 # gestor de archivos comprimidos
@@ -28,3 +29,4 @@ pacman-contrib              # utilidades adicionales para pacman
 bluez                       # pila de Bluetooth
 bluez-utils                 # utilidades CLI para Bluetooth (bluetoothctl)
 blueman                     # interfaz gráfica para Bluetooth
+os-prober                   # detección de otros sistemas operativos
