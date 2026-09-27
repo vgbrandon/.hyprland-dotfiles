@@ -1,0 +1,5 @@
+[data]
+    name           = {{ promptStringOnce . "name" "Nombre para git" | quote }}
+    email          = {{ promptStringOnce . "email" "Email para git" | quote }}
+    enableAur      = {{ promptBoolOnce . "enableAur" "¿Habilitar instalación de paquetes AUR?" false }}
+    deepseekApiKey = {{ promptStringOnce . "deepseekApiKey" "DeepSeek API key para Zed/Fish (vacío para omitir)" "" | quote }}
