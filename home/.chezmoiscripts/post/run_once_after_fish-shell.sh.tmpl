@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v fish >/dev/null 2>&1; then
+  echo "[WARN] fish no encontrado. Saltando configuración de shell por defecto."
+  exit 0
+fi
+
+fish_bin="$(command -v fish)"
+target_user="${SUDO_USER:-${USER:-}}"
+current_shell="$(getent passwd "$target_user" 2>/dev/null | cut -d: -f7 || true)"
+
+if [ "$current_shell" = "$fish_bin" ] || [ "${SHELL:-}" = "$fish_bin" ]; then
+  echo "[OK] Fish ya está configurado como shell por defecto."
+elif grep -qx "$fish_bin" /etc/shells 2>/dev/null; then
+  if [ -z "$target_user" ]; then
+    echo "[WARN] No se pudo detectar el usuario objetivo para configurar Fish."
+  elif command -v usermod >/dev/null 2>&1; then
+    if sudo usermod -s "$fish_bin" "$target_user"; then
+      echo "[OK] Fish configurado como shell por defecto para $target_user."
+    else
+      echo "[WARN] No se pudo cambiar el shell automáticamente para $target_user."
+    fi
+  else
+    echo "[WARN] usermod no encontrado. No se pudo configurar Fish como shell por defecto."
+  fi
+else
+  echo "[WARN] Fish no está en /etc/shells. Agrega '$fish_bin' para poder usarlo como shell por defecto."
+fi
