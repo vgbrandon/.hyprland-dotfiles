@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+info() { echo "[INFO] $1"; }
+error() { echo "[ERROR] $1"; }
+
+info "Verificando dependencias básicas..."
+
+for cmd in git sudo pacman; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    error "$cmd no está instalado."
+    exit 1
+  fi
+done
+
+echo "[OK] Dependencias básicas verificadas."
