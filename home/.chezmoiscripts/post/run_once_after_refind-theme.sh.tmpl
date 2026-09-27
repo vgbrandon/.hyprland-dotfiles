@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# NOTA: assets/refind-theme vive fuera de .chezmoiroot (no es un dotfile,
+# es un asset binario de ~800K) por lo que no forma parte del árbol que
+# chezmoi aplica. Se referencia por ruta relativa a partir de .chezmoi.sourceDir,
+# que con .chezmoiroot activo apunta a la carpeta "home". Verificar esta ruta
+# la primera vez que se corra (chezmoi source-path te confirma el valor real).
+REFIND_ASSETS="{{ .chezmoi.sourceDir }}/../assets/refind-theme"
+
+if [ ! -d /boot/EFI/refind ]; then
+  echo "[WARN] No se encontró /boot/EFI/refind. Ejecutá refind-install primero."
+  exit 0
+fi
+
+if [ ! -d "$REFIND_ASSETS" ]; then
+  echo "[WARN] No se encontró $REFIND_ASSETS. Saltando tema de rEFInd."
+  exit 0
+fi
+
+echo "[INFO] Copiando tema rEFInd..."
+sudo cp -r "$REFIND_ASSETS" /boot/EFI/refind/refind-theme
+
+if ! grep -q "refind-theme/theme.conf" /boot/EFI/refind/refind.conf 2>/dev/null; then
+  echo "include refind-theme/theme.conf" | sudo tee -a /boot/EFI/refind/refind.conf >/dev/null
+  echo "[OK] Tema rEFInd configurado en refind.conf."
+else
+  echo "[OK] Tema rEFInd ya estaba configurado en refind.conf."
+fi
