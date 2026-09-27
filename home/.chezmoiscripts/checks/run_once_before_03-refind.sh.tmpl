@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Solo informa, no bloquea ni instala nada: instalar rEFInd (el bootloader
+# en sí, con 'refind-install') queda fuera de este repo a propósito, ver
+# README.md → Requisitos. Esto solo te avisa temprano si falta, para que
+# no te enteres recién al final, en post/run_once_after_refind-theme.sh.tmpl
+# (que es el que de verdad copia el tema, solo si esto da OK).
+
+if [ -d /boot/EFI/refind ]; then
+  echo "[OK] rEFInd está instalado (/boot/EFI/refind encontrado)."
+else
+  echo "[WARN] rEFInd no está instalado. Más adelante se va a saltear el tema de rEFInd."
+  echo "[WARN] Si lo querés, instalalo vos con 'sudo refind-install' y después corré 'chezmoi apply' de nuevo."
+fi
