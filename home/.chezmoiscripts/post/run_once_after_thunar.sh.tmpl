@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v xfconf-query >/dev/null 2>&1; then
+  xfconf-query -c thunar -p /last-show-hidden -n -t bool -s true
+  echo "[OK] Thunar configurado."
+else
+  echo "[WARN] xfconf-query no encontrado. Saltando configuración de Thunar."
+fi
