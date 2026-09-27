@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v opencode >/dev/null 2>&1; then
+  echo "[OK] opencode ya está instalado."
+else
+  echo "[INFO] Instalando opencode..."
+  if curl -fsSL https://opencode.ai/install | bash; then
+    echo "[OK] opencode instalado correctamente."
+  else
+    echo "[WARN] No se pudo instalar opencode. Puedes intentarlo manualmente desde https://opencode.ai"
+  fi
+fi
