@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Este script se vuelve a ejecutar automáticamente cada vez que cambia
+# el contenido de .chezmoidata/packages.yaml o el flag enableAur.
+# hash de paquetes: {{ .packages | toJson | sha256sum }}
+# aur habilitado: {{ .enableAur }}
+
+echo "[INFO] Instalando paquetes base y oficiales..."
+
+PACKAGES=(
+{{ range (concat .packages.base .packages.pacman) }}  "{{ . }}"
+{{ end }}
+)
+
+sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
+
+{{ if .enableAur -}}
+if ! command -v yay >/dev/null 2>&1; then
+  echo "[INFO] Instalando yay..."
+  tmp_dir="$(mktemp -d)"
+  git clone https://aur.archlinux.org/yay.git "$tmp_dir/yay"
+  (cd "$tmp_dir/yay" && makepkg --noconfirm && sudo pacman -U --noconfirm ./*.pkg.tar.zst)
+  rm -rf "$tmp_dir"
+fi
+
+echo "[INFO] Instalando paquetes AUR..."
+
+AUR_PACKAGES=(
+{{ range .packages.aur }}  "{{ . }}"
+{{ end }}
+)
+
+yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
+{{ else -}}
+echo "[WARN] AUR deshabilitado (enableAur=false en 'chezmoi init'). Paquetes omitidos: {{ .packages.aur | join ", " }}"
+echo "[WARN] Para habilitarlo: chezmoi data | grep enableAur, y editá ~/.config/chezmoi/chezmoi.toml"
+{{ end -}}
+
+echo "[OK] Paquetes instalados correctamente."
