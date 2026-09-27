@@ -48,3 +48,6 @@ fish_variables
 
 # dumps de memoria/debug
 *.dump
+
+# binario de chezmoi si el instalador se corre parado dentro del repo
+/bin/
