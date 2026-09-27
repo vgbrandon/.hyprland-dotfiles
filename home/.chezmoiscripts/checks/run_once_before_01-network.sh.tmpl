@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+info() { echo "[INFO] $1"; }
+error() { echo "[ERROR] $1"; }
+
+info "Verificando conexión a internet..."
+
+if curl -fsSL --max-time 5 -o /dev/null https://archlinux.org; then
+  echo "[OK] Conexión a internet verificada."
+else
+  error "No hay conexión a internet (falló curl a archlinux.org). La instalación necesita descargar paquetes."
+  exit 1
+fi
