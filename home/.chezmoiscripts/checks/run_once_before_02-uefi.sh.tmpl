@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# No es un chequeo bloqueante: solo informa. rEFInd (tema post-instalación,
+# ver .chezmoiscripts/post/run_once_after_refind-theme.sh.tmpl) requiere UEFI,
+# pero el resto de la instalación funciona igual en modo legacy/BIOS.
+
+if [ -d /sys/firmware/efi ]; then
+  echo "[OK] Sistema arrancado en modo UEFI."
+else
+  echo "[WARN] Sistema arrancado en modo BIOS/legacy. El tema de rEFInd no podrá aplicarse."
+fi
