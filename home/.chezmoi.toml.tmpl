@@ -1,3 +1,8 @@
+# Fija dónde vive el repo de forma permanente. Sin esto, chezmoi usa por
+# defecto ~/.local/share/chezmoi, que no es la carpeta que este repo espera
+# (ver README.md → Instalación).
+sourceDir = "{{ .chezmoi.homeDir }}/.hyprland-dotfiles"
+
 [data]
     name           = {{ promptStringOnce . "name" "Nombre para git" | quote }}
     email          = {{ promptStringOnce . "email" "Email para git" | quote }}
