@@ -1,4 +1,5 @@
 {
+  "tab_size": 2,
   "agent": {
     "default_profile": "write",
     "default_model": {
@@ -18,7 +19,7 @@
   },
   "buffer_font_family": "JetBrainsMono Nerd Font",
   "auto_install_extensions": {
-    "gruvbox-ish": true,
+    "base16": true,
     "fantasticons-icons-theme": true,
   },
   "vim_mode": true,
@@ -28,6 +29,6 @@
   "theme": {
     "mode": "dark",
     "light": "Ayu Light",
-    "dark": "Gruvbox ish Dark Hard",
+    "dark": "Base16 Gruvbox Material Dark, Hard",
   },
 }
