@@ -29,7 +29,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "dolphin"
+local fileManager = "Thunar"
 local menu        = "wofi --show drun"
 
 
