@@ -219,7 +219,7 @@ hl.config({
 hl.config({
     input = {
         kb_layout    = "us",
-        kb_variant   = "",
+        kb_variant   = "engrammer",
         kb_model     = "",
         kb_options   = "",
         kb_rules     = "",
