@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 'reinstall', no 'install': este último hace un append no idempotente.
+#
+# Un 'pacman -Syu' que actualice xkeyboard-config puede revertir esto. Si
+# pasa, fuerza que este script se vuelva a ejecutar:
+#   chezmoi state delete-bucket --bucket=scriptState && chezmoi apply
+
+echo "[INFO] Instalando el layout de teclado Engrammer..."
+
+tmp_dir="$(mktemp -d)"
+git clone --depth 1 https://github.com/sunaku/engrammer.git "$tmp_dir/engrammer"
+
+(cd "$tmp_dir/engrammer/linux" && sudo make reinstall)
+
+rm -rf "$tmp_dir"
+
+echo "[OK] Engrammer instalado. Reinicia la sesión gráfica para que tome efecto."
