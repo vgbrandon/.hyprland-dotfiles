@@ -91,7 +91,7 @@ El repo tiene dos partes claramente separadas:
     ├── .chezmoiscripts/        → scripts run_once_/run_onchange_, uno por responsabilidad
     │   ├── checks/             → validaciones previas
     │   ├── packages/           → instalación de paquetes
-    │   └── post/               → un script por responsabilidad (thunar, fish, opencode, refind)
+    │   └── post/               → un script por responsabilidad (thunar, fish, opencode, refind, engrammer)
     ├── dot_config/             → equivalente directo de ~/.config
     └── dot_gitconfig.tmpl      → usa {{ .name }} / {{ .email }}
 ```
