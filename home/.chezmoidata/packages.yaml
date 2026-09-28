@@ -1,6 +1,7 @@
 packages:
   base:
     - git # control de versiones
+    - less # paginador que usa git (log, diff, etc.) por defecto
     - curl # descarga de archivos desde terminal
     - base-devel # herramientas básicas de compilación
     - go # toolchain para compilar software en Go
