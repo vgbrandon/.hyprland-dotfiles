@@ -32,4 +32,11 @@
     "light": "Ayu Light",
     "dark": "Base16 Gruvbox Material Dark, Hard",
   },
+  "project_panel": {
+    "indent_guides": {
+      "show": "never",
+    },
+    "hide_root": true,
+    "auto_fold_dirs": false,
+  },
 }
