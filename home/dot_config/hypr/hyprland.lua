@@ -37,11 +37,12 @@ local menu        = "wofi --show drun"
 -- Autostart necessary processes (like notifications daemons, status bars, etc.)
 -- Or execute your favorite apps at launch like this:
 --
--- hl.on("hyprland.start", function ()
---   hl.exec_cmd(terminal)
---   hl.exec_cmd("nm-applet")
---   hl.exec_cmd("waybar & hyprpaper & firefox")
--- end)
+hl.on("hyprland.start", function()
+  --   hl.exec_cmd(terminal)
+  --   hl.exec_cmd("nm-applet")
+  hl.exec_cmd("hyprpaper")
+  hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+end)
 
 
 -------------------------------
@@ -176,7 +177,7 @@ hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" 
 -- See https://wiki.hypr.land/configuring/layouts/dwindle-layout/ for more
 hl.config({
   dwindle = {
-    preserve_split = true,     -- You probably want this
+    preserve_split = true, -- You probably want this
   },
 })
 
@@ -200,8 +201,8 @@ hl.config({
 
 hl.config({
   misc = {
-    force_default_wallpaper = -1,        -- Set to 0 or 1 to disable the anime mascot wallpapers
-    disable_hyprland_logo   = false,     -- If true disables the random hyprland logo / anime girl background. :(
+    force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
+    disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
   },
 })
 
@@ -220,7 +221,7 @@ hl.config({
 
     follow_mouse = 1,
 
-    sensitivity  = 0,    -- -1.0 - 1.0, 0 means no modification.
+    sensitivity  = 0, -- -1.0 - 1.0, 0 means no modification.
 
     touchpad     = {
       natural_scroll = false,
@@ -272,7 +273,7 @@ hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
 for i = 1, 10 do
-  local key = i % 10   -- 10 maps to key 0
+  local key = i % 10 -- 10 maps to key 0
   hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
   hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
