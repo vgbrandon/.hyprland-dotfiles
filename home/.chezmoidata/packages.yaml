@@ -24,6 +24,7 @@ packages:
     - fastfetch # información del sistema
     - github-cli # CLI de GitHub
     - zed # editor de código
+    - stylua # formateador de Lua, usado por zed en hyprland.lua
     - xdg-desktop-portal # servicio base de portales XDG
     - xdg-desktop-portal-hyprland # backend portal para Hyprland
     - xdg-desktop-portal-gtk # fallback GTK para FileChooser/OpenURI
