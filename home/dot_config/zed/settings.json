@@ -39,4 +39,14 @@
     "hide_root": true,
     "auto_fold_dirs": false,
   },
+  "languages": {
+    "Lua": {
+      "formatter": {
+        "external": {
+          "command": "stylua",
+          "arguments": ["--syntax=Lua54", "--respect-ignores", "--stdin-filepath", "{buffer_path}", "-"],
+        },
+      },
+    },
+  },
 }
