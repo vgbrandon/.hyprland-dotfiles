@@ -8,6 +8,7 @@ packages:
     - stow # ya no se usa para aplicar dotfiles, pero puede quedar como dependencia general
 
   pacman:
+    - kitty # emulador de terminal, usado como terminal por defecto en hyprland.lua
     - thunar # gestor de archivos gráfico
     - gvfs # soporte para montar dispositivos y red
     - ntfs-3g # soporte de lectura/escritura para unidades NTFS
