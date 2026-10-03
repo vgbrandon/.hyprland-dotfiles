@@ -27,3 +27,10 @@ if ! sudo grep -q "refind-theme/theme.conf" /boot/EFI/refind/refind.conf 2>/dev/
 else
   echo "[OK] Tema rEFInd ya estaba configurado en refind.conf."
 fi
+
+if ! sudo grep -q "^resolution max$" /boot/EFI/refind/refind.conf 2>/dev/null; then
+  echo "resolution max" | sudo tee -a /boot/EFI/refind/refind.conf >/dev/null
+  echo "[OK] Resolución de rEFInd configurada en max."
+else
+  echo "[OK] Resolución de rEFInd ya estaba en max."
+fi
