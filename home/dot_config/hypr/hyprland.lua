@@ -200,6 +200,15 @@ hl.config({
 	},
 })
 
+-- no_hardware_cursors: el cursor se corrompe (cuadro negro) al cruzar entre
+-- monitores conectados a GPUs distintas (bug conocido de AMDGPU en setups
+-- multi-GPU). Forzar cursor por software lo evita.
+hl.config({
+	cursor = {
+		no_hardware_cursors = true,
+	},
+})
+
 ---------------
 ---- INPUT ----
 ---------------
