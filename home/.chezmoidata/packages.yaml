@@ -9,6 +9,7 @@ packages:
 
   pacman:
     - kitty # emulador de terminal, usado como terminal por defecto en hyprland.lua
+    - tree-sitter-cli # CLI para desarrollar, testear y usar parsers de tree-sitter
     - thunar # gestor de archivos gráfico
     - gvfs # soporte para montar dispositivos y red
     - ntfs-3g # soporte de lectura/escritura para unidades NTFS
