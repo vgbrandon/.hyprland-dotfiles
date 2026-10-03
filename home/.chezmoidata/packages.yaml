@@ -12,6 +12,7 @@ packages:
     - tree-sitter-cli # CLI para desarrollar, testear y usar parsers de tree-sitter
     - fd # alternativa simple y rápida a find
     - lua-language-server # language server de Lua
+    - wl-clipboard # utilidades de copiar/pegar para Wayland
     - thunar # gestor de archivos gráfico
     - gvfs # soporte para montar dispositivos y red
     - ntfs-3g # soporte de lectura/escritura para unidades NTFS
