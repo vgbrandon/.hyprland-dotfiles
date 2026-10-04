@@ -87,7 +87,7 @@ Pill {
         MouseArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
-            onClicked: mediaPanel.visible = !mediaPanel.visible
+            onClicked: mediaPanel.toggle()
         }
     }
 
