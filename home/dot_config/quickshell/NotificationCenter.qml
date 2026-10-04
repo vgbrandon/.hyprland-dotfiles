@@ -71,7 +71,7 @@ PanelWindow {
             }
         }
 
-        color: Qt.rgba(0.07, 0.07, 0.08, 0.97)
+        color: Theme.panelBg
         border.color: Theme.surfaceHigh
         border.width: 1
 
