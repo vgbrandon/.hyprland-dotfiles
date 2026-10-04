@@ -58,3 +58,10 @@ output_path = '~/.config/gtk-4.0/gtk.css'
 input_path = '~/.config/matugen/templates/icons-color'
 output_path = '~/.local/share/icons/Matugen/.color'
 post_hook = 'python3 ~/.config/matugen/scripts/icons.py && gsettings set org.gnome.desktop.interface icon-theme Adwaita && sleep 0.1 && gsettings set org.gnome.desktop.interface icon-theme Matugen'
+
+# Firefox (extensión Pywalfox): lee los colores en formato de pywal desde
+# ~/.cache/wal/colors.json; "pywalfox update" le avisa a Firefox al instante.
+[templates.pywalfox]
+input_path = '~/.config/matugen/templates/pywalfox-colors.json'
+output_path = '~/.cache/wal/colors.json'
+post_hook = 'command -v pywalfox >/dev/null && pywalfox update || true'
