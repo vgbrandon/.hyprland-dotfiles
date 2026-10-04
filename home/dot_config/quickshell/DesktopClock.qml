@@ -1,27 +1,17 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Wayland
 
-// Reloj grande en el escritorio (debajo de las ventanas, encima del fondo)
-PanelWindow {
+// Reloj grande en el escritorio (va dentro de la capa del fondo, debajo de las ventanas)
+Item {
     id: root
 
-    anchors {
-        top: true
-        right: true
-    }
-    margins {
-        top: Theme.barHeight + 70
-        right: 70
-    }
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.topMargin: Theme.barHeight + 70
+    anchors.rightMargin: 70
     implicitWidth: col.implicitWidth
     implicitHeight: col.implicitHeight
-    color: "transparent"
-    exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.layer: WlrLayer.Bottom
-    WlrLayershell.namespace: "quickshell:clock"
-    mask: Region {} // no captura clics
 
     SystemClock {
         id: clock
