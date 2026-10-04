@@ -7,6 +7,7 @@ ShellRoot {
         Launcher.open = false;
         PowerMenu.open = false;
         Screenshot.active = false;
+        Notifs.dnd = false; // inicia el servidor de notificaciones
     }
 
     Variants {
