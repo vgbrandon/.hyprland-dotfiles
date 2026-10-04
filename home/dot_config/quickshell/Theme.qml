@@ -44,11 +44,12 @@ Singleton {
     Behavior on dot { ColorAnimation { duration: 600 } }
     Behavior on error { ColorAnimation { duration: 600 } }
 
-    // Genera la paleta para un fondo nuevo (lo llama Wallpaper)
+    // Genera la paleta para un fondo nuevo (lo llama Wallpaper). matugen también
+    // genera las plantillas de ~/.config/matugen/config.toml (tema de Zed)
     function setWallpaper(path) {
         if (path === "" || path === wallpaper) return;
         wallpaper = path;
-        matugenProc.command = ["matugen", "image", path, "--dry-run", "--json", "hex", "--prefer", "saturation", "-m", "dark", "-q"];
+        matugenProc.command = ["matugen", "image", path, "--json", "hex", "--prefer", "saturation", "-m", "dark", "-q"];
         matugenProc.running = true;
     }
 
