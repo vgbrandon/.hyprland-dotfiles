@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
+import Quickshell.Wayland
 
 // Capturas de pantalla.
 //   quickshell ipc call screenshot open    -> selector (región / ventana / pantalla)
@@ -21,6 +22,54 @@ Singleton {
     readonly property int originX: Math.min(...Quickshell.screens.map(s => s.x))
     readonly property int originY: Math.min(...Quickshell.screens.map(s => s.y))
 
+    // Con cursor por software, Hyprland dibuja el cursor dentro de la captura.
+    // Para evitarlo se muestra un instante una capa transparente con cursor
+    // invisible sobre todos los monitores, se captura y se quita.
+    property bool hidingCursor: false
+    property var pending: null
+
+    function capture(proc) {
+        pending = proc;
+        hidingCursor = true;
+        hideDelay.restart();
+    }
+
+    function captureDone() {
+        hidingCursor = false;
+        nudgeProc.running = true; // devuelve el cursor normal
+    }
+
+    // El cursor invisible solo se aplica cuando el ratón se mueve: se mueve
+    // 1 px y se regresa, y después se captura
+    Timer {
+        id: hideDelay
+        interval: 60
+        onTriggered: {
+            nudgeProc.then = root.pending;
+            nudgeProc.running = true;
+        }
+    }
+    Process {
+        id: nudgeProc
+        property var then: null
+        command: ["sh", "-c", Hyprland.usingLua === false
+            ? 'p=$(hyprctl cursorpos | tr -d " "); x=${p%,*}; y=${p#*,}; hyprctl dispatch movecursor $((x+1)) $y; hyprctl dispatch movecursor $x $y'
+            : 'p=$(hyprctl cursorpos | tr -d " "); x=${p%,*}; y=${p#*,}; hyprctl dispatch "hl.dsp.cursor.move({ x = $((x+1)), y = $y })"; hyprctl dispatch "hl.dsp.cursor.move({ x = $x, y = $y })"']
+        onExited: {
+            if (!then) return;
+            const p = then;
+            then = null;
+            captureTimer.proc = p;
+            captureTimer.restart();
+        }
+    }
+    Timer {
+        id: captureTimer
+        property var proc: null
+        interval: 60
+        onTriggered: proc.running = true
+    }
+
     function newFile() {
         return `${dir}/Captura_${Qt.formatDateTime(new Date(), "yyyy-MM-dd_hh-mm-ss")}.png`;
     }
@@ -30,7 +79,7 @@ Singleton {
         mode = "region";
         frozen = `/tmp/qs-screenshot-${Date.now()}.png`;
         freezeProc.command = ["grim", frozen];
-        freezeProc.running = true;
+        capture(freezeProc);
         clientsProc.running = true;
     }
 
@@ -107,7 +156,7 @@ Singleton {
         const file = newFile();
         shotProc.file = file;
         shotProc.command = ["grim", "-o", Hyprland.focusedMonitor?.name ?? "", file];
-        shotProc.running = true;
+        capture(shotProc);
     }
 
     Component.onCompleted: Quickshell.execDetached(["mkdir", "-p", dir])
@@ -123,6 +172,7 @@ Singleton {
     Process {
         id: freezeProc
         onExited: code => {
+            root.captureDone();
             if (code === 0) root.active = true;
             else root.cleanup();
         }
@@ -145,7 +195,37 @@ Singleton {
     Process {
         id: shotProc
         property string file
-        onExited: code => { if (code === 0) root.finish(file); }
+        onExited: code => {
+            root.captureDone();
+            if (code === 0) root.finish(file);
+        }
+    }
+
+    // Capa transparente que oculta el cursor durante la captura
+    Variants {
+        model: Quickshell.screens
+
+        PanelWindow {
+            required property ShellScreen modelData
+            screen: modelData
+            visible: root.hidingCursor
+            anchors {
+                top: true
+                bottom: true
+                left: true
+                right: true
+            }
+            color: "transparent"
+            exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.layer: WlrLayer.Overlay
+            WlrLayershell.namespace: "quickshell:screenshot-cursor"
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.BlankCursor
+            }
+        }
     }
 
     // Un selector por monitor
