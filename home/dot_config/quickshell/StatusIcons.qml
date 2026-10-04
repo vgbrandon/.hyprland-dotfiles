@@ -31,12 +31,24 @@ RowLayout {
         text: root.net === "ethernet" ? Theme.iEthernet : root.net === "wifi" ? Theme.iWifi : Theme.iNoNet
     }
     Icon {
+        id: btIcon
         visible: root.bt !== null
         text: !root.bt?.enabled ? Theme.iBtOff : root.btConnected ? Theme.iBtOn : Theme.iBt
+        // Clic = panel, clic derecho = encender/apagar
         MouseArea {
             anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
             cursorShape: Qt.PointingHandCursor
-            onClicked: root.bt.enabled = !root.bt.enabled
+            onClicked: e => {
+                if (e.button === Qt.RightButton) btPanel.setPower(!btPanel.on);
+                else btPanel.toggle();
+            }
+        }
+
+        BluetoothPanel {
+            id: btPanel
+            anchorItem: btIcon
+            visible: false
         }
     }
     // Campana: abre el centro de notificaciones
