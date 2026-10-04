@@ -8,21 +8,13 @@ ShellRoot {
         PowerMenu.open = false;
         Screenshot.active = false;
         Notifs.dnd = false; // inicia el servidor de notificaciones
+        Wallpaper.open = false; // crea el fondo (y el reloj del escritorio)
     }
 
     Variants {
         model: Quickshell.screens
 
         Bar {
-            required property var modelData
-            screen: modelData
-        }
-    }
-
-    Variants {
-        model: Quickshell.screens
-
-        DesktopClock {
             required property var modelData
             screen: modelData
         }
