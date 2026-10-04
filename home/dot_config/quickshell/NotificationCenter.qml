@@ -62,7 +62,7 @@ PanelWindow {
         width: parent.width
         height: parent.height
         radius: 24
-        x: Notifs.centerOpen ? 0 : width + 16
+        x: Notifs.centerOpen ? 0 : panel.implicitWidth + 16
         Behavior on x {
             NumberAnimation {
                 id: slide
