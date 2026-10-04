@@ -65,3 +65,10 @@ post_hook = 'python3 ~/.config/matugen/scripts/icons.py && gsettings set org.gno
 input_path = '~/.config/matugen/templates/pywalfox-colors.json'
 output_path = '~/.cache/wal/colors.json'
 post_hook = 'command -v pywalfox >/dev/null && pywalfox update || true'
+
+# Firefox al arrancar: userChrome.css con los mismos colores, para que no se vea
+# el tema por defecto antes de que cargue Pywalfox (ver scripts/firefox.sh)
+[templates.firefox]
+input_path = '~/.config/matugen/templates/firefox-userChrome.css'
+output_path = '~/.cache/matugen/firefox-userChrome.css'
+post_hook = 'sh ~/.config/matugen/scripts/firefox.sh'
