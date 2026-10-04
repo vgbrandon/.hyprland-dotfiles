@@ -17,8 +17,23 @@ Pill {
         objects: [root.sink]
     }
 
+    // Clic en la hora/fecha = calendario
     Label {
+        id: dateLabel
         text: Qt.formatDateTime(clock.date, "hh:mm") + "  •  " + Qt.formatDateTime(clock.date, "dddd, dd/MM")
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: calendar.toggle()
+        }
+
+        CalendarPanel {
+            id: calendar
+            anchorItem: dateLabel
+            today: clock.date
+            visible: false
+        }
     }
 
     // Captura: clic = selector, clic derecho = monitor completo al instante
