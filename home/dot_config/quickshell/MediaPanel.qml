@@ -26,11 +26,23 @@ PopupWindow {
     implicitHeight: 124
     color: "transparent"
 
-    // Cierra al hacer clic fuera (el clic en la barra lo maneja el propio botón)
+    property real closedAt: 0
+
+    // Abre/cierra desde el botón de la barra. Si el mismo clic acaba de
+    // cerrarlo (clic fuera del panel), no lo vuelve a abrir.
+    function toggle() {
+        if (!visible && Date.now() - closedAt < 300) return;
+        visible = !visible;
+    }
+
+    // Clic fuera del panel = cerrar
     HyprlandFocusGrab {
-        windows: [panel, panel.anchorItem.QsWindow.window]
         id: grab
-        onCleared: panel.visible = false
+        windows: [panel]
+        onCleared: {
+            panel.visible = false;
+            panel.closedAt = Date.now();
+        }
     }
 
     // Activa el grab cuando la ventana ya está mapeada
