@@ -23,7 +23,7 @@ require("monitors")
 -- Set programs that you use
 local terminal = "kitty"
 local fileManager = "Thunar"
-local menu = "wofi --show drun"
+local menu = "quickshell ipc call launcher toggle"
 
 -------------------
 ---- AUTOSTART ----
@@ -260,6 +260,7 @@ hl.bind(
 	hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'")
 )
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
+hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("quickshell ipc call power toggle"))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
