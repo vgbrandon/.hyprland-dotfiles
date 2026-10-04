@@ -52,6 +52,10 @@ Singleton {
     readonly property string iWindow: String.fromCodePoint(0xF05AF)
     readonly property string iMonitor: String.fromCodePoint(0xF0379)
     readonly property string iCamera: String.fromCodePoint(0xF0100)
+    readonly property string iBell: String.fromCodePoint(0xF009A)
+    readonly property string iBellEmpty: String.fromCodePoint(0xF009C)
+    readonly property string iBellOff: String.fromCodePoint(0xF009B)
+    readonly property string iClose: String.fromCodePoint(0xF0156)
 
     readonly property color warm: "#ffb870"
 }
