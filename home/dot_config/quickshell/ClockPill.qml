@@ -36,9 +36,20 @@ Pill {
         }
     }
 
-    // Captura: clic = selector, clic derecho = monitor completo al instante
+    // Fondos de pantalla
     Icon {
         Layout.leftMargin: 6
+        text: Theme.iImage
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: Wallpaper.toggle()
+        }
+    }
+
+    // Captura: clic = selector, clic derecho = monitor completo al instante
+    Icon {
         text: Theme.iCamera
 
         MouseArea {
