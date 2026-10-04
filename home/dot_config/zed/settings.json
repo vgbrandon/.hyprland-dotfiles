@@ -30,7 +30,7 @@
   "theme": {
     "mode": "dark",
     "light": "Ayu Light",
-    "dark": "Base16 Gruvbox Material Dark, Hard",
+    "dark": "Matugen",
   },
   "project_panel": {
     "indent_guides": {
