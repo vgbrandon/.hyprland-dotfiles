@@ -39,6 +39,30 @@ RowLayout {
             onClicked: root.bt.enabled = !root.bt.enabled
         }
     }
+    // Campana: abre el centro de notificaciones
+    Item {
+        id: bell
+        implicitWidth: bellRow.implicitWidth
+        implicitHeight: bellRow.implicitHeight
+
+        RowLayout {
+            id: bellRow
+            spacing: 4
+
+            Icon {
+                text: Notifs.dnd ? Theme.iBellOff : Notifs.count > 0 ? Theme.iBell : Theme.iBellEmpty
+            }
+            Label {
+                visible: Notifs.count > 0
+                text: Notifs.count
+            }
+        }
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: Notifs.toggleCenter()
+        }
+    }
     Icon {
         text: Theme.iPower
         MouseArea {
