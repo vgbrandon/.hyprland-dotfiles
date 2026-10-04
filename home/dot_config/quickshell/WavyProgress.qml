@@ -14,6 +14,11 @@ Canvas {
     onProgressChanged: requestPaint()
     onPhaseChanged: requestPaint()
     onWidthChanged: requestPaint()
+    // Repinta si cambian los colores del tema
+    property color lineColor: Theme.text
+    property color trackColor: Theme.dot
+    onLineColorChanged: requestPaint()
+    onTrackColorChanged: requestPaint()
 
     NumberAnimation on phase {
         from: 0
@@ -31,7 +36,7 @@ Canvas {
         const mid = height / 2;
         const px = Math.max(2, width * Math.min(1, progress));
 
-        ctx.strokeStyle = String(Theme.text);
+        ctx.strokeStyle = String(lineColor);
         ctx.beginPath();
         for (let x = 2; x <= px; x++) {
             const y = mid + Math.sin(x / 4 + phase) * 3;
@@ -41,7 +46,7 @@ Canvas {
         ctx.stroke();
 
         if (px + 6 < width - 2) {
-            ctx.strokeStyle = String(Theme.dot);
+            ctx.strokeStyle = String(trackColor);
             ctx.beginPath();
             ctx.moveTo(px + 6, mid);
             ctx.lineTo(width - 2, mid);
