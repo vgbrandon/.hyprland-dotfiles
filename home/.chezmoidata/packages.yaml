@@ -52,4 +52,4 @@ packages:
     - refind # gestor de arranque UEFI
 
   aur:
-    - wl-gammarelay # control de brillo/temperatura en Wayland
+    - python-pywalfox # app nativa para la extensión de navegador Pywalfox
