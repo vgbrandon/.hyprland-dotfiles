@@ -16,3 +16,22 @@ magenta = { color = "#c678dd", blend = true }
 [templates.zed]
 input_path = '~/.config/matugen/templates/zed.json'
 output_path = '~/.config/zed/themes/matugen.json'
+
+# kitty: los colores se cargan con "globinclude matugen.conf" en kitty.conf.
+# SIGUSR1 hace que las ventanas de kitty abiertas recarguen la config al instante.
+[templates.kitty]
+input_path = '~/.config/matugen/templates/kitty.conf'
+output_path = '~/.config/kitty/matugen.conf'
+post_hook = 'pkill -USR1 -x kitty || true'
+
+# starship: la paleta se une con starship.toml (ver scripts/starship.sh).
+# Starship lee la config en cada prompt, así que el cambio se ve al instante.
+[templates.starship]
+input_path = '~/.config/matugen/templates/starship-palette.toml'
+output_path = '~/.config/starship/palette-matugen.toml'
+post_hook = 'sh ~/.config/matugen/scripts/starship.sh --notify'
+
+# eza (ls): tema de colores; los iconos toman el color de cada tipo de archivo
+[templates.eza]
+input_path = '~/.config/matugen/templates/eza-theme.yml'
+output_path = '~/.config/eza/theme.yml'
