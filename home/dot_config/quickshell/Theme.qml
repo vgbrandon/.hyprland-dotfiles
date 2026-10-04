@@ -2,17 +2,87 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 
 Singleton {
-    // Colores (tonos oscuros estilo Material, como en la captura)
-    readonly property color barBg: Qt.rgba(0.07, 0.07, 0.08, 0.85)
-    readonly property color surface: "#1f1e22"
-    readonly property color surfaceHigh: "#2b2a30"
-    readonly property color primary: "#d6d4dc"
-    readonly property color primaryFg: "#1c1b1f"
-    readonly property color text: "#e6e1e5"
-    readonly property color subtext: "#9e9aa3"
-    readonly property color dot: "#5a5860"
+    id: root
+
+    // Paleta Material You generada por matugen a partir del fondo de pantalla.
+    // Mientras no haya paleta se usan los grises originales.
+    property var scheme: ({})
+    property string wallpaper: ""
+
+    function pick(name, fallback) {
+        return scheme[name] ?? fallback;
+    }
+
+    function withAlpha(c, a) {
+        const q = Qt.tint(c, "transparent");
+        return Qt.rgba(q.r, q.g, q.b, a);
+    }
+
+    // Colores (cambian con una transición suave al cambiar el fondo)
+    property color barBg: withAlpha(pick("surface", "#121214"), 0.85)
+    property color panelBg: withAlpha(pick("surface", "#121214"), 0.97)
+    property color surface: pick("surface_container", "#1f1e22")
+    property color surfaceHigh: pick("surface_container_highest", "#2b2a30")
+    property color primary: pick("primary", "#d6d4dc")
+    property color primaryFg: pick("on_primary", "#1c1b1f")
+    property color text: pick("on_surface", "#e6e1e5")
+    property color subtext: pick("on_surface_variant", "#9e9aa3")
+    property color dot: scheme.outline_variant ? Qt.lighter(scheme.outline_variant, 1.25) : "#5a5860"
+    property color error: pick("error", "#ffb4ab")
+
+    Behavior on barBg { ColorAnimation { duration: 600 } }
+    Behavior on panelBg { ColorAnimation { duration: 600 } }
+    Behavior on surface { ColorAnimation { duration: 600 } }
+    Behavior on surfaceHigh { ColorAnimation { duration: 600 } }
+    Behavior on primary { ColorAnimation { duration: 600 } }
+    Behavior on primaryFg { ColorAnimation { duration: 600 } }
+    Behavior on text { ColorAnimation { duration: 600 } }
+    Behavior on subtext { ColorAnimation { duration: 600 } }
+    Behavior on dot { ColorAnimation { duration: 600 } }
+    Behavior on error { ColorAnimation { duration: 600 } }
+
+    // Genera la paleta para un fondo nuevo (lo llama Wallpaper)
+    function setWallpaper(path) {
+        if (path === "" || path === wallpaper) return;
+        wallpaper = path;
+        matugenProc.command = ["matugen", "image", path, "--dry-run", "--json", "hex", "--prefer", "saturation", "-m", "dark", "-q"];
+        matugenProc.running = true;
+    }
+
+    Process {
+        id: matugenProc
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    const colors = JSON.parse(this.text).colors;
+                    const s = {};
+                    for (const k in colors) s[k] = colors[k].dark.color;
+                    root.scheme = s;
+                    cache.setText(JSON.stringify({ wallpaper: root.wallpaper, scheme: s }));
+                } catch (e) {
+                    console.warn("matugen:", e);
+                }
+            }
+        }
+    }
+
+    // Última paleta guardada: se aplica al iniciar sin esperar a matugen
+    FileView {
+        id: cache
+        path: Quickshell.statePath("theme.json")
+        onLoaded: {
+            try {
+                const d = JSON.parse(text());
+                if (root.wallpaper === "") {
+                    root.wallpaper = d.wallpaper;
+                    root.scheme = d.scheme;
+                }
+            } catch (e) {}
+        }
+    }
 
     // Tamaños
     readonly property int barHeight: 38
@@ -60,6 +130,8 @@ Singleton {
     readonly property string iRefresh: String.fromCodePoint(0xF0450)
     readonly property string iChevronLeft: String.fromCodePoint(0xF0141)
     readonly property string iChevronRight: String.fromCodePoint(0xF0142)
+    readonly property string iImage: String.fromCodePoint(0xF02E9)
+    readonly property string iCheck: String.fromCodePoint(0xF012C)
 
     readonly property color warm: "#ffb870"
 }
