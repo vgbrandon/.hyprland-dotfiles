@@ -1,0 +1,18 @@
+# Paleta Material You generada desde el fondo de pantalla.
+# Quickshell ejecuta matugen cada vez que cambia el fondo y genera estas plantillas.
+[config]
+
+# Colores extra "armonizados" con el fondo (se acercan a su tono pero siguen
+# siendo distintos). Los usa el resaltado de sintaxis y la terminal de Zed.
+[config.custom_colors]
+red = { color = "#e06c75", blend = true }
+orange = { color = "#d19a66", blend = true }
+yellow = { color = "#e5c07b", blend = true }
+green = { color = "#98c379", blend = true }
+cyan = { color = "#56b6c2", blend = true }
+blue = { color = "#61afef", blend = true }
+magenta = { color = "#c678dd", blend = true }
+
+[templates.zed]
+input_path = '~/.config/matugen/templates/zed.json'
+output_path = '~/.config/zed/themes/matugen.json'
