@@ -15,6 +15,7 @@ packages:
     - wl-clipboard # utilidades de copiar/pegar para Wayland
     - swayimg # visor de imágenes liviano para Wayland
     - matugen # generador de paletas de color Material You
+    - adw-gtk-theme # port no oficial del tema de libadwaita para GTK 3
     - thunar # gestor de archivos gráfico
     - gvfs # soporte para montar dispositivos y red
     - ntfs-3g # soporte de lectura/escritura para unidades NTFS
