@@ -1,0 +1,16 @@
+# Copia del acceso directo de tidal-hifi con --no-sandbox: con el sandbox de
+# Electron la ventana sale en gris (pasa con o sin sesión iniciada). Este archivo
+# tiene prioridad sobre /usr/share/applications/tidal-hifi.desktop.
+[Desktop Entry]
+Name=TIDAL Hi-Fi
+GenericName=Music Streaming Service
+Icon=tidal-hifi
+Comment=The web version of Tidal running in electron with hifi support thanks to widevine
+Exec=tidal-hifi --no-sandbox %u
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Audio;Video;AudioVideo;
+StartupWMClass=tidal-hifi
+X-PulseAudio-Properties=media.role=music
+MimeType=x-scheme-handler/tidal;
