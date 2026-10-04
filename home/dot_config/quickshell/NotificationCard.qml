@@ -31,7 +31,7 @@ Rectangle {
     implicitHeight: content.implicitHeight + 24
     radius: 20
     color: Theme.surface
-    border.color: notif.urgency === NotificationUrgency.Critical ? Theme.warm : Theme.surfaceHigh
+    border.color: notif.urgency === NotificationUrgency.Critical ? Theme.error : Theme.surfaceHigh
     border.width: 1
 
     HoverHandler {
