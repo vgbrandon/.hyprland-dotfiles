@@ -1,0 +1,7 @@
+/*
+ * Tema "Matugen" para GTK3 (generado por matugen, no editar a mano):
+ * adw-gtk3-dark + los colores del fondo de pantalla. Va en un tema propio
+ * porque GTK3 solo recarga en vivo los archivos del tema, no ~/.config/gtk-3.0/gtk.css.
+ */
+@import url("file:///usr/share/themes/adw-gtk3-dark/gtk-3.0/gtk.css");
+@import url("colors.css");
