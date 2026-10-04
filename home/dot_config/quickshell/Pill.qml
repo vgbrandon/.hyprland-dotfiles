@@ -12,9 +12,11 @@ Rectangle {
     radius: height / 2
     color: Theme.surface
 
+    // Ocupa todo el alto: cada elemento se centra respecto a la píldora
     RowLayout {
         id: row
-        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        height: parent.height
         spacing: 8
     }
 }
