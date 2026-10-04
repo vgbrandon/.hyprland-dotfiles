@@ -10,7 +10,8 @@ Singleton {
 
     property bool available: false
     property bool enabled: false
-    property int temperature: 4500
+    readonly property int defaultTemp: 4500
+    property int temperature: defaultTemp
     readonly property int minTemp: 2500
     readonly property int maxTemp: 6500
     // 0 = sin filtro, 1 = filtro máximo
@@ -20,11 +21,20 @@ Singleton {
         if (available) enabled = !enabled;
     }
 
+    // Solo cambia la intensidad si el filtro está activado
     function setTemperature(t) {
-        if (!available) return;
+        if (!available || !enabled) return;
         temperature = Math.max(minTemp, Math.min(maxTemp, Math.round(t / 100) * 100));
-        enabled = true;
         applyTimer.restart();
+    }
+
+    function reset() {
+        setTemperature(defaultTemp);
+    }
+
+    // Rueda hacia arriba = más intensidad (temperatura más cálida)
+    function scroll(delta) {
+        setTemperature(temperature + (delta > 0 ? -100 : 100));
     }
 
     onEnabledChanged: proc.running = enabled
@@ -35,17 +45,30 @@ Singleton {
         onExited: code => root.available = code === 0
     }
 
+    // hyprsunset corre solo mientras el filtro está activado
     Process {
         id: proc
         command: ["hyprsunset", "-t", String(root.temperature)]
-        // Al terminar (por un cambio de temperatura) vuelve a arrancar con el valor nuevo
-        onExited: if (root.enabled) running = true
+        // Si se cierra por su cuenta, el filtro queda desactivado
+        onExited: root.enabled = false
     }
 
-    // Espera a que dejes de mover la rueda antes de reiniciar hyprsunset
+    // Cambia la temperatura en vivo (sin reiniciar hyprsunset, así no parpadea)
+    Process {
+        id: setProc
+        property int sent: 0
+        command: ["hyprctl", "hyprsunset", "temperature", String(sent)]
+        // Si la rueda siguió moviéndose mientras se enviaba, manda el último valor
+        onExited: if (root.enabled && sent !== root.temperature) applyTimer.restart()
+    }
+
     Timer {
         id: applyTimer
-        interval: 250
-        onTriggered: if (proc.running) proc.signal(15)
+        interval: 60
+        onTriggered: {
+            if (!proc.running || setProc.running) return;
+            setProc.sent = root.temperature;
+            setProc.running = true;
+        }
     }
 }
