@@ -14,6 +14,7 @@ packages:
     - lua-language-server # language server de Lua
     - wl-clipboard # utilidades de copiar/pegar para Wayland
     - swayimg # visor de imágenes liviano para Wayland
+    - matugen # generador de paletas de color Material You
     - thunar # gestor de archivos gráfico
     - gvfs # soporte para montar dispositivos y red
     - ntfs-3g # soporte de lectura/escritura para unidades NTFS
