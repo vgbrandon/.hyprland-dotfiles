@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 
 // Icono de luz nocturna: clic = activar/desactivar y muestra el OSD.
 // Con el ratón sobre el OSD (o el icono), la rueda cambia la intensidad si está activado.
@@ -41,6 +42,22 @@ Item {
         }
 
         onHoveringChanged: hovering ? hideTimer.stop() : hideTimer.restart()
+
+        // Clic en cualquier otro lugar = cerrar al instante
+        HyprlandFocusGrab {
+            id: grab
+            windows: [osd]
+            onCleared: osd.visible = false
+        }
+        onVisibleChanged: {
+            grab.active = false;
+            if (visible) grabTimer.restart();
+        }
+        Timer {
+            id: grabTimer
+            interval: 50
+            onTriggered: grab.active = osd.visible
+        }
 
         anchor.item: root
         anchor.rect.x: root.width / 2 - width / 2
