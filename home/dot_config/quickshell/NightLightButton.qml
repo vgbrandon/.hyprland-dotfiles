@@ -2,7 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-// Icono de luz nocturna: clic = activar/desactivar, rueda = temperatura (con OSD)
+// Icono de luz nocturna: clic = activar/desactivar y muestra el OSD.
+// Con el ratón sobre el OSD (o el icono), la rueda cambia la intensidad si está activado.
 Item {
     id: root
 
@@ -23,7 +24,7 @@ Item {
             osd.show();
         }
         onWheel: e => {
-            NightLight.setTemperature(NightLight.temperature + (e.angleDelta.y > 0 ? -100 : 100));
+            NightLight.scroll(e.angleDelta.y);
             osd.show();
         }
     }
@@ -31,18 +32,24 @@ Item {
     PopupWindow {
         id: osd
 
+        // Ratón encima del OSD (incluido el botón de reinicio)
+        readonly property bool hovering: osdHover.containsMouse || resetMouse.containsMouse
+
         function show() {
             visible = true;
-            hideTimer.restart();
+            if (!hovering) hideTimer.restart();
         }
+
+        onHoveringChanged: hovering ? hideTimer.stop() : hideTimer.restart()
 
         anchor.item: root
         anchor.rect.x: root.width / 2 - width / 2
         anchor.rect.y: root.height + 14
-        implicitWidth: 220
+        implicitWidth: 260
         implicitHeight: 56
         color: "transparent"
 
+        // Se oculta 1.5 s después de que el ratón sale del OSD
         Timer {
             id: hideTimer
             interval: 1500
@@ -53,6 +60,14 @@ Item {
             anchors.fill: parent
             radius: 16
             color: Theme.surface
+
+            // Ratón encima: no se oculta y la rueda cambia la intensidad
+            MouseArea {
+                id: osdHover
+                anchors.fill: parent
+                hoverEnabled: true
+                onWheel: e => NightLight.scroll(e.angleDelta.y)
+            }
 
             RowLayout {
                 anchors.fill: parent
@@ -94,6 +109,31 @@ Item {
                             color: Theme.warm
                             Behavior on width { NumberAnimation { duration: 150 } }
                         }
+                    }
+                }
+
+                // Volver a la intensidad por defecto
+                Rectangle {
+                    readonly property bool usable: NightLight.enabled && NightLight.temperature !== NightLight.defaultTemp
+
+                    visible: NightLight.available
+                    implicitWidth: 30
+                    implicitHeight: 30
+                    radius: 15
+                    color: resetMouse.containsMouse && usable ? Theme.surfaceHigh : "transparent"
+
+                    Icon {
+                        anchors.centerIn: parent
+                        text: Theme.iRestore
+                        color: parent.usable ? Theme.text : Theme.dot
+                        font.pixelSize: 18
+                    }
+                    MouseArea {
+                        id: resetMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: parent.usable ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: NightLight.reset()
                     }
                 }
             }
