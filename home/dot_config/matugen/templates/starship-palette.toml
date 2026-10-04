@@ -1,0 +1,9 @@
+# Generado por matugen desde el fondo de pantalla. No editar a mano.
+[palettes.matugen]
+primary = "{{colors.primary.default.hex}}"
+accent = "{{colors.tertiary.default.hex}}"
+accent_alt = "{{colors.magenta.default.hex}}"
+ok = "{{colors.green.default.hex}}"
+warn = "{{colors.orange.default.hex}}"
+err = "{{colors.red.default.hex}}"
+muted = "{{colors.outline.default.hex}}"
