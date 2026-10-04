@@ -72,3 +72,10 @@ post_hook = 'command -v pywalfox >/dev/null && pywalfox update || true'
 input_path = '~/.config/matugen/templates/firefox-userChrome.css'
 output_path = '~/.cache/matugen/firefox-userChrome.css'
 post_hook = 'sh ~/.config/matugen/scripts/firefox.sh'
+
+# tidal-hifi: tema "matugen" (seleccionado en su config como user:matugen.css).
+# Tidal lo aplica al cargar la página: si está abierto se recarga (Ctrl+R).
+[templates.tidal]
+input_path = '~/.config/matugen/templates/tidal.css'
+output_path = '~/.config/tidal-hifi/themes/matugen.css'
+post_hook = 'sh ~/.config/matugen/scripts/tidal.sh'
