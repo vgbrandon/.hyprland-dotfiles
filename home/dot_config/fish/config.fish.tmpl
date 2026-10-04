@@ -35,8 +35,25 @@ if status is-interactive
 
     # Esto siempre debe ir al final
     if type -q starship
-        set -gx STARSHIP_CONFIG "$HOME/.config/starship/starship.toml"
+        # Colores del fondo de pantalla (matugen); si no hay, el starship.toml normal
+        sh "$HOME/.config/matugen/scripts/starship.sh" 2>/dev/null
+        if test -f "$HOME/.config/starship/starship-matugen.toml"
+            set -gx STARSHIP_CONFIG "$HOME/.config/starship/starship-matugen.toml"
+        else
+            set -gx STARSHIP_CONFIG "$HOME/.config/starship/starship.toml"
+        end
         starship init fish | source
+
+        # Repinta el prompt cuando matugen cambia los colores (avisa con SIGUSR1
+        # solo a las terminales registradas aquí)
+        function __matugen_repaint --on-signal SIGUSR1
+            commandline -f repaint
+        end
+        set -l matugen_dir "$XDG_RUNTIME_DIR/matugen-fish"
+        mkdir -p $matugen_dir; and touch $matugen_dir/$fish_pid
+        function __matugen_unregister --on-event fish_exit
+            rm -f "$XDG_RUNTIME_DIR/matugen-fish/$fish_pid"
+        end
     end
 end
 
