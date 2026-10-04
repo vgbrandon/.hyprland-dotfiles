@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// Filtro de luz azul con hyprsunset. Se reinicia el proceso al cambiar la temperatura.
+// Filtro de luz azul con hyprsunset. La temperatura se cambia en vivo por IPC (hyprctl hyprsunset).
 Singleton {
     id: root
 
