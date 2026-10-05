@@ -30,7 +30,8 @@ Rectangle {
 
     implicitHeight: content.implicitHeight + 24
     radius: 20
-    color: Theme.surface
+    // Dentro del panel de vidrio, semitransparente; como popup, sólida
+    color: popup ? Theme.surface : Theme.withAlpha(Theme.surfaceHigh, 0.5)
     border.color: notif.urgency === NotificationUrgency.Critical ? Theme.error : Theme.surfaceHigh
     border.width: 1
 
