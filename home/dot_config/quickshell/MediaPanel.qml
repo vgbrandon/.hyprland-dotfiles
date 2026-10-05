@@ -64,10 +64,15 @@ PopupWindow {
         onTriggered: panel.player.positionChanged()
     }
 
+    GlassFrame {
+        anchors.fill: parent
+        radius: 20
+    }
+
     ClippingRectangle {
         anchors.fill: parent
         radius: 20
-        color: Theme.surface
+        color: "transparent"
 
         // Fondo: carátula desenfocada
         Image {
