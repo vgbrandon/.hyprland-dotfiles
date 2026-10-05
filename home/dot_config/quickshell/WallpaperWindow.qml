@@ -64,7 +64,7 @@ PanelWindow {
         fillMode: Image.PreserveAspectCrop
         sourceSize: Qt.size(win.modelData.width, win.modelData.height)
         asynchronous: true
-        cache: false
+        cache: true // la pantalla de bloqueo reutiliza esta imagen ya decodificada
         onStatusChanged: if (status === Image.Ready) win.reveal(imgA)
     }
     Image {
@@ -74,7 +74,7 @@ PanelWindow {
         fillMode: Image.PreserveAspectCrop
         sourceSize: Qt.size(win.modelData.width, win.modelData.height)
         asynchronous: true
-        cache: false
+        cache: true // la pantalla de bloqueo reutiliza esta imagen ya decodificada
         onStatusChanged: if (status === Image.Ready) win.reveal(imgB)
     }
 
