@@ -15,6 +15,7 @@ Singleton {
     property int selected: 0
 
     readonly property var actions: [
+        { label: "Bloquear", key: "B", icon: Theme.iLock, run: () => Lock.lock() },
         { label: "Suspender", key: "S", icon: Theme.iSleep, run: () => Quickshell.execDetached(["systemctl", "suspend"]) },
         { label: "Cerrar sesión", key: "C", icon: Theme.iLogout, run: () => Hyprland.dispatch(Hyprland.usingLua === false ? "exit" : "hl.dsp.exit()") },
         { label: "Reiniciar", key: "R", icon: Theme.iReboot, run: () => Quickshell.execDetached(["systemctl", "reboot"]) },
