@@ -73,10 +73,9 @@ Item {
             onTriggered: osd.visible = false
         }
 
-        Rectangle {
+        GlassFrame {
             anchors.fill: parent
             radius: 16
-            color: Theme.surface
 
             // Ratón encima: no se oculta y la rueda cambia la intensidad
             MouseArea {
