@@ -16,6 +16,7 @@ packages:
     - swayimg # visor de imágenes liviano para Wayland
     - matugen # generador de paletas de color Material You
     - adw-gtk-theme # port no oficial del tema de libadwaita para GTK 3
+    - hypridle # demonio de inactividad de Hyprland
     - hyprsunset # filtro de luz azul para Hyprland
     - thunar # gestor de archivos gráfico
     - gvfs # soporte para montar dispositivos y red
