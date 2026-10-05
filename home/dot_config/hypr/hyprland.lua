@@ -38,6 +38,7 @@ hl.on("hyprland.start", function()
 	--   hl.exec_cmd(terminal)
 	--   hl.exec_cmd("nm-applet")
 	hl.exec_cmd("quickshell")
+	hl.exec_cmd("hypridle") -- bloqueo automático por inactividad (ver hypridle.conf)
 	hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
 end)
 
@@ -111,8 +112,10 @@ hl.config({
 
 		blur = {
 			enabled = true,
-			size = 3,
-			passes = 1,
+			-- Más fuerte para el vidrio de los paneles de Quickshell (solo afecta a
+			-- superficies transparentes)
+			size = 6,
+			passes = 2,
 			vibrancy = 0.1696,
 		},
 	},
@@ -197,6 +200,8 @@ hl.config({
 	misc = {
 		force_default_wallpaper = 0, -- Set to 0 or 1 to disable the anime mascot wallpapers
 		disable_hyprland_logo = true, -- If true disables the random hyprland logo / anime girl background. :(
+		-- Si quickshell se cae con la pantalla bloqueada, permite volver a abrirlo y desbloquear
+		allow_session_lock_restore = true,
 	},
 })
 
@@ -260,6 +265,7 @@ hl.bind(
 )
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("quickshell ipc call power toggle"))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("quickshell ipc call lock lock"))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
@@ -363,6 +369,21 @@ hl.window_rule({
 --     no_anim = true,
 -- })
 -- overlayLayerRule:set_enabled(false)
+
+-- Quickshell: vidrio de los paneles. Hyprland desenfoca lo que hay detrás;
+-- ignore_alpha evita desenfocar las esquinas transparentes de cada panel.
+hl.layer_rule({
+	name = "quickshell-bar-popups", -- paneles que se abren desde la barra
+	match = { namespace = "^quickshell$" },
+	blur_popups = true,
+	ignore_alpha = 0.2,
+})
+hl.layer_rule({
+	name = "quickshell-glass",
+	match = { namespace = "^quickshell:notification-center$" },
+	blur = true,
+	ignore_alpha = 0.2,
+})
 
 -- Hyprland-run windowrule
 hl.window_rule({
