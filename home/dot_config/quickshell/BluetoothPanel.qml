@@ -86,12 +86,9 @@ PopupWindow {
         onTriggered: grab.active = panel.visible
     }
 
-    Rectangle {
+    GlassFrame {
         anchors.fill: parent
         radius: 24
-        color: Theme.panelBg
-        border.color: Theme.surfaceHigh
-        border.width: 1
 
         ColumnLayout {
             id: layout
