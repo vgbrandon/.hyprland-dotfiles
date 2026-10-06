@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Usa NetworkManager para la red (cable y WiFi) en lugar de systemd-networkd.
+# Lo necesita el panel de WiFi de Quickshell. NetworkManager toma el cable solo,
+# así que la conexión se corta apenas unos segundos al cambiar.
+
+if ! command -v NetworkManager >/dev/null 2>&1; then
+  echo "[WARN] NetworkManager no está instalado. Saltando configuración de red."
+  exit 0
+fi
+
+if systemctl is-enabled --quiet NetworkManager && systemctl is-active --quiet NetworkManager; then
+  echo "[OK] NetworkManager ya está activo."
+  exit 0
+fi
+
+# systemd-networkd se vuelve a activar desde sus sockets, así que se desactivan todos.
+# No se usa "set -e" aquí: si alguno no existe, se sigue igual.
+sudo systemctl disable --now \
+  systemd-networkd.socket \
+  systemd-networkd-varlink.socket \
+  systemd-networkd-varlink-metrics.socket \
+  systemd-networkd-resolve-hook.socket \
+  systemd-networkd-wait-online.service \
+  systemd-networkd.service 2>/dev/null || true
+
+if sudo systemctl enable --now NetworkManager; then
+  echo "[OK] NetworkManager activado (systemd-networkd desactivado)."
+else
+  echo "[WARN] No se pudo activar NetworkManager. Para volver atrás:"
+  echo "       sudo systemctl enable --now systemd-networkd.service systemd-networkd.socket"
+fi
