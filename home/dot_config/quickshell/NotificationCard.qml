@@ -51,10 +51,13 @@ Rectangle {
         anchors.margins: 12
         spacing: 12
 
+        // Icono/imagen del mismo alto que el texto (entre 36 y 56 px)
         ClippingRectangle {
-            Layout.alignment: Qt.AlignTop
-            implicitWidth: 40
-            implicitHeight: 40
+            readonly property real size: Math.max(36, Math.min(56, textBlock.implicitHeight))
+
+            Layout.alignment: Qt.AlignVCenter
+            implicitWidth: size
+            implicitHeight: size
             radius: 12
             color: Theme.surfaceHigh
 
@@ -77,6 +80,7 @@ Rectangle {
         }
 
         ColumnLayout {
+            id: textBlock
             Layout.fillWidth: true
             spacing: 2
 
