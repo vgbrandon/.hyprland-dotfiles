@@ -57,7 +57,7 @@ PanelWindow {
         Keys.onEscapePressed: Notifs.closeCenter()
     }
 
-    GlassFrame {
+    Rectangle {
         id: sheet
         width: parent.width
         height: parent.height
@@ -71,6 +71,9 @@ PanelWindow {
             }
         }
 
+        color: Theme.panelBg
+        border.color: Theme.surfaceHigh
+        border.width: 1
 
         ColumnLayout {
             id: layout
