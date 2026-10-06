@@ -112,10 +112,8 @@ hl.config({
 
 		blur = {
 			enabled = true,
-			-- Más fuerte para el vidrio de los paneles de Quickshell (solo afecta a
-			-- superficies transparentes)
-			size = 6,
-			passes = 2,
+			size = 3,
+			passes = 1,
 			vibrancy = 0.1696,
 		},
 	},
@@ -369,21 +367,6 @@ hl.window_rule({
 --     no_anim = true,
 -- })
 -- overlayLayerRule:set_enabled(false)
-
--- Quickshell: vidrio de los paneles. Hyprland desenfoca lo que hay detrás;
--- ignore_alpha evita desenfocar las esquinas transparentes de cada panel.
-hl.layer_rule({
-	name = "quickshell-bar-popups", -- paneles que se abren desde la barra
-	match = { namespace = "^quickshell$" },
-	blur_popups = true,
-	ignore_alpha = 0.2,
-})
-hl.layer_rule({
-	name = "quickshell-glass",
-	match = { namespace = "^quickshell:notification-center$" },
-	blur = true,
-	ignore_alpha = 0.2,
-})
 
 -- Hyprland-run windowrule
 hl.window_rule({
