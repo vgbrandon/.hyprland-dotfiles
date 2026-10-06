@@ -17,6 +17,8 @@ Singleton {
     readonly property string dir: `${Quickshell.env("HOME")}/Pictures`
     property bool open: false
     property var files: []
+    // Miniatura en caché de cada fondo (ruta -> miniatura)
+    property var thumbs: ({})
     // Fondo actual (se guarda y se restaura al iniciar)
     property string current: ""
 
@@ -32,6 +34,8 @@ Singleton {
 
     onCurrentChanged: Theme.setWallpaper(current)
     onOpenChanged: if (open) listProc.running = true
+    // Prepara las miniaturas al iniciar, para que el selector abra al instante
+    Component.onCompleted: listProc.running = true
 
     IpcHandler {
         target: "wallpaper"
@@ -42,10 +46,19 @@ Singleton {
 
     Process {
         id: listProc
-        command: ["sh", "-c", 'find "$1" -maxdepth 1 -type f \\( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \\) | sort', "sh", root.dir]
+        command: ["sh", Quickshell.shellPath("scripts/wallpaper-thumbs.sh"), root.dir, Quickshell.cachePath("wallpaper-thumbs")]
         stdout: StdioCollector {
             onStreamFinished: {
-                root.files = this.text.split("\n").filter(f => f !== "");
+                const files = [];
+                const thumbs = {};
+                for (const line of this.text.split("\n")) {
+                    const [file, thumb] = line.split("\t");
+                    if (!file) continue;
+                    files.push(file);
+                    thumbs[file] = thumb || file;
+                }
+                root.thumbs = thumbs;
+                root.files = files;
                 if (root.current === "" && root.files.length > 0) root.choose(root.files[0]);
             }
         }
@@ -204,7 +217,7 @@ Singleton {
 
                                 Image {
                                     anchors.fill: parent
-                                    source: "file://" + cell.modelData
+                                    source: "file://" + (root.thumbs[cell.modelData] ?? cell.modelData)
                                     sourceSize.width: 400
                                     fillMode: Image.PreserveAspectCrop
                                     asynchronous: true
