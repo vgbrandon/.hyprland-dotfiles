@@ -48,6 +48,17 @@ Pill {
         }
     }
 
+    // Selector de color
+    Icon {
+        text: Theme.iPicker
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: ColorPicker.pick()
+        }
+    }
+
     // Captura: clic = selector, clic derecho = monitor completo al instante
     Icon {
         text: Theme.iCamera
