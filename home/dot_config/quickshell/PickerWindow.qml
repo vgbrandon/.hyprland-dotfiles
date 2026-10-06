@@ -91,7 +91,9 @@ PanelWindow {
             const text = e.button === Qt.RightButton ? ColorPicker.rgb(c) : ColorPicker.hex(c);
             swatch.color = c;
             swatch.grabToImage(result => {
-                const file = "/tmp/qs-colorpicker-swatch.png";
+                // Un archivo por color: con el mismo nombre la notificación mostraría
+                // la imagen anterior (queda en caché). Son PNG diminutos en /tmp (RAM).
+                const file = `/tmp/qs-colorpicker-swatch-${Date.now()}.png`;
                 result.saveToFile(file);
                 ColorPicker.accept(text, file);
             });
