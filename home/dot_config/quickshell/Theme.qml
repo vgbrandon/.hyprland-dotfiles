@@ -22,8 +22,8 @@ Singleton {
     }
 
     // Colores (cambian con una transición suave al cambiar el fondo)
-    property color barBg: withAlpha(pick("surface", "#121214"), 0.85)
-    property color panelBg: withAlpha(pick("surface", "#121214"), 0.97)
+    property color barBg: pick("surface", "#121214")
+    property color panelBg: pick("surface", "#121214")
     property color surface: pick("surface_container", "#1f1e22")
     property color surfaceHigh: pick("surface_container_highest", "#2b2a30")
     property color primary: pick("primary", "#d6d4dc")
@@ -32,8 +32,6 @@ Singleton {
     property color subtext: pick("on_surface_variant", "#9e9aa3")
     property color dot: scheme.outline_variant ? Qt.lighter(scheme.outline_variant, 1.25) : "#5a5860"
     property color error: pick("error", "#ffb4ab")
-    // Vidrio de los paneles (translúcido: Hyprland desenfoca lo que hay detrás)
-    property color glassFill: withAlpha(pick("surface", "#121214"), 0.45)
 
     Behavior on barBg { ColorAnimation { duration: 600 } }
     Behavior on panelBg { ColorAnimation { duration: 600 } }
@@ -45,7 +43,6 @@ Singleton {
     Behavior on subtext { ColorAnimation { duration: 600 } }
     Behavior on dot { ColorAnimation { duration: 600 } }
     Behavior on error { ColorAnimation { duration: 600 } }
-    Behavior on glassFill { ColorAnimation { duration: 600 } }
 
     // Genera la paleta para un fondo nuevo (lo llama Wallpaper). matugen también
     // genera las plantillas de ~/.config/matugen/config.toml (tema de Zed)
@@ -126,6 +123,7 @@ Singleton {
     readonly property string iWindow: String.fromCodePoint(0xF05AF)
     readonly property string iMonitor: String.fromCodePoint(0xF0379)
     readonly property string iCamera: String.fromCodePoint(0xF0100)
+    readonly property string iPicker: String.fromCodePoint(0xF020A)
     readonly property string iBell: String.fromCodePoint(0xF009A)
     readonly property string iBellEmpty: String.fromCodePoint(0xF009C)
     readonly property string iBellOff: String.fromCodePoint(0xF009B)
