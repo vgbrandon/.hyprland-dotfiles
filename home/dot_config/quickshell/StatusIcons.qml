@@ -1,34 +1,46 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Io
 import Quickshell.Bluetooth
+import Quickshell.Networking
 
-// Red (lee /sys/class/net, no necesita NetworkManager) y Bluetooth
+// Red (NetworkManager), Bluetooth, notificaciones y energía
 RowLayout {
     id: root
     spacing: 14
 
-    property string net: ""
+    // Red (NetworkManager)
+    readonly property bool wiredUp: Networking.devices.values.some(d => d.type === DeviceType.Wired && d.connected)
+    readonly property var wifiNet: Networking.devices.values.find(d => d.type === DeviceType.Wifi)?.networks.values.find(n => n.connected) ?? null
     readonly property BluetoothAdapter bt: Bluetooth.defaultAdapter
     readonly property bool btConnected: bt?.devices.values.some(d => d.connected) ?? false
 
-    Process {
-        id: netProc
-        command: ["sh", "-c", "for d in /sys/class/net/*; do [ \"${d##*/}\" = lo ] && continue; [ \"$(cat $d/operstate)\" = up ] || continue; [ -d $d/wireless ] && echo wifi || echo ethernet; done | sort -u | head -1"]
-        stdout: StdioCollector {
-            onStreamFinished: root.net = this.text.trim()
-        }
-    }
-    Timer {
-        interval: 5000
-        running: true
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: netProc.running = true
-    }
-
+    // Red: clic = panel de WiFi, clic derecho = encender/apagar WiFi
     Icon {
-        text: root.net === "ethernet" ? Theme.iEthernet : root.net === "wifi" ? Theme.iWifi : Theme.iNoNet
+        id: netIcon
+        text: {
+            if (root.wiredUp) return Theme.iEthernet;
+            if (root.wifiNet) {
+                const v = root.wifiNet.signalStrength > 1 ? root.wifiNet.signalStrength / 100 : root.wifiNet.signalStrength;
+                return v > 0.75 ? Theme.iWifi4 : v > 0.5 ? Theme.iWifi3 : v > 0.25 ? Theme.iWifi2 : Theme.iWifi1;
+            }
+            return Networking.wifiEnabled ? Theme.iNoNet : Theme.iWifiOff;
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            cursorShape: Qt.PointingHandCursor
+            onClicked: e => {
+                if (e.button === Qt.RightButton) Networking.wifiEnabled = !Networking.wifiEnabled;
+                else wifiPanel.toggle();
+            }
+        }
+
+        WifiPanel {
+            id: wifiPanel
+            anchorItem: netIcon
+            visible: false
+        }
     }
     Icon {
         id: btIcon
