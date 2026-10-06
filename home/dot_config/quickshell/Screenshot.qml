@@ -43,7 +43,7 @@ Singleton {
     // 1 px y se regresa, y después se captura
     Timer {
         id: hideDelay
-        interval: 60
+        interval: 30
         onTriggered: {
             nudgeProc.then = root.pending;
             nudgeProc.running = true;
@@ -66,7 +66,7 @@ Singleton {
     Timer {
         id: captureTimer
         property var proc: null
-        interval: 60
+        interval: 30
         onTriggered: proc.running = true
     }
 
@@ -77,8 +77,10 @@ Singleton {
     function open() {
         if (active || freezeProc.running) return;
         mode = "region";
-        frozen = `/tmp/qs-screenshot-${Date.now()}.png`;
-        freezeProc.command = ["grim", frozen];
+        // Imagen temporal sin comprimir (PPM): mucho más rápida que PNG. Las capturas
+        // que se guardan siguen siendo PNG.
+        frozen = `/tmp/qs-screenshot-${Date.now()}.ppm`;
+        freezeProc.command = ["grim", "-t", "ppm", frozen];
         capture(freezeProc);
         clientsProc.running = true;
     }
