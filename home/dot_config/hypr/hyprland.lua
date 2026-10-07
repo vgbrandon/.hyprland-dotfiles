@@ -384,3 +384,11 @@ hl.window_rule({
 	size = { "monitor_w * 0.65", "monitor_h * 0.75" },
 	center = true,
 })
+
+-- Terminal de actualizaciones que abre la barra (Quickshell)
+hl.window_rule({
+	match = { class = "^qs-updates$" },
+	float = true,
+	size = { "monitor_w * 0.55", "monitor_h * 0.6" },
+	center = true,
+})
