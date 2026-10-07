@@ -59,6 +59,9 @@ Pill {
         }
     }
 
+    // Grabación de pantalla (grabando: punto rojo con el tiempo)
+    RecordButton {}
+
     // Captura: clic = selector, clic derecho = monitor completo al instante
     Icon {
         text: Theme.iCamera
