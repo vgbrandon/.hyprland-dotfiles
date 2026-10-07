@@ -48,10 +48,14 @@ PanelWindow {
         ClockPill {}
     }
 
-    // Derecha: red y bluetooth
-    StatusIcons {
+    // Derecha: actualizaciones, red, bluetooth, notificaciones y energía
+    RowLayout {
         anchors.right: parent.right
         anchors.rightMargin: 16
         anchors.verticalCenter: parent.verticalCenter
+        spacing: 14
+
+        UpdatesPill {}
+        StatusIcons {}
     }
 }
