@@ -22,6 +22,9 @@ packages:
     - libvips # vipsthumbnail: miniaturas del selector de fondos de Quickshell
     - networkmanager # gestiona la red (cable y WiFi); lo usa el panel de WiFi de Quickshell
     - wpa_supplicant # backend de WiFi de NetworkManager
+    - gpu-screen-recorder # grabación de pantalla de Quickshell (codifica con la GPU)
+    - slurp # selección de región para grabar la pantalla
+    - ffmpeg # miniatura de las grabaciones para la notificación
     - thunar # gestor de archivos gráfico
     - gvfs # soporte para montar dispositivos y red
     - ntfs-3g # soporte de lectura/escritura para unidades NTFS
