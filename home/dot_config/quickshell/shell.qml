@@ -12,6 +12,7 @@ ShellRoot {
         Lock.locked = false; // registra el IPC de la pantalla de bloqueo
         ColorPicker.active = false; // registra el IPC del selector de color
         Updates.checking; // empieza a buscar actualizaciones
+        Recorder.recording; // registra el IPC de la grabación de pantalla
     }
 
     Variants {
