@@ -264,6 +264,7 @@ hl.bind(
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("quickshell ipc call power toggle"))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("quickshell ipc call lock lock"))
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("quickshell ipc call screenshot open")) -- captura de pantalla
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
