@@ -11,6 +11,7 @@ ShellRoot {
         Wallpaper.open = false; // crea el fondo (y el reloj del escritorio)
         Lock.locked = false; // registra el IPC de la pantalla de bloqueo
         ColorPicker.active = false; // registra el IPC del selector de color
+        Updates.checking; // empieza a buscar actualizaciones
     }
 
     Variants {
