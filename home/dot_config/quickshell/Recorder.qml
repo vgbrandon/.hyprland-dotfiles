@@ -54,7 +54,9 @@ Singleton {
         if (recording || selecting) return;
         selecting = true;
         const hex = c => "#" + [c.r, c.g, c.b].map(v => Math.round(v * 255).toString(16).padStart(2, "0")).join("");
-        slurpProc.command = ["slurp", "-d", "-f", "%wx%h+%x+%y", "-w", "2",
+        // Entrada vacía (< /dev/null): si slurp recibe una tubería abierta, espera a
+        // leer rectángulos de ella y nunca muestra la selección
+        slurpProc.command = ["sh", "-c", 'exec slurp "$@" < /dev/null', "sh", "-d", "-f", "%wx%h+%x+%y", "-w", "2",
             "-b", "#00000066", "-c", hex(Theme.primary) + "ff", "-s", "#00000000"];
         slurpProc.running = true;
     }
