@@ -47,6 +47,14 @@ Item {
         onClicked: Recorder.recording ? Recorder.stop() : menu.toggle()
     }
 
+    // Espera a que el menú desaparezca y suelte el ratón antes de empezar
+    Timer {
+        id: startTimer
+        property bool region: false
+        interval: 300
+        onTriggered: region ? Recorder.recordRegion() : Recorder.recordScreen()
+    }
+
     // Menú: qué grabar y con qué audio
     PopupWindow {
         id: menu
@@ -143,21 +151,16 @@ Item {
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
+                                    // Suelta el ratón y el teclado antes de cerrar: si no, slurp
+                                    // (la selección de región) arranca sin recibir el ratón y se cierra
+                                    grab.active = false;
                                     menu.visible = false;
-                                    // Un momento para que el menú desaparezca antes de grabar
                                     startTimer.region = opt.modelData.region;
                                     startTimer.restart();
                                 }
                             }
                         }
                     }
-                }
-
-                Timer {
-                    id: startTimer
-                    property bool region: false
-                    interval: 150
-                    onTriggered: region ? Recorder.recordRegion() : Recorder.recordScreen()
                 }
 
                 // Audio
