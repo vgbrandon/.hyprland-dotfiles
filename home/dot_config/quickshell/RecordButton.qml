@@ -11,10 +11,12 @@ Item {
     implicitWidth: row.implicitWidth
     implicitHeight: row.implicitHeight
 
-    RowLayout {
+    GridLayout {
         id: row
         anchors.centerIn: parent
-        spacing: 5
+        columns: Config.barVertical ? 1 : 3
+        rowSpacing: 3
+        columnSpacing: 5
 
         Icon {
             visible: !Recorder.recording
@@ -22,6 +24,7 @@ Item {
         }
         Rectangle {
             visible: Recorder.recording
+            Layout.alignment: Qt.AlignCenter
             implicitWidth: 10
             implicitHeight: 10
             radius: 5
@@ -36,6 +39,7 @@ Item {
         }
         Label {
             visible: Recorder.recording
+            Layout.alignment: Qt.AlignCenter
             text: Recorder.timeText()
             color: Theme.error
         }
@@ -67,8 +71,10 @@ Item {
         }
 
         anchor.item: root
-        anchor.rect.x: root.width / 2 - width / 2
-        anchor.rect.y: root.height + 14
+        anchor.rect.x: popupPos.x
+        anchor.rect.y: popupPos.y
+        // Junto a la barra, esté donde esté
+        readonly property point popupPos: Config.popupPos(root, implicitWidth, implicitHeight, visible)
         implicitWidth: 280
         implicitHeight: menuLayout.implicitHeight + 24
         color: "transparent"

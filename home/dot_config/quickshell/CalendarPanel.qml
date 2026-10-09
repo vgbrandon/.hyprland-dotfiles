@@ -50,8 +50,10 @@ PopupWindow {
     }
 
     anchor.item: anchorItem
-    anchor.rect.x: anchorItem.width / 2 - width / 2
-    anchor.rect.y: anchorItem.height + 14
+    anchor.rect.x: popupPos.x
+    anchor.rect.y: popupPos.y
+    // Junto a la barra, esté donde esté
+    readonly property point popupPos: Config.popupPos(anchorItem, implicitWidth, implicitHeight, visible)
     implicitWidth: 320
     implicitHeight: layout.implicitHeight + 32
     color: "transparent"

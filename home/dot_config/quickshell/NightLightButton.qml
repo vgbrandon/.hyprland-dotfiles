@@ -60,8 +60,10 @@ Item {
         }
 
         anchor.item: root
-        anchor.rect.x: root.width / 2 - width / 2
-        anchor.rect.y: root.height + 14
+        anchor.rect.x: popupPos.x
+        anchor.rect.y: popupPos.y
+        // Junto a la barra, esté donde esté
+        readonly property point popupPos: Config.popupPos(root, implicitWidth, implicitHeight, visible)
         implicitWidth: 260
         implicitHeight: 56
         color: "transparent"

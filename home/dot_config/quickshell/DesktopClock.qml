@@ -8,8 +8,8 @@ Item {
 
     anchors.top: parent.top
     anchors.right: parent.right
-    anchors.topMargin: Theme.barHeight + 70
-    anchors.rightMargin: 70
+    anchors.topMargin: Config.reserve("top") + 70
+    anchors.rightMargin: Config.reserve("right") + 70
     implicitWidth: col.implicitWidth
     implicitHeight: col.implicitHeight
 

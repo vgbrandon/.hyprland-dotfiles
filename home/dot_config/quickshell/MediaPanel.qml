@@ -21,7 +21,10 @@ PopupWindow {
     }
 
     anchor.item: anchorItem
-    anchor.rect.y: anchorItem.height + 10
+    anchor.rect.x: popupPos.x
+    anchor.rect.y: popupPos.y
+    // Junto a la barra, esté donde esté
+    readonly property point popupPos: Config.popupPos(anchorItem, implicitWidth, implicitHeight, visible)
     implicitWidth: 380
     implicitHeight: 124
     color: "transparent"

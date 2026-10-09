@@ -17,10 +17,11 @@ PanelWindow {
         bottom: true
         right: true
     }
+    // Deja libre el borde donde esté la barra
     margins {
-        top: Theme.barHeight + 8
-        bottom: 8
-        right: 8
+        top: Config.reserve("top") + 8
+        bottom: Config.reserve("bottom") + 8
+        right: Config.reserve("right") + 8
     }
     implicitWidth: 400
     color: "transparent"

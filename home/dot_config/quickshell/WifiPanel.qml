@@ -24,10 +24,11 @@ PopupWindow {
         visible = !visible;
     }
 
-    // Pegado al borde derecho de la pantalla, debajo de la barra
-    anchor.window: anchorItem.QsWindow.window
-    anchor.rect.x: (anchorItem.QsWindow.window?.width ?? 0) - width - 8
-    anchor.rect.y: Theme.barHeight + 8
+    anchor.item: anchorItem
+    anchor.rect.x: popupPos.x
+    anchor.rect.y: popupPos.y
+    // Junto a la barra, esté donde esté
+    readonly property point popupPos: Config.popupPos(anchorItem, implicitWidth, implicitHeight, visible)
     implicitWidth: 360
     implicitHeight: Math.min(560, layout.implicitHeight + 24)
     color: "transparent"

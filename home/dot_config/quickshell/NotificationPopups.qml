@@ -15,8 +15,8 @@ PanelWindow {
         right: true
     }
     margins {
-        top: Theme.barHeight + 8
-        right: 12
+        top: Config.reserve("top") + 8
+        right: Config.reserve("right") + 12
     }
     implicitWidth: 380
     implicitHeight: Math.max(1, column.implicitHeight)
