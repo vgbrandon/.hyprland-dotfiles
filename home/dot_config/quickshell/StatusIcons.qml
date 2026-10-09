@@ -4,9 +4,20 @@ import Quickshell.Bluetooth
 import Quickshell.Networking
 
 // Red (NetworkManager), Bluetooth, notificaciones, ajustes y energía
-RowLayout {
+// (en columna si la barra está a un lado)
+GridLayout {
     id: root
-    spacing: 14
+
+    property bool compact: false
+    columns: Config.barVertical ? 1 : -1
+    rowSpacing: compact ? 7 : 10
+    columnSpacing: 14
+
+    // Centra los iconos en la columna (si no, quedan a la izquierda)
+    Component.onCompleted: {
+        for (const child of children)
+            child.Layout.alignment = Qt.AlignCenter;
+    }
 
     // Red (NetworkManager)
     readonly property bool wiredUp: Networking.devices.values.some(d => d.type === DeviceType.Wired && d.connected)

@@ -21,10 +21,11 @@ PanelWindow {
         bottom: true
         right: true
     }
+    // Deja libre el borde donde esté la barra
     margins {
-        top: Theme.barHeight + 8
-        bottom: 8
-        right: 8
+        top: Config.reserve("top") + 8
+        bottom: Config.reserve("bottom") + 8
+        right: Config.reserve("right") + 8
     }
     implicitWidth: 400
     color: "transparent"
@@ -195,6 +196,60 @@ PanelWindow {
                 text: "Apariencia"
                 color: Theme.subtext
                 font.pixelSize: Theme.fontSize
+            }
+
+            // Posición de la barra: un botón por borde
+            RowLayout {
+                Layout.leftMargin: 6
+                Layout.rightMargin: 4
+                spacing: 10
+
+                Icon {
+                    text: ({ top: Theme.iDockTop, bottom: Theme.iDockBottom, left: Theme.iDockLeft, right: Theme.iDockRight })[Config.barTarget]
+                    color: Theme.subtext
+                }
+                Label {
+                    Layout.fillWidth: true
+                    text: "Barra"
+                }
+
+                Row {
+                    spacing: 4
+
+                    Repeater {
+                        model: [
+                            { position: "top", icon: Theme.iDockTop },
+                            { position: "bottom", icon: Theme.iDockBottom },
+                            { position: "left", icon: Theme.iDockLeft },
+                            { position: "right", icon: Theme.iDockRight }
+                        ]
+
+                        Rectangle {
+                            id: posButton
+                            required property var modelData
+                            readonly property bool selected: Config.barTarget === modelData.position
+
+                            implicitWidth: 30
+                            implicitHeight: 26
+                            radius: Theme.radiusSmall
+                            color: selected ? Theme.primary : posMouse.containsMouse ? Theme.surfaceHigh : Theme.surface
+
+                            Icon {
+                                anchors.centerIn: parent
+                                text: posButton.modelData.icon
+                                color: posButton.selected ? Theme.primaryFg : Theme.text
+                                font.pixelSize: 16
+                            }
+                            MouseArea {
+                                id: posMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: Config.setBarPosition(posButton.modelData.position)
+                            }
+                        }
+                    }
+                }
             }
 
             RowLayout {

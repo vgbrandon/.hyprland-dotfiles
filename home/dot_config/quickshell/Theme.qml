@@ -175,6 +175,10 @@ Singleton {
     readonly property string iBlur: String.fromCodePoint(0xF00B5)
     readonly property string iShadow: String.fromCodePoint(0xF0637)
     readonly property string iGaps: String.fromCodePoint(0xF084E)
+    readonly property string iDockTop: String.fromCodePoint(0xF1513)
+    readonly property string iDockBottom: String.fromCodePoint(0xF10A9)
+    readonly property string iDockLeft: String.fromCodePoint(0xF10AA)
+    readonly property string iDockRight: String.fromCodePoint(0xF10AB)
 
     readonly property color warm: "#ffb870"
 }

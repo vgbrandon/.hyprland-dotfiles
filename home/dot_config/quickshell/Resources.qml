@@ -8,6 +8,8 @@ import Quickshell.Services.Mpris
 Pill {
     id: root
 
+    // Sin sitio (barra vertical en un monitor bajo): solo el reproductor
+    property bool compact: false
     property int cpu: 0
     property int ram: 0
     property var lastCpu: null
@@ -47,10 +49,10 @@ Pill {
         onTriggered: { stat.reload(); meminfo.reload(); }
     }
 
-    Icon { text: Theme.iCpu; color: Theme.subtext }
-    Label { text: root.cpu }
-    Icon { text: Theme.iRam; color: Theme.subtext }
-    Label { text: root.ram }
+    Icon { visible: !root.compact; text: Theme.iCpu; color: Theme.subtext }
+    Label { visible: !root.compact; text: root.cpu }
+    Icon { visible: !root.compact; text: Theme.iRam; color: Theme.subtext }
+    Label { visible: !root.compact; text: root.ram }
 
     // Botón play/pausa
     Rectangle {
@@ -74,8 +76,20 @@ Pill {
         }
     }
 
+    // Barra vertical: no cabe el título, una nota abre el panel
+    Icon {
+        visible: root.player !== null && root.vertical
+        text: Theme.iMusic
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: mediaPanel.toggle()
+        }
+    }
+
     Label {
-        visible: root.player !== null
+        visible: root.player !== null && !root.vertical
         Layout.maximumWidth: 200
         Layout.leftMargin: 4
         text: {

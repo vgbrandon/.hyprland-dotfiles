@@ -12,7 +12,9 @@ Pill {
     readonly property int activeId: monitor?.activeWorkspace?.id ?? 1
     readonly property int shown: 8
     readonly property int group: Math.floor((activeId - 1) / shown)
-    readonly property int slot: 26
+    readonly property int slot: compact ? 22 : 26
+    // Grosor de las celdas (alto en la barra horizontal, ancho en la vertical)
+    readonly property int thickness: slot - 4
 
     padding: 4
 
@@ -24,24 +26,28 @@ Pill {
     }
 
     Item {
-        implicitWidth: cells.implicitWidth
-        implicitHeight: root.slot - 4
+        implicitWidth: root.vertical ? root.thickness : cells.implicitWidth
+        implicitHeight: root.vertical ? cells.implicitHeight : root.thickness
 
-        // Indicador del workspace activo (sigue la posición y el ancho de su celda)
+        // Indicador del workspace activo (sigue la posición y el tamaño de su celda)
         Rectangle {
             readonly property Item cell: repeater.count > 0 ? repeater.itemAt(root.activeId - root.group * root.shown - 1) : null
-            x: (cell?.x ?? 0) + 2
-            width: (cell?.width ?? root.slot) - 4
-            height: parent.height
-            radius: height / 2
+            x: root.vertical ? 0 : (cell?.x ?? 0) + 2
+            y: root.vertical ? (cell?.y ?? 0) + 2 : 0
+            width: root.vertical ? parent.width : (cell?.width ?? root.slot) - 4
+            height: root.vertical ? (cell?.height ?? root.slot) - 4 : parent.height
+            radius: Math.min(width, height) / 2
             color: Theme.surfaceHigh
             Behavior on x { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
             Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on height { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
         }
 
-        Row {
+        // Fila en la barra horizontal, columna en la vertical
+        Grid {
             id: cells
-            height: parent.height
+            columns: root.vertical ? 1 : root.shown
 
             Repeater {
                 id: repeater
@@ -57,16 +63,21 @@ Pill {
                         const ids = (ws?.toplevels.values ?? []).map(t => t.wayland?.appId ?? t.lastIpcObject?.class ?? "").filter(a => a !== "");
                         return [...new Set(ids)];
                     }
-                    readonly property int maxIcons: 3
+                    // En columna caben menos (el alto es más justo)
+                    readonly property int maxIcons: root.compact ? 1 : root.vertical ? 2 : 3
 
-                    width: apps.length > 0 ? icons.implicitWidth + 12 : root.slot
-                    height: parent.height
+                    width: root.vertical ? root.thickness : apps.length > 0 ? icons.implicitWidth + 12 : root.slot
+                    height: !root.vertical ? root.thickness : apps.length > 0 ? icons.implicitHeight + 12 : root.slot
                     Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+                    Behavior on height { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
-                    Row {
+                    Grid {
                         id: icons
                         anchors.centerIn: parent
+                        columns: root.vertical ? 1 : cell.maxIcons + 1
                         spacing: 3
+                        horizontalItemAlignment: Grid.AlignHCenter
+                        verticalItemAlignment: Grid.AlignVCenter
 
                         Repeater {
                             model: cell.apps.slice(0, cell.maxIcons)
@@ -84,7 +95,6 @@ Pill {
 
                         Text {
                             visible: cell.apps.length > cell.maxIcons
-                            anchors.verticalCenter: parent.verticalCenter
                             text: `+${cell.apps.length - cell.maxIcons}`
                             color: Theme.subtext
                             font.family: Theme.font

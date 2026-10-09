@@ -5,11 +5,14 @@ import QtQuick
 Item {
     id: root
 
+    property bool compact: false
+
     implicitWidth: pill.implicitWidth
     implicitHeight: pill.implicitHeight
 
     Pill {
         id: pill
+        compact: root.compact
 
         anchors.fill: parent
         spacing: 10

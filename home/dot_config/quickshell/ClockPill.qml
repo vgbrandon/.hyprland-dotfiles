@@ -20,7 +20,12 @@ Pill {
     // Clic en la hora/fecha = calendario
     Label {
         id: dateLabel
-        text: Qt.formatDateTime(clock.date, "hh:mm") + "  •  " + Qt.formatDateTime(clock.date, "dddd, dd/MM")
+        // En la barra vertical: horas sobre minutos, sin fecha
+        text: root.vertical
+            ? Qt.formatDateTime(clock.date, "hh\nmm")
+            : Qt.formatDateTime(clock.date, "hh:mm") + "  •  " + Qt.formatDateTime(clock.date, "dddd, dd/MM")
+        horizontalAlignment: Text.AlignHCenter
+        lineHeight: 0.9
 
         MouseArea {
             anchors.fill: parent
@@ -38,7 +43,8 @@ Pill {
 
     // Fondos de pantalla
     Icon {
-        Layout.leftMargin: 6
+        Layout.leftMargin: root.vertical ? 0 : 6
+        Layout.topMargin: root.vertical ? 3 : 0
         text: Theme.iImage
 
         MouseArea {
@@ -82,15 +88,24 @@ Pill {
     // Volumen (en escritorio no hay batería). Click = mute, rueda = subir/bajar
     Item {
         visible: root.sink?.audio !== undefined
-        Layout.leftMargin: 6
+        Layout.leftMargin: root.vertical ? 0 : 6
+        Layout.topMargin: root.vertical ? 3 : 0
         implicitWidth: vol.implicitWidth
         implicitHeight: vol.implicitHeight
 
-        RowLayout {
+        GridLayout {
             id: vol
-            spacing: 4
-            Icon { text: root.sink?.audio?.muted || Math.round((root.sink?.audio?.volume ?? 0) * 100) === 0 ? Theme.iMuted : Theme.iVolume }
-            Label { text: Math.round((root.sink?.audio?.volume ?? 0) * 100) }
+            columns: root.vertical ? 1 : 2
+            rowSpacing: 0
+            columnSpacing: 4
+            Icon {
+                Layout.alignment: Qt.AlignCenter
+                text: root.sink?.audio?.muted || Math.round((root.sink?.audio?.volume ?? 0) * 100) === 0 ? Theme.iMuted : Theme.iVolume
+            }
+            Label {
+                Layout.alignment: Qt.AlignCenter
+                text: Math.round((root.sink?.audio?.volume ?? 0) * 100)
+            }
         }
 
         MouseArea {
