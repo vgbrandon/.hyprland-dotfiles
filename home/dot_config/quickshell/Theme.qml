@@ -141,6 +141,7 @@ Singleton {
     readonly property string iRecord: String.fromCodePoint(0xF044A)
     readonly property string iMic: String.fromCodePoint(0xF036C)
     readonly property string iBell: String.fromCodePoint(0xF009A)
+    readonly property string iBellBadge: String.fromCodePoint(0xF116B)
     readonly property string iBellEmpty: String.fromCodePoint(0xF009C)
     readonly property string iBellOff: String.fromCodePoint(0xF009B)
     readonly property string iClose: String.fromCodePoint(0xF0156)
@@ -151,6 +152,11 @@ Singleton {
     readonly property string iImage: String.fromCodePoint(0xF02E9)
     readonly property string iCheck: String.fromCodePoint(0xF012C)
     readonly property string iLock: String.fromCodePoint(0xF033E)
+    readonly property string iSettings: String.fromCodePoint(0xF0493)
+    readonly property string iAnimation: String.fromCodePoint(0xF05D8)
+    readonly property string iBlur: String.fromCodePoint(0xF00B5)
+    readonly property string iShadow: String.fromCodePoint(0xF0637)
+    readonly property string iGaps: String.fromCodePoint(0xF084E)
 
     readonly property color warm: "#ffb870"
 }
