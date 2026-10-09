@@ -106,13 +106,14 @@ PanelWindow {
         Keys.onEscapePressed: ColorPicker.cancel()
     }
 
-    // Muestra del color para la notificación (tapada por la imagen de fondo)
+    // Muestra del color para la notificación (tapada por la imagen de fondo).
+    // Cuadrada y llena: la notificación la recorta con su propio radio.
     Rectangle {
         id: swatch
         z: -1
         width: 64
         height: 64
-        radius: 16
+        // Sin redondeo: la notificación ya recorta la imagen con su propio radio
     }
 
     // Lupa que sigue al cursor (se pasa al otro lado cerca del borde)
@@ -126,7 +127,7 @@ PanelWindow {
         y: win.my + 24 + height > win.height ? win.my - 24 - height : win.my + 24
         width: size + 16
         height: size + info.implicitHeight + 28
-        radius: 20
+        radius: Theme.radius
         color: Theme.panelBg
         border.color: Theme.surfaceHigh
         border.width: 1
