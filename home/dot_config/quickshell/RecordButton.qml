@@ -93,7 +93,7 @@ Item {
 
         Rectangle {
             anchors.fill: parent
-            radius: 24
+            radius: Theme.radius
             color: Theme.panelBg
             border.color: Theme.surfaceHigh
             border.width: 1
@@ -126,7 +126,7 @@ Item {
 
                             Layout.fillWidth: true
                             implicitHeight: 70
-                            radius: 18
+                            radius: Theme.radiusSmall
                             color: optMouse.containsMouse ? Theme.primary : Theme.surfaceHigh
 
                             ColumnLayout {
