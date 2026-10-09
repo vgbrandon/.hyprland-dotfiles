@@ -124,7 +124,7 @@ Singleton {
             anchors.centerIn: parent
             width: grid.width + 32
             height: content.implicitHeight + 32
-            radius: 26
+            radius: Theme.radius
             color: Theme.panelBg
             border.color: Theme.surfaceHigh
             border.width: 1
@@ -204,7 +204,7 @@ Singleton {
                         Rectangle {
                             anchors.fill: parent
                             anchors.margins: 4
-                            radius: 18
+                            radius: Theme.radius
                             color: cell.selected ? Theme.surfaceHigh : "transparent"
                             border.color: cell.active ? Theme.primary : "transparent"
                             border.width: 2
@@ -212,7 +212,7 @@ Singleton {
                             ClippingRectangle {
                                 anchors.fill: parent
                                 anchors.margins: 6
-                                radius: 13
+                                radius: Theme.radiusSmall
                                 color: Theme.surface
 
                                 Image {
