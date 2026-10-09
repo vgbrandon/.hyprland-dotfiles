@@ -91,6 +91,24 @@ Singleton {
         }
     }
 
+    // Redondeo de los paneles: el mismo que las ventanas de Hyprland
+    // (decoration:rounding), leído al iniciar. Los elementos de dentro usan uno menor.
+    property int radius: 10
+    readonly property int radiusSmall: Math.max(4, radius - 4)
+
+    Process {
+        command: ["hyprctl", "getoption", "decoration:rounding", "-j"]
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    const value = JSON.parse(this.text).int;
+                    if (value >= 0) root.radius = value;
+                } catch (e) {}
+            }
+        }
+    }
+
     // Tamaños
     readonly property int barHeight: 38
     readonly property int pillHeight: 28
