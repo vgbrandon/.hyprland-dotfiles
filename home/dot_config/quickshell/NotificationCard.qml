@@ -29,7 +29,7 @@ Rectangle {
     }
 
     implicitHeight: content.implicitHeight + 24
-    radius: 20
+    radius: Theme.radius
     color: Theme.surface
     border.color: notif.urgency === NotificationUrgency.Critical ? Theme.error : Theme.surfaceHigh
     border.width: 1
@@ -58,7 +58,7 @@ Rectangle {
             Layout.alignment: Qt.AlignVCenter
             implicitWidth: size
             implicitHeight: size
-            radius: 12
+            radius: Theme.radiusSmall
             color: Theme.surfaceHigh
 
             Icon {
