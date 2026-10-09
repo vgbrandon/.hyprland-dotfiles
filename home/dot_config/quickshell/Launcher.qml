@@ -120,7 +120,7 @@ Singleton {
             y: Math.max(0, Math.round((parent.height - maxHeight) / 2))
             width: 600
             height: content.implicitHeight + 24
-            radius: 26
+            radius: Theme.radius
             color: Theme.surface
             border.color: Theme.surfaceHigh
             border.width: 1
@@ -213,7 +213,7 @@ Singleton {
                     keyNavigationWraps: true
 
                     highlight: Rectangle {
-                        radius: 16
+                        radius: Theme.radiusSmall
                         color: Theme.surfaceHigh
                     }
 
