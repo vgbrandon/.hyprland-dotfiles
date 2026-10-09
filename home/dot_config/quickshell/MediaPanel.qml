@@ -66,7 +66,7 @@ PopupWindow {
 
     ClippingRectangle {
         anchors.fill: parent
-        radius: 20
+        radius: Theme.radius
         color: Theme.surface
 
         // Fondo: carátula desenfocada
@@ -94,7 +94,7 @@ PopupWindow {
             ClippingRectangle {
                 implicitWidth: 100
                 implicitHeight: 100
-                radius: 14
+                radius: Theme.radiusSmall
                 color: Theme.surfaceHigh
 
                 Icon {
@@ -140,7 +140,7 @@ PopupWindow {
                     Rectangle {
                         implicitWidth: 38
                         implicitHeight: 38
-                        radius: 12
+                        radius: Theme.radiusSmall
                         color: Theme.surfaceHigh
 
                         Icon {
