@@ -75,7 +75,7 @@ Item {
 
         Rectangle {
             anchors.fill: parent
-            radius: 16
+            radius: Theme.radius
             color: Theme.surface
 
             // Ratón encima: no se oculta y la rueda cambia la intensidad
