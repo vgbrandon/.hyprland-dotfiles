@@ -8,6 +8,7 @@ ShellRoot {
         PowerMenu.open = false;
         Screenshot.active = false;
         Notifs.dnd = false; // inicia el servidor de notificaciones
+        Config.open = false; // crea el panel de ajustes rápidos
         Wallpaper.open = false; // crea el fondo (y el reloj del escritorio)
         Lock.locked = false; // registra el IPC de la pantalla de bloqueo
         ColorPicker.active = false; // registra el IPC del selector de color
