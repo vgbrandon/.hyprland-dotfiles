@@ -61,7 +61,7 @@ PanelWindow {
         id: sheet
         width: parent.width
         height: parent.height
-        radius: 24
+        radius: Theme.radius
         x: Notifs.centerOpen ? 0 : panel.implicitWidth + 16
         Behavior on x {
             NumberAnimation {
