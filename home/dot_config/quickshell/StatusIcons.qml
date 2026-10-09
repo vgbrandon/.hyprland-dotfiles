@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import Quickshell.Bluetooth
 import Quickshell.Networking
 
-// Red (NetworkManager), Bluetooth, notificaciones y energía
+// Red (NetworkManager), Bluetooth, notificaciones, ajustes y energía
 RowLayout {
     id: root
     spacing: 14
@@ -63,30 +63,20 @@ RowLayout {
             visible: false
         }
     }
-    // Campana: abre el centro de notificaciones
-    Item {
+    // Campana: abre el centro de notificaciones. Con notificaciones
+    // muestra un puntito sobre la campana (en vez de la cantidad).
+    Icon {
         id: bell
-        implicitWidth: bellRow.implicitWidth
-        implicitHeight: bellRow.implicitHeight
+        text: Notifs.dnd ? Theme.iBellOff : Notifs.count > 0 ? Theme.iBellBadge : Theme.iBell
 
-        RowLayout {
-            id: bellRow
-            spacing: 4
-
-            Icon {
-                text: Notifs.dnd ? Theme.iBellOff : Notifs.count > 0 ? Theme.iBell : Theme.iBellEmpty
-            }
-            Label {
-                visible: Notifs.count > 0
-                text: Notifs.count
-            }
-        }
         MouseArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             onClicked: Notifs.toggleCenter()
         }
     }
+    // Ajustes rápidos (clic = panel)
+    ConfigButton {}
     Icon {
         text: Theme.iPower
         MouseArea {
