@@ -48,7 +48,7 @@ Rectangle {
     }
 
     implicitHeight: content.implicitHeight + 16
-    radius: 16
+    radius: Theme.radiusSmall
     color: mouse.containsMouse || askingKey ? Theme.surfaceHigh : "transparent"
 
     MouseArea {
@@ -75,7 +75,7 @@ Rectangle {
             Rectangle {
                 implicitWidth: 34
                 implicitHeight: 34
-                radius: 12
+                radius: Theme.radiusSmall
                 color: row.net.connected ? Theme.primary : Theme.surfaceHigh
 
                 Icon {
