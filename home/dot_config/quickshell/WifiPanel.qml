@@ -61,7 +61,7 @@ PopupWindow {
 
     Rectangle {
         anchors.fill: parent
-        radius: 24
+        radius: Theme.radius
         color: Theme.panelBg
         border.color: Theme.surfaceHigh
         border.width: 1
@@ -116,7 +116,7 @@ PopupWindow {
                 Rectangle {
                     implicitWidth: 34
                     implicitHeight: 34
-                    radius: 12
+                    radius: Theme.radiusSmall
                     color: Theme.surfaceHigh
 
                     Icon {
