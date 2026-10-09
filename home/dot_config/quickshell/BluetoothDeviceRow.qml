@@ -27,7 +27,7 @@ Rectangle {
     }
 
     implicitHeight: 52
-    radius: 16
+    radius: Theme.radiusSmall
     color: mouse.containsMouse ? Theme.surfaceHigh : "transparent"
 
     Connections {
@@ -58,7 +58,7 @@ Rectangle {
         Rectangle {
             implicitWidth: 34
             implicitHeight: 34
-            radius: 12
+            radius: Theme.radiusSmall
             color: row.dev.connected ? Theme.primary : Theme.surfaceHigh
 
             IconImage {
