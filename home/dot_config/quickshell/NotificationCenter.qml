@@ -22,7 +22,7 @@ PanelWindow {
         bottom: 8
         right: 8
     }
-    implicitWidth: 420
+    implicitWidth: 400
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.layer: WlrLayer.Top
