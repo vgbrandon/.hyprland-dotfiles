@@ -108,7 +108,7 @@ Singleton {
             anchors.centerIn: parent
             width: row.implicitWidth + 32
             height: row.implicitHeight + 32
-            radius: 32
+            radius: Theme.radius
             color: Theme.surface
             border.color: Theme.surfaceHigh
             border.width: 1
@@ -138,7 +138,7 @@ Singleton {
 
                         implicitWidth: 128
                         implicitHeight: 128
-                        radius: active ? 36 : 24
+                        radius: active ? Theme.radius * 2 : Theme.radius
                         color: active ? Theme.primary : Theme.surfaceHigh
                         Behavior on radius { NumberAnimation { duration: 150 } }
                         Behavior on color { ColorAnimation { duration: 150 } }
