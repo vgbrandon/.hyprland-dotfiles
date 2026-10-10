@@ -25,6 +25,7 @@ Singleton {
         return Qt.rgba(q.r, q.g, q.b, a);
     }
 
+    readonly property color panelBg: pick("surface", "#121214")
     readonly property color surface: pick("surface_container", "#1f1e22")
     readonly property color surfaceHigh: pick("surface_container_highest", "#2b2a30")
     readonly property color primary: pick("primary", "#d6d4dc")
@@ -43,10 +44,19 @@ Singleton {
                 const d = JSON.parse(text());
                 root.scheme = d.scheme ?? {};
                 root.user = d.user ?? "";
+                if (d.radius >= 0) root.radius = d.radius;
                 if (d.wallpaper) root.wallpaper = root.shared + "/wallpaper";
             } catch (e) {}
         }
     }
+
+    // Redondeo de los paneles (el de las ventanas de Hyprland, lo comparte la sesión)
+    property int radius: 10
+    readonly property int radiusSmall: Math.max(4, radius - 4)
+
+    // Tamaños (los mismos que la barra)
+    readonly property int pillHeight: 28
+    readonly property int gap: 6
 
     // Fuentes
     readonly property string font: "sans-serif"

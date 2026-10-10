@@ -7,7 +7,8 @@ Rectangle {
     default property alias content: grid.data
     property int padding: 12
     property int spacing: 8
-    readonly property bool vertical: Config.barVertical
+    // Sigue a la barra; otros sitios (p. ej. la pantalla de bloqueo) lo fijan
+    property bool vertical: Config.barVertical
     // Barra vertical en un monitor bajo: aún más apretado
     property bool compact: false
 

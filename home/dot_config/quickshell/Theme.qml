@@ -98,7 +98,7 @@ Singleton {
     // compartida no existe (greeter sin instalar), no hace nada.
     function shareWithGreeter() {
         if (wallpaper === "") return;
-        const data = JSON.stringify({ wallpaper: true, user: Quickshell.env("USER"), scheme: scheme });
+        const data = JSON.stringify({ wallpaper: true, user: Quickshell.env("USER"), radius: radius, scheme: scheme });
         shareProc.command = ["sh", "-c", `d=/var/lib/qs-greeter
             [ -w "$d" ] || exit 0
             cp -f "$1" "$d/wallpaper.tmp" && mv -f "$d/wallpaper.tmp" "$d/wallpaper"
@@ -122,6 +122,7 @@ Singleton {
                 try {
                     const value = JSON.parse(this.text).int;
                     if (value >= 0) root.radius = value;
+                    root.shareWithGreeter();
                 } catch (e) {}
             }
         }

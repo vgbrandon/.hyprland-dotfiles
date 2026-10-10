@@ -3,7 +3,8 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
 
-// Pantalla de inicio de sesión (greeter de greetd). Corre en un Hyprland mínimo
+// Pantalla de inicio de sesión (greeter de greetd), con el mismo diseño que la
+// pantalla de bloqueo. Corre en un Hyprland mínimo
 // como el usuario "greeter"; ver hyprland.lua y config.toml en esta carpeta.
 ShellRoot {
     Variants {
