@@ -29,16 +29,38 @@ Item {
     readonly property real stageLeft: (width - stageWidth) / 2
     readonly property real stageRight: stageLeft + stageWidth
 
-    // Entrada: aparece cuando el fondo está listo (o al rato, si no carga)
+    // Entrada: aparece cuando el fondo está listo (o al rato, si no carga).
+    // shown = reloj, tarjeta y mini barra; backdrop = el fondo, que no sale al desbloquear
     property real shown: 0
+    property real backdrop: 0
     readonly property bool ready: wallpaper.status === Image.Ready || wallpaper.status === Image.Error || fallback.triggered
     onReadyChanged: if (ready) enter.start()
     Component.onCompleted: if (ready) enter.start()
 
+    // Contraseña correcta: reloj, tarjeta y mini barra salen por donde entraron
+    // (el fondo se queda) y luego se quita el bloqueo
+    Connections {
+        target: Lock
+        function onUnlockingChanged() {
+            if (Lock.unlocking) {
+                enter.stop();
+                leave.start();
+            }
+        }
+    }
+    NumberAnimation {
+        id: leave
+        target: surface
+        property: "shown"
+        to: 0
+        duration: 450
+        easing.type: Easing.InCubic
+    }
+
     NumberAnimation {
         id: enter
         target: surface
-        property: "shown"
+        properties: "shown,backdrop"
         to: 1
         duration: 450
         easing.type: Easing.OutCubic
@@ -75,7 +97,7 @@ Item {
     MultiEffect {
         anchors.fill: parent
         source: wallpaper
-        opacity: surface.shown
+        opacity: surface.backdrop
         blurEnabled: true
         blur: 0.7
         blurMax: 64
@@ -84,7 +106,7 @@ Item {
     // Velo del color de los paneles, más denso hacia la izquierda
     Rectangle {
         anchors.fill: parent
-        opacity: surface.shown
+        opacity: surface.backdrop
         gradient: Gradient {
             orientation: Gradient.Horizontal
             GradientStop { position: 0; color: Theme.withAlpha(Theme.panelBg, 0.75) }
@@ -323,21 +345,24 @@ Item {
                         implicitWidth: 38
                         implicitHeight: 38
                         radius: height / 2
-                        color: input.text !== "" ? Theme.primary : Theme.surfaceHigh
+                        color: input.text !== "" || Lock.unlocking ? Theme.primary : Theme.surfaceHigh
                         Behavior on color { ColorAnimation { duration: 150 } }
 
                         Icon {
+                            id: submitIcon
                             anchors.centerIn: parent
-                            text: Theme.iChevronRight
-                            color: input.text !== "" ? Theme.primaryFg : Theme.subtext
+                            // ✓ cuando la contraseña es correcta
+                            text: Lock.unlocking ? Theme.iCheck : Theme.iChevronRight
+                            color: input.text !== "" || Lock.unlocking ? Theme.primaryFg : Theme.subtext
                             font.pixelSize: 20
-                            rotation: Lock.checking ? 360 : 0
                             RotationAnimation on rotation {
                                 running: Lock.checking
                                 loops: Animation.Infinite
                                 from: 0
                                 to: 360
                                 duration: 900
+                                // Al parar a medio giro, el icono queda derecho
+                                onStopped: submitIcon.rotation = 0
                             }
                         }
                         MouseArea {
@@ -448,4 +473,5 @@ Item {
             }
         }
     }
+
 }

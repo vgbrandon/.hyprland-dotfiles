@@ -18,12 +18,25 @@ Singleton {
     property string error: ""
     // Aumenta en cada intento fallido (lo usa la animación de temblor)
     property int failCount: 0
+    // Contraseña correcta: animación de salida antes de quitar el bloqueo
+    property bool unlocking: false
 
     function lock() {
         if (locked) return;
         buffer = "";
         error = "";
+        unlocking = false;
         locked = true;
+    }
+
+    // Tras la animación de salida (el contenido se va; el fondo se queda): quita el bloqueo
+    Timer {
+        id: unlockTimer
+        interval: 500
+        onTriggered: {
+            root.locked = false;
+            root.unlocking = false;
+        }
     }
 
     function submit() {
@@ -47,7 +60,8 @@ Singleton {
             root.checking = false;
             root.buffer = "";
             if (result === PamResult.Success) {
-                root.locked = false;
+                root.unlocking = true;
+                unlockTimer.restart();
             } else {
                 root.error = result === PamResult.MaxTries
                     ? "Demasiados intentos, espera unos minutos"
