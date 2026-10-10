@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Instala la pantalla de inicio de sesión (greetd + Quickshell) en /etc/greetd
-# y deja activado greetd en lugar del gestor anterior.
+# Instala la pantalla de inicio de sesión (greetd + Quickshell) en /etc/greetd.
+# (Que greetd quede activado lo comprueba run_after_greetd-enable.sh.)
 # Se vuelve a ejecutar cuando cambia algún archivo del greeter, los componentes
 # que comparte con la sesión normal o los monitores:
 {{ range (glob (joinPath .chezmoi.sourceDir "dot_config/quickshell-greeter/*")) -}}
@@ -14,14 +14,3 @@ set -euo pipefail
 # monitors.lua: {{ include "dot_config/hypr/monitors.lua" | sha256sum }}
 
 "$HOME/.config/quickshell-greeter/install.sh"
-
-# greetd en lugar del gestor que hubiera antes. Sin --now: el cambio se aplica al
-# reiniciar, para no cortar la sesión en curso.
-if command -v greetd >/dev/null 2>&1 && ! systemctl is-enabled --quiet greetd; then
-  current="$(basename "$(readlink -f /etc/systemd/system/display-manager.service 2>/dev/null)" .service)"
-  if [ -n "$current" ] && [ "$current" != "display-manager" ] && [ "$current" != "greetd" ]; then
-    sudo systemctl disable "$current"
-  fi
-  sudo systemctl enable greetd
-  echo "[OK] greetd activado; se usará al reiniciar."
-fi
