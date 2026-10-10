@@ -12,12 +12,33 @@ PopupWindow {
 
     required property MprisPlayer player
     required property Item anchorItem
-    // Las transmisiones en vivo reportan duraciones absurdas
-    readonly property bool hasLength: (player?.length ?? 0) > 0 && player.length < 86400
+    // Duración de la pista. Algunos reproductores (Firefox con YouTube) a ratos dejan
+    // de informarla (lengthSupported falso) y Quickshell pone la posición como duración:
+    // se recuerda la última conocida de la misma pista y se usa mientras falte.
+    readonly property string trackKey: `${player?.identity ?? ""}|${player?.trackTitle ?? ""}`
+    readonly property real reportedLength: (player?.lengthSupported ?? false) ? (player.length ?? 0) : 0
+    property real cachedLength: 0
+    property string cachedKey: ""
+    onReportedLengthChanged: rememberLength()
+    onTrackKeyChanged: rememberLength()
+    function rememberLength() {
+        if (reportedLength > 0) {
+            cachedLength = reportedLength;
+            cachedKey = trackKey;
+        }
+    }
+    readonly property real trackLength: reportedLength > 0 ? reportedLength : cachedKey === trackKey ? cachedLength : 0
 
+    // Sin duración conocida, no se muestra progreso. Las transmisiones en vivo
+    // reportan duraciones absurdas.
+    readonly property bool live: trackLength >= 86400
+    readonly property bool hasLength: trackLength > 0 && !live
+
+    // m:ss, o h:mm:ss si pasa de una hora
     function fmt(s) {
         s = Math.max(0, Math.floor(s));
-        return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+        const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), sec = String(s % 60).padStart(2, "0");
+        return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
     }
 
     anchor.item: anchorItem
@@ -135,7 +156,8 @@ PopupWindow {
                 RowLayout {
                     Label {
                         Layout.fillWidth: true
-                        text: panel.hasLength ? `${panel.fmt(panel.player.position)} / ${panel.fmt(panel.player.length)}` : "En vivo"
+                        text: panel.hasLength ? `${panel.fmt(panel.player.position)} / ${panel.fmt(panel.trackLength)}`
+                            : panel.live ? "En vivo" : panel.fmt(panel.player?.position ?? 0)
                         color: Theme.subtext
                     }
 
@@ -173,11 +195,14 @@ PopupWindow {
 
                     WavyProgress {
                         Layout.fillWidth: true
-                        progress: panel.hasLength ? panel.player.position / panel.player.length : 1
+                        // Sin duración conocida (o en vivo): de lado a lado, y tenue si se
+                        // desconoce, para no fingir un progreso
+                        progress: panel.hasLength ? Math.max(0, Math.min(1, panel.player.position / panel.trackLength)) : 1
+                        lineColor: panel.hasLength || panel.live ? Theme.text : Theme.withAlpha(Theme.text, 0.35)
                         animating: panel.visible && (panel.player?.isPlaying ?? false)
                         onSeek: f => {
                             if (panel.hasLength && panel.player.canSeek)
-                                panel.player.position = f * panel.player.length;
+                                panel.player.position = f * panel.trackLength;
                         }
                     }
 
