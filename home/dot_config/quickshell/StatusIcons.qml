@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import Quickshell.Bluetooth
 import Quickshell.Networking
 
-// Red (NetworkManager), Bluetooth, notificaciones, ajustes y energía
+// Bandeja, red (NetworkManager), Bluetooth, notificaciones, ajustes y energía
 // (en columna si la barra está a un lado)
 GridLayout {
     id: root
@@ -24,6 +24,9 @@ GridLayout {
     readonly property var wifiNet: Networking.devices.values.find(d => d.type === DeviceType.Wifi)?.networks.values.find(n => n.connected) ?? null
     readonly property BluetoothAdapter bt: Bluetooth.defaultAdapter
     readonly property bool btConnected: bt?.devices.values.some(d => d.connected) ?? false
+
+    // Bandeja del sistema (apps en segundo plano)
+    Tray {}
 
     // Red: clic = panel de WiFi, clic derecho = encender/apagar WiFi
     Icon {

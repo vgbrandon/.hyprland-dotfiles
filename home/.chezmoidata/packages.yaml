@@ -65,3 +65,4 @@ packages:
   aur:
     - python-pywalfox # app nativa para la extensión de navegador Pywalfox
     - tidal-hifi # cliente de escritorio de Tidal con soporte HiFi
+    - zapzap # WhatsApp (WhatsApp Web como app, con notificaciones en segundo plano)

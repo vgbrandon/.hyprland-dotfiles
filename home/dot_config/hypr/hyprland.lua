@@ -40,6 +40,8 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("quickshell")
 	hl.exec_cmd("hypridle") -- bloqueo automático por inactividad (ver hypridle.conf)
 	hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+	-- WhatsApp (ZapZap) oculto en la bandeja, para recibir las notificaciones
+	hl.exec_cmd("sh -c 'command -v zapzap >/dev/null && exec zapzap --hideStart'")
 end)
 
 -------------------------------
