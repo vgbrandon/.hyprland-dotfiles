@@ -16,6 +16,7 @@ ShellRoot {
         Recorder.recording; // registra el IPC de la grabación de pantalla
         Media.player; // registra el IPC del reproductor multimedia
         Displays.open = false; // registra el IPC del módulo de pantallas
+        SystemStats.cpu; // registra el IPC del panel del sistema
     }
 
     Variants {
