@@ -14,6 +14,7 @@ ShellRoot {
         ColorPicker.active = false; // registra el IPC del selector de color
         Updates.checking; // empieza a buscar actualizaciones
         Recorder.recording; // registra el IPC de la grabación de pantalla
+        Media.player; // registra el IPC del reproductor multimedia
     }
 
     Variants {

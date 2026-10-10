@@ -21,6 +21,8 @@ PanelWindow {
     color: "transparent"
     // Barra vertical en un monitor bajo: no cabe todo, se ocultan CPU y RAM
     readonly property bool compact: vertical && height < 900
+    // Barra horizontal en un monitor estrecho: títulos más cortos para que quepa todo
+    readonly property bool narrow: !vertical && width < 1600
 
     // Todo el contenido: se desliza fuera de su borde al cambiar de posición
     Item {
@@ -64,11 +66,12 @@ PanelWindow {
             // El título de la ventana no cabe en la barra vertical
             ActiveWindow {
                 visible: !bar.vertical
+                maxWidth: bar.narrow ? 150 : 260
                 screen: bar.screen
             }
         }
 
-        // Centro: recursos/media, workspaces, reloj
+        // Centro: recursos, multimedia, workspaces, reloj
         GridLayout {
             id: centerGroup
             // Centrado, pero sin pisar los grupos de los extremos
@@ -83,6 +86,12 @@ PanelWindow {
             Resources {
                 Layout.alignment: Qt.AlignCenter
                 compact: bar.compact
+            }
+            // Lo que esté sonando (cualquier app)
+            MediaPill {
+                Layout.alignment: Qt.AlignCenter
+                compact: bar.compact
+                titleWidth: bar.narrow ? 110 : 200
             }
             Workspaces {
                 Layout.alignment: Qt.AlignCenter

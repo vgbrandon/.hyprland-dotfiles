@@ -2,19 +2,16 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-import Quickshell.Services.Mpris
 
-// CPU, RAM y reproductor actual (como el primer grupo de la captura)
+// CPU y RAM (el reproductor va en la píldora multimedia, MediaPill)
 Pill {
     id: root
 
-    // Sin sitio (barra vertical en un monitor bajo): solo el reproductor
-    property bool compact: false
+    // Sin sitio en la barra vertical de un monitor bajo
+    visible: !compact
     property int cpu: 0
     property int ram: 0
     property var lastCpu: null
-
-    readonly property MprisPlayer player: Mpris.players.values.find(p => p.isPlaying) ?? Mpris.players.values[0] ?? null
 
     FileView {
         id: stat
@@ -49,66 +46,8 @@ Pill {
         onTriggered: { stat.reload(); meminfo.reload(); }
     }
 
-    Icon { visible: !root.compact; text: Theme.iCpu; color: Theme.subtext }
-    Label { visible: !root.compact; text: root.cpu }
-    Icon { visible: !root.compact; text: Theme.iRam; color: Theme.subtext }
-    Label { visible: !root.compact; text: root.ram }
-
-    // Botón play/pausa
-    Rectangle {
-        visible: root.player !== null
-        implicitWidth: 22
-        implicitHeight: 22
-        radius: 11
-        color: "transparent"
-        border.color: Theme.text
-        border.width: 1.5
-
-        Icon {
-            anchors.centerIn: parent
-            text: root.player?.isPlaying ? Theme.iPause : Theme.iPlay
-            font.pixelSize: 13
-        }
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onClicked: if (root.player?.canTogglePlaying) root.player.togglePlaying()
-        }
-    }
-
-    // Barra vertical: no cabe el título, una nota abre el panel
-    Icon {
-        visible: root.player !== null && root.vertical
-        text: Theme.iMusic
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onClicked: mediaPanel.toggle()
-        }
-    }
-
-    Label {
-        visible: root.player !== null && !root.vertical
-        Layout.maximumWidth: 200
-        Layout.leftMargin: 4
-        text: {
-            const p = root.player;
-            if (!p) return "";
-            return p.trackArtist ? `${p.trackTitle} • ${p.trackArtist}` : p.trackTitle;
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onClicked: mediaPanel.toggle()
-        }
-    }
-
-    MediaPanel {
-        id: mediaPanel
-        player: root.player
-        anchorItem: root
-        visible: false
-    }
+    Icon { text: Theme.iCpu; color: Theme.subtext }
+    Label { text: root.cpu }
+    Icon { text: Theme.iRam; color: Theme.subtext }
+    Label { text: root.ram }
 }

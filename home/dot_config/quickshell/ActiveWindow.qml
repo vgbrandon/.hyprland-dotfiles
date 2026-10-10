@@ -18,16 +18,19 @@ ColumnLayout {
         return ws.toplevels.values[0].wayland ?? null;
     }
 
+    // Ancho máximo de los textos (menor en monitores estrechos)
+    property int maxWidth: 260
+
     spacing: -2
 
     Label {
-        Layout.maximumWidth: 260
+        Layout.maximumWidth: root.maxWidth
         text: root.win ? root.win.appId : "Escritorio"
         color: Theme.subtext
         font.pixelSize: Theme.fontSize - 1
     }
     Label {
-        Layout.maximumWidth: 260
+        Layout.maximumWidth: root.maxWidth
         text: root.win ? root.win.title : `Workspace ${root.ws?.id ?? 1}`
     }
 }
