@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Pantalla de carga al arrancar (Plymouth, tema "quickshell"). Se vuelve a
+# ejecutar cuando cambia el tema:
+{{ range (glob (joinPath .chezmoi.sourceDir "dot_config/plymouth-theme/*")) -}}
+# {{ base . }}: {{ include . | sha256sum }}
+{{ end -}}
+
+"$HOME/.config/plymouth-theme/install.sh"

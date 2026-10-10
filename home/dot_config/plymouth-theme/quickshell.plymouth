@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Quickshell
+Description=Logo de Arch con el color del texto del escritorio
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/quickshell
+ScriptFile=/usr/share/plymouth/themes/quickshell/quickshell.script
