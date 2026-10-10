@@ -28,6 +28,35 @@ Item {
     onReadyChanged: if (ready) enter.start()
     Component.onCompleted: if (ready) enter.start()
 
+    // El campo toma el foco al abrir y cada vez que este monitor pasa a ser el
+    // enfocado (sin tener que mover el ratón): el nombre si no hay usuario conocido,
+    // si no la contraseña. Con un pequeño retraso, para que la ventana ya tenga el teclado
+    onMainChanged: focusTimer.restart()
+    Timer {
+        id: focusTimer
+        interval: 150
+        onTriggered: if (surface.main) (Auth.user === "" ? userInput : input).forceActiveFocus()
+    }
+
+    // Contraseña aceptada: todo sale por donde entró (el fundido a negro va en shell.qml)
+    Connections {
+        target: Auth
+        function onLaunchingChanged() {
+            if (Auth.launching) {
+                enter.stop();
+                leave.start();
+            }
+        }
+    }
+    NumberAnimation {
+        id: leave
+        target: surface
+        property: "shown"
+        to: 0
+        duration: 450
+        easing.type: Easing.InCubic
+    }
+
     NumberAnimation {
         id: enter
         target: surface
@@ -342,21 +371,24 @@ Item {
                         implicitWidth: 38
                         implicitHeight: 38
                         radius: height / 2
-                        color: input.text !== "" ? Theme.primary : Theme.surfaceHigh
+                        color: input.text !== "" || Auth.launching ? Theme.primary : Theme.surfaceHigh
                         Behavior on color { ColorAnimation { duration: 150 } }
 
                         Icon {
+                            id: submitIcon
                             anchors.centerIn: parent
-                            text: Theme.iChevronRight
-                            color: input.text !== "" ? Theme.primaryFg : Theme.subtext
+                            // ✓ cuando la contraseña es correcta
+                            text: Auth.launching ? Theme.iCheck : Theme.iChevronRight
+                            color: input.text !== "" || Auth.launching ? Theme.primaryFg : Theme.subtext
                             font.pixelSize: 20
-                            rotation: Auth.busy ? 360 : 0
                             RotationAnimation on rotation {
-                                running: Auth.busy
+                                running: Auth.busy && !Auth.launching
                                 loops: Animation.Infinite
                                 from: 0
                                 to: 360
                                 duration: 900
+                                // Al parar a medio giro, el ✓ queda derecho
+                                onStopped: submitIcon.rotation = 0
                             }
                         }
                         MouseArea {
@@ -368,9 +400,7 @@ Item {
                 }
             }
 
-            Component.onCompleted: {
-                if (surface.main) (Auth.user === "" ? userInput : input).forceActiveFocus();
-            }
+            Component.onCompleted: focusTimer.restart()
 
             // Error o ayuda
             Label {

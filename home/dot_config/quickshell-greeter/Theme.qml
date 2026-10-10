@@ -15,6 +15,8 @@ Singleton {
     property var scheme: ({})
     property string wallpaper: ""
     property string user: ""
+    // Monitor principal (lo elige el módulo de pantallas de la sesión)
+    property string primaryMonitor: ""
 
     function pick(name, fallback) {
         return scheme[name] ?? fallback;
@@ -44,6 +46,7 @@ Singleton {
                 const d = JSON.parse(text());
                 root.scheme = d.scheme ?? {};
                 root.user = d.user ?? "";
+                root.primaryMonitor = d.primary ?? "";
                 if (d.radius >= 0) root.radius = d.radius;
                 if (d.wallpaper) root.wallpaper = root.shared + "/wallpaper";
             } catch (e) {}
@@ -72,4 +75,5 @@ Singleton {
     readonly property string iMonitor: String.fromCodePoint(0xF0379)
     readonly property string iChevronLeft: String.fromCodePoint(0xF0141)
     readonly property string iChevronRight: String.fromCodePoint(0xF0142)
+    readonly property string iCheck: String.fromCodePoint(0xF012C)
 }

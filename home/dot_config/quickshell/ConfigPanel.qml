@@ -198,6 +198,44 @@ PanelWindow {
                 font.pixelSize: Theme.fontSize
             }
 
+            // Pantallas: abre el módulo de pantallas
+            Rectangle {
+                Layout.fillWidth: true
+                implicitHeight: 34
+                radius: Theme.radiusSmall
+                color: displaysMouse.containsMouse ? Theme.surface : "transparent"
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: 6
+                    anchors.rightMargin: 4
+                    spacing: 10
+
+                    Icon {
+                        text: Theme.iMonitor
+                        color: Theme.subtext
+                    }
+                    Label {
+                        Layout.fillWidth: true
+                        text: "Pantallas"
+                    }
+                    Icon {
+                        text: Theme.iChevronRight
+                        color: Theme.subtext
+                    }
+                }
+                MouseArea {
+                    id: displaysMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Config.close();
+                        Displays.toggle();
+                    }
+                }
+            }
+
             // Posición de la barra: un botón por borde
             RowLayout {
                 Layout.leftMargin: 6

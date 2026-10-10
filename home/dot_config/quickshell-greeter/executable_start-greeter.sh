@@ -7,4 +7,6 @@ mkdir -p "$runtime"
 export XDG_CACHE_HOME="$runtime/cache"
 export XDG_STATE_HOME="$runtime/state"
 export XDG_DATA_HOME="$runtime/data"
-exec start-hyprland -- --config /etc/greetd/hyprland.lua
+# Su salida (el logo en texto y el registro) va a un archivo: si no, se ve un
+# instante en la consola antes de que aparezca la pantalla de inicio
+exec start-hyprland -- --config /etc/greetd/hyprland.lua > "$runtime/hyprland.log" 2>&1

@@ -18,8 +18,15 @@ Singleton {
     readonly property string barTarget: settings.barPosition
     property string barPosition: "top"
     readonly property bool barVertical: barPosition === "left" || barPosition === "right"
-    // 0 = barra visible, 1 = escondida fuera de su borde
-    property real barHide: 0
+    // 0 = barra visible, 1 = escondida fuera de su borde. Empieza escondida:
+    // al iniciar la sesión entra deslizándose (introAnim)
+    property real barHide: 1
+
+    readonly property string primaryMonitor: settings.primaryMonitor
+    function setPrimaryMonitor(name) {
+        settings.primaryMonitor = name;
+        settingsFile.writeAdapter();
+    }
 
     function setBarPosition(position) {
         settings.barPosition = position;
@@ -29,14 +36,57 @@ Singleton {
     // Al iniciar se coloca directamente, sin animación
     property bool settingsLoaded: false
 
+    // Entrada del escritorio (fondo y barra). Al iniciar la sesión el monitor tarda
+    // un par de segundos en volver a dar imagen tras el cambio de modo; si Hyprland
+    // acaba de arrancar, se espera para que las animaciones se vean. Al reiniciar
+    // Quickshell a mitad de sesión, no se espera.
+    property bool introReady: false
+    readonly property int sessionStartDelay: 2500
+    onIntroReadyChanged: if (introReady && settingsLoaded) introAnim.start()
+    onSettingsLoadedChanged: if (introReady && settingsLoaded) introAnim.start()
+
+    Process {
+        command: ["sh", "-c", "ps -o etimes= -p \"$(pidof Hyprland | cut -d' ' -f1)\""]
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const seconds = parseInt(this.text.trim());
+                if (seconds >= 0 && seconds < 15) introDelay.start();
+                else root.introReady = true;
+            }
+        }
+        // Si no se pudo saber, sin esperar
+        onExited: code => { if (code !== 0) root.introReady = true; }
+    }
+    Timer {
+        id: introDelay
+        interval: root.sessionStartDelay
+        onTriggered: root.introReady = true
+    }
+
     // Al cambiar la posición (desde el panel o editando el archivo):
     // sale por su borde, cambia de lado y entra por el nuevo
     Connections {
         target: settings
         function onBarPositionChanged() {
             if (!root.settingsLoaded) return;
-            if (settings.barPosition !== root.barPosition || moveAnim.running)
+            if (settings.barPosition !== root.barPosition || moveAnim.running) {
+                introAnim.stop();
                 moveAnim.restart();
+            }
+        }
+    }
+
+    // Entrada al iniciar la sesión, junto con el fundido del fondo (ver introReady)
+    SequentialAnimation {
+        id: introAnim
+        PauseAnimation { duration: 350 }
+        NumberAnimation {
+            target: root
+            property: "barHide"
+            to: 0
+            duration: 500
+            easing.type: Easing.OutCubic
         }
     }
 
@@ -107,6 +157,8 @@ Singleton {
         JsonAdapter {
             id: settings
             property string barPosition: "top"
+            // Monitor principal elegido en el módulo de pantallas ("" = automático)
+            property string primaryMonitor: ""
         }
     }
 

@@ -13,6 +13,8 @@ Singleton {
     property string user: Theme.user
     property string password: ""
     property bool busy: false
+    // Contraseña aceptada: animación de salida antes de lanzar la sesión
+    property bool launching: false
     property string error: ""
     // Aumenta en cada intento fallido (lo usa la animación de temblor)
     property int failCount: 0
@@ -56,13 +58,21 @@ Singleton {
             root.fail("Contraseña incorrecta");
         }
         function onReadyToLaunch() {
-            // Al lanzar, Quickshell se cierra y el Hyprland del greeter también
-            Greetd.launch(root.session?.command ?? ["start-hyprland"], ["XDG_SESSION_TYPE=wayland"], true);
+            // Primero la animación de salida (fundido a negro); luego se lanza
+            root.launching = true;
+            launchTimer.start();
         }
         function onError(error) {
             Greetd.cancelSession();
             root.fail(`Error: ${error}`);
         }
+    }
+
+    Timer {
+        id: launchTimer
+        interval: 700
+        // Al lanzar, Quickshell se cierra y el Hyprland del greeter también
+        onTriggered: Greetd.launch(root.session?.command ?? ["start-hyprland"], ["XDG_SESSION_TYPE=wayland"], true)
     }
 
     // Lee nombre y comando de cada sesión; Hyprland queda elegida por defecto

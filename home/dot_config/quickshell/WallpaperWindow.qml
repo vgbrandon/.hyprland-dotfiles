@@ -20,6 +20,8 @@ PanelWindow {
 
     function reveal(img) {
         if (img === front || img.source.toString() !== "file://" + target) return;
+        // Al iniciar la sesión, espera a que el monitor vuelva a dar imagen
+        if (!Config.introReady) return;
         const prev = front;
         img.z = 1;
         if (prev) prev.z = 0;
@@ -32,6 +34,16 @@ PanelWindow {
     onTargetChanged: load()
     Component.onCompleted: load()
 
+    // Primer fondo ya cargado, a la espera de introReady
+    Connections {
+        target: Config
+        function onIntroReadyChanged() {
+            if (!Config.introReady) return;
+            if (imgA.status === Image.Ready) win.reveal(imgA);
+            if (imgB.status === Image.Ready) win.reveal(imgB);
+        }
+    }
+
     screen: modelData
     anchors {
         top: true
@@ -39,7 +51,9 @@ PanelWindow {
         left: true
         right: true
     }
-    color: Theme.surface
+    // Negro hasta que carga el fondo: al iniciar sesión se pasa del negro de la
+    // pantalla de inicio al fondo con un fundido, sin saltos de color
+    color: "black"
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.layer: WlrLayer.Bottom
     WlrLayershell.namespace: "quickshell:wallpaper"
@@ -78,7 +92,10 @@ PanelWindow {
         onStatusChanged: if (status === Image.Ready) win.reveal(imgB)
     }
 
+    // Aparece junto con el primer fondo, no antes
     DesktopClock {
         z: 2
+        opacity: win.front ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: 700; easing.type: Easing.InOutQuad } }
     }
 }
