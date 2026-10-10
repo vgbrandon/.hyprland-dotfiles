@@ -190,6 +190,82 @@ PanelWindow {
                 }
             }
 
+            // Intensidad de la luz nocturna: más a la derecha = más cálida
+            RowLayout {
+                visible: NightLight.available
+                Layout.leftMargin: 34
+                Layout.rightMargin: 4
+                spacing: 10
+
+                Label {
+                    text: "Intensidad"
+                    color: Theme.subtext
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    implicitHeight: 4
+                    radius: 2
+                    color: Theme.surfaceHigh
+
+                    Rectangle {
+                        width: parent.width * NightLight.strength
+                        height: parent.height
+                        radius: 2
+                        color: Theme.warm
+                        opacity: NightLight.enabled ? 1 : 0.5
+                        Behavior on width { NumberAnimation { duration: 150 } }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        anchors.topMargin: -8
+                        anchors.bottomMargin: -8
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        // Posición -> temperatura (izquierda = 6500 K, derecha = 2500 K)
+                        function temp(x) {
+                            return NightLight.maxTemp - Math.max(0, Math.min(1, x / width)) * (NightLight.maxTemp - NightLight.minTemp);
+                        }
+                        onClicked: e => NightLight.setTemperature(temp(e.x))
+                        onPositionChanged: e => {
+                            if (pressed) NightLight.setTemperature(temp(e.x));
+                        }
+                        onWheel: e => NightLight.scroll(e.angleDelta.y)
+                    }
+                }
+
+                Label {
+                    text: `${NightLight.temperature}K`
+                    color: Theme.subtext
+                    Layout.preferredWidth: 44
+                }
+
+                // Restablecer: siempre en su sitio; apagado si ya está en el valor por defecto
+                Rectangle {
+                    readonly property bool usable: NightLight.temperature !== NightLight.defaultTemp
+
+                    implicitWidth: 24
+                    implicitHeight: 24
+                    radius: 12
+                    color: resetNight.containsMouse && usable ? Theme.surfaceHigh : "transparent"
+
+                    Icon {
+                        anchors.centerIn: parent
+                        text: Theme.iRestore
+                        color: parent.usable ? Theme.text : Theme.dot
+                        font.pixelSize: 16
+                    }
+                    MouseArea {
+                        id: resetNight
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: parent.usable ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: if (parent.usable) NightLight.reset()
+                    }
+                }
+            }
+
             // --- Apariencia ---
             Label {
                 Layout.leftMargin: 6
@@ -394,25 +470,27 @@ PanelWindow {
                     Layout.preferredWidth: 26
                 }
 
+                // Restablecer: siempre en su sitio; apagado si ya está en el valor por defecto
                 Rectangle {
-                    visible: gapsIn.intValue !== gapsIn.fallback
+                    readonly property bool usable: gapsIn.intValue !== gapsIn.fallback
+
                     implicitWidth: 24
                     implicitHeight: 24
                     radius: 12
-                    color: resetMouseIn.containsMouse ? Theme.surfaceHigh : "transparent"
+                    color: resetMouseIn.containsMouse && usable ? Theme.surfaceHigh : "transparent"
 
                     Icon {
                         anchors.centerIn: parent
                         text: Theme.iRestore
-                        color: Theme.text
+                        color: parent.usable ? Theme.text : Theme.dot
                         font.pixelSize: 16
                     }
                     MouseArea {
                         id: resetMouseIn
                         anchors.fill: parent
                         hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: gapsIn.set(gapsIn.fallback)
+                        cursorShape: parent.usable ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: if (parent.usable) gapsIn.set(gapsIn.fallback)
                     }
                 }
             }
@@ -461,25 +539,27 @@ PanelWindow {
                     Layout.preferredWidth: 26
                 }
 
+                // Restablecer: siempre en su sitio; apagado si ya está en el valor por defecto
                 Rectangle {
-                    visible: gapsOut.intValue !== gapsOut.fallback
+                    readonly property bool usable: gapsOut.intValue !== gapsOut.fallback
+
                     implicitWidth: 24
                     implicitHeight: 24
                     radius: 12
-                    color: resetMouseOut.containsMouse ? Theme.surfaceHigh : "transparent"
+                    color: resetMouseOut.containsMouse && usable ? Theme.surfaceHigh : "transparent"
 
                     Icon {
                         anchors.centerIn: parent
                         text: Theme.iRestore
-                        color: Theme.text
+                        color: parent.usable ? Theme.text : Theme.dot
                         font.pixelSize: 16
                     }
                     MouseArea {
                         id: resetMouseOut
                         anchors.fill: parent
                         hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: gapsOut.set(gapsOut.fallback)
+                        cursorShape: parent.usable ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: if (parent.usable) gapsOut.set(gapsOut.fallback)
                     }
                 }
             }

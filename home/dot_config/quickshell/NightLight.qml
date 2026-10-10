@@ -5,13 +5,15 @@ import Quickshell
 import Quickshell.Io
 
 // Filtro de luz azul con hyprsunset. La temperatura se cambia en vivo por IPC (hyprctl hyprsunset).
+// La barra solo lo activa/desactiva; la intensidad se ajusta en el panel de ajustes
+// y se guarda (Config.nightLightTemp).
 Singleton {
     id: root
 
     property bool available: false
     property bool enabled: false
     readonly property int defaultTemp: 4500
-    property int temperature: defaultTemp
+    property int temperature: Config.nightLightTemp > 0 ? Config.nightLightTemp : defaultTemp
     readonly property int minTemp: 2500
     readonly property int maxTemp: 6500
     // 0 = sin filtro, 1 = filtro máximo
@@ -21,11 +23,12 @@ Singleton {
         if (available) enabled = !enabled;
     }
 
-    // Solo cambia la intensidad si el filtro está activado
+    // Con el filtro apagado también se puede ajustar: se usa al encenderlo
     function setTemperature(t) {
-        if (!available || !enabled) return;
+        if (!available) return;
         temperature = Math.max(minTemp, Math.min(maxTemp, Math.round(t / 100) * 100));
-        applyTimer.restart();
+        Config.setNightLightTemp(temperature);
+        if (enabled) applyTimer.restart();
     }
 
     function reset() {

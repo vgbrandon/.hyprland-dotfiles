@@ -66,12 +66,12 @@ PanelWindow {
             // El título de la ventana no cabe en la barra vertical
             ActiveWindow {
                 visible: !bar.vertical
-                maxWidth: bar.narrow ? 150 : 260
+                maxWidth: bar.narrow ? 110 : 260
                 screen: bar.screen
             }
         }
 
-        // Centro: recursos, multimedia, workspaces, reloj
+        // Centro: recursos, multimedia, workspaces, reloj, herramientas, volumen
         GridLayout {
             id: centerGroup
             // Centrado, pero sin pisar los grupos de los extremos
@@ -101,6 +101,15 @@ PanelWindow {
             ClockPill {
                 Layout.alignment: Qt.AlignCenter
                 compact: bar.compact
+            }
+            ToolsPill {
+                Layout.alignment: Qt.AlignCenter
+                compact: bar.compact
+            }
+            // En la barra vertical va dentro de la píldora del reloj
+            VolumePill {
+                Layout.alignment: Qt.AlignCenter
+                active: !bar.vertical
             }
         }
 

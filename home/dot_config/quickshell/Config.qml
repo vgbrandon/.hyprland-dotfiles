@@ -22,6 +22,18 @@ Singleton {
     // al iniciar la sesión entra deslizándose (introAnim)
     property real barHide: 1
 
+    readonly property int nightLightTemp: settings.nightLightTemp
+    // Se guarda con un pequeño retraso: al arrastrar el deslizador llegan muchos valores
+    function setNightLightTemp(t) {
+        settings.nightLightTemp = t;
+        saveTimer.restart();
+    }
+    Timer {
+        id: saveTimer
+        interval: 500
+        onTriggered: settingsFile.writeAdapter()
+    }
+
     readonly property string primaryMonitor: settings.primaryMonitor
     function setPrimaryMonitor(name) {
         settings.primaryMonitor = name;
@@ -159,6 +171,8 @@ Singleton {
             property string barPosition: "top"
             // Monitor principal elegido en el módulo de pantallas ("" = automático)
             property string primaryMonitor: ""
+            // Temperatura de la luz nocturna en K (0 = la de por defecto)
+            property int nightLightTemp: 0
         }
     }
 
