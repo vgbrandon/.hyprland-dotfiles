@@ -1,35 +1,24 @@
 import QtQuick
 
-// Píldora de actualizaciones: Pac-Man = pacman, fantasma = AUR. Sin números:
-// cada icono pasa de blanco a amarillo / azul según cuántas haya. Clic = panel.
+// Actualizaciones: solo el Pac-Man (sin píldora), sin números. Pasa de blanco a
+// amarillo según cuántas haya entre pacman y AUR. Clic = panel (con las dos listas).
 Item {
     id: root
 
     property bool compact: false
 
-    implicitWidth: pill.implicitWidth
-    implicitHeight: pill.implicitHeight
+    implicitWidth: icon.implicitWidth
+    implicitHeight: icon.implicitHeight
 
-    Pill {
-        id: pill
-        compact: root.compact
-
-        anchors.fill: parent
-        spacing: 10
+    // Icono suelto, sin píldora (como los de red o Bluetooth)
+    Icon {
+        id: icon
+        anchors.centerIn: parent
+        text: Theme.iPacman
+        color: Updates.totalColor()
+        font.pixelSize: 16
         opacity: Updates.checking && Updates.lastCheck.getTime() === 0 ? 0.5 : 1
-
-        Icon {
-            text: Theme.iPacman
-            color: Updates.pacmanColor()
-            font.pixelSize: 16
-            Behavior on color { ColorAnimation { duration: 400 } }
-        }
-        Icon {
-            text: Theme.iGhost
-            color: Updates.aurColor()
-            font.pixelSize: 16
-            Behavior on color { ColorAnimation { duration: 400 } }
-        }
+        Behavior on color { ColorAnimation { duration: 400 } }
     }
 
     MouseArea {

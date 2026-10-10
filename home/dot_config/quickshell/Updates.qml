@@ -35,6 +35,11 @@ Singleton {
         return mix(Theme.text, Theme.blue, Math.min(1, aur.length / aurFull));
     }
 
+    // Las dos juntas (icono de la píldora): cada paquete de AUR pesa como 50/20 de pacman
+    function totalColor() {
+        return mix(Theme.text, Theme.warning, Math.min(1, pacman.length / pacmanFull + aur.length / aurFull));
+    }
+
     // Líneas "nombre versión-actual -> versión-nueva"
     function parse(text) {
         return text.split("\n").map(l => l.trim().split(/\s+/)).filter(p => p.length >= 4 && p[2] === "->")
