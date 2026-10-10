@@ -69,6 +69,7 @@ Singleton {
                     for (const k in colors) s[k] = colors[k].dark.color;
                     root.scheme = s;
                     cache.setText(JSON.stringify({ wallpaper: root.wallpaper, scheme: s }));
+                    root.shareWithGreeter();
                 } catch (e) {
                     console.warn("matugen:", e);
                 }
@@ -86,9 +87,26 @@ Singleton {
                 if (root.wallpaper === "") {
                     root.wallpaper = d.wallpaper;
                     root.scheme = d.scheme;
+                    root.shareWithGreeter();
                 }
             } catch (e) {}
         }
+    }
+
+    // Comparte fondo, colores y usuario con la pantalla de inicio de sesión (greetd):
+    // el usuario "greeter" no puede leer esta carpeta personal. Si la carpeta
+    // compartida no existe (greeter sin instalar), no hace nada.
+    function shareWithGreeter() {
+        if (wallpaper === "") return;
+        const data = JSON.stringify({ wallpaper: true, user: Quickshell.env("USER"), scheme: scheme });
+        shareProc.command = ["sh", "-c", `d=/var/lib/qs-greeter
+            [ -w "$d" ] || exit 0
+            cp -f "$1" "$d/wallpaper.tmp" && mv -f "$d/wallpaper.tmp" "$d/wallpaper"
+            printf '%s' "$2" > "$d/theme.json"`, "sh", wallpaper, data];
+        shareProc.running = true;
+    }
+    Process {
+        id: shareProc
     }
 
     // Redondeo de los paneles: el mismo que las ventanas de Hyprland

@@ -1,0 +1,10 @@
+# greetd: gestor de inicio de sesión. Se instala en /etc/greetd/config.toml (ver install.sh).
+# La pantalla de inicio es Quickshell dentro de un Hyprland mínimo (start-greeter.sh
+# y hyprland.lua).
+
+[terminal]
+vt = 1
+
+[default_session]
+command = "/etc/greetd/start-greeter.sh"
+user = "greeter"
