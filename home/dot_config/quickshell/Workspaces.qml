@@ -74,7 +74,9 @@ Pill {
                     Grid {
                         id: icons
                         anchors.centerIn: parent
-                        columns: root.vertical ? 1 : cell.maxIcons + 1
+                        // Tantas columnas como elementos visibles (iconos + "+N"): con columnas
+                        // de más, el Grid suma separación a la derecha y queda descentrado
+                        columns: root.vertical ? 1 : Math.max(1, Math.min(cell.apps.length, cell.maxIcons) + (cell.apps.length > cell.maxIcons ? 1 : 0))
                         spacing: 3
                         horizontalItemAlignment: Grid.AlignHCenter
                         verticalItemAlignment: Grid.AlignVCenter
