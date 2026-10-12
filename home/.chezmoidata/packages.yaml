@@ -13,6 +13,7 @@ packages:
     - fd # alternativa simple y rápida a find
     - lua-language-server # language server de Lua
     - wl-clipboard # utilidades de copiar/pegar para Wayland
+    - cliphist # historial del portapapeles (Quickshell, Super + Shift + V)
     - swayimg # visor de imágenes liviano para Wayland
     - matugen # generador de paletas de color Material You
     - adw-gtk-theme # port no oficial del tema de libadwaita para GTK 3

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-// Herramientas: fondos, selector de color, grabación, captura y luz nocturna.
+// Herramientas: fondos, selector de color, portapapeles, grabación, captura y luz nocturna.
 // En la barra vertical también el volumen (icono y número), donde ocupa menos alto.
 Pill {
     id: root
@@ -26,6 +26,17 @@ Pill {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             onClicked: ColorPicker.pick()
+        }
+    }
+
+    // Historial del portapapeles
+    Icon {
+        text: Theme.iClipboard
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: Clipboard.toggle()
         }
     }
 

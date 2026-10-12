@@ -17,6 +17,7 @@ ShellRoot {
         Media.player; // registra el IPC del reproductor multimedia
         Displays.open = false; // registra el IPC del módulo de pantallas
         SystemStats.cpu; // registra el IPC del panel del sistema
+        Clipboard.open = false; // historial del portapapeles: IPC y vigilancia de lo copiado
     }
 
     Variants {
