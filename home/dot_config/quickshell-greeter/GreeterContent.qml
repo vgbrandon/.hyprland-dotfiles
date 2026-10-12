@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
+import qs.components.base
+import qs.services
 
 // Contenido de la pantalla de inicio de sesión en un monitor. Mismo diseño que la
 // pantalla de bloqueo (LockContent.qml de la sesión normal): reloj grande a la

@@ -1,0 +1,295 @@
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Bluetooth
+import Quickshell.Networking
+import qs.components
+import qs.components.base
+import qs.components.buttons
+import qs.components.containers
+import qs.components.controls
+import qs.services
+
+// Panel de ajustes rápidos: entra desde la derecha del monitor enfocado
+// (como el centro de notificaciones).
+//   quickshell ipc call config toggle
+SidePanel {
+    id: panel
+
+    open: Config.open
+    onCloseRequested: Config.close()
+    namespace: "quickshell:config-panel"
+
+    HyprOption { id: animations; option: "animations:enabled" }
+    HyprOption { id: blur; option: "decoration:blur:enabled" }
+    HyprOption { id: shadows; option: "decoration:shadow:enabled" }
+    HyprOption { id: gapsIn; option: "general:gaps_in"; max: 20; fallback: 5 }
+    HyprOption { id: gapsOut; option: "general:gaps_out"; max: 30; fallback: 10 }
+
+    readonly property BluetoothAdapter bt: Bluetooth.defaultAdapter
+
+    Label {
+        Layout.leftMargin: 6
+        text: "Configuración"
+        font.pixelSize: 16
+    }
+
+    Section {
+        title: "Dispositivos"
+        contentSpacing: 10
+
+        SwitchRow {
+            icon: Networking.wifiEnabled ? Theme.iWifi : Theme.iWifiOff
+            text: "Red inalámbrica"
+            checked: Networking.wifiEnabled
+            onToggled: Networking.wifiEnabled = !Networking.wifiEnabled
+        }
+        SwitchRow {
+            icon: panel.bt?.enabled ? Theme.iBtOn : Theme.iBt
+            text: "Bluetooth"
+            checked: panel.bt?.enabled ?? false
+            onToggled: if (panel.bt) panel.bt.enabled = !panel.bt.enabled
+        }
+        SwitchRow {
+            icon: Notifs.dnd ? Theme.iBellOff : Theme.iBell
+            text: "No molestar"
+            checked: Notifs.dnd
+            onToggled: Notifs.dnd = !Notifs.dnd
+        }
+        SwitchRow {
+            icon: NightLight.enabled ? Theme.iNight : Theme.iSun
+            text: "Luz nocturna"
+            checked: NightLight.available && NightLight.enabled
+            onToggled: NightLight.toggle()
+        }
+
+        // Intensidad de la luz nocturna: más a la derecha = más cálida
+        // (izquierda = 6500 K, derecha = 2500 K)
+        SliderRow {
+            visible: NightLight.available
+            Layout.leftMargin: 34
+            text: "Intensidad"
+            value: NightLight.strength
+            valueText: `${NightLight.temperature}K`
+            valueWidth: 44
+            color: Theme.warm
+            dimmed: !NightLight.enabled
+            resettable: NightLight.temperature !== NightLight.defaultTemp
+            onMoved: f => NightLight.setTemperature(NightLight.maxTemp - f * (NightLight.maxTemp - NightLight.minTemp))
+            onReset: NightLight.reset()
+
+            WheelHandler {
+                onWheel: e => NightLight.scroll(e.angleDelta.y)
+            }
+        }
+    }
+
+    Section {
+        title: "Apariencia"
+        contentSpacing: 10
+
+        NavRow {
+            icon: Theme.iMonitor
+            text: "Pantallas"
+            onClicked: {
+                Config.close();
+                Displays.toggle();
+            }
+        }
+        NavRow {
+            icon: Theme.iKeyboard
+            text: "Teclado"
+            onClicked: {
+                Config.close();
+                AulaKeyboard.toggle();
+            }
+        }
+
+        // Posición de la barra: un botón por borde
+        RowLayout {
+            Layout.leftMargin: 6
+            Layout.rightMargin: 4
+            spacing: 10
+
+            Icon {
+                text: ({ top: Theme.iDockTop, bottom: Theme.iDockBottom, left: Theme.iDockLeft, right: Theme.iDockRight })[Config.barTarget]
+                color: Theme.subtext
+            }
+            Label {
+                Layout.fillWidth: true
+                text: "Barra"
+            }
+            Repeater {
+                model: [
+                    { position: "top", icon: Theme.iDockTop },
+                    { position: "bottom", icon: Theme.iDockBottom },
+                    { position: "left", icon: Theme.iDockLeft },
+                    { position: "right", icon: Theme.iDockRight }
+                ]
+
+                Chip {
+                    required property var modelData
+                    icon: modelData.icon
+                    selected: Config.barTarget === modelData.position
+                    onClicked: Config.setBarPosition(modelData.position)
+                }
+            }
+        }
+
+        SwitchRow {
+            icon: Theme.iAnimation
+            text: "Animaciones"
+            checked: animations.boolValue
+            onToggled: animations.set(!animations.boolValue)
+        }
+        SwitchRow {
+            icon: Theme.iBlur
+            text: "Desenfoque"
+            checked: blur.boolValue
+            onToggled: blur.set(!blur.boolValue)
+        }
+        SwitchRow {
+            icon: Theme.iShadow
+            text: "Sombras"
+            checked: shadows.boolValue
+            onToggled: shadows.set(!shadows.boolValue)
+        }
+
+        // Bordes: clic o arrastre para fijar el tamaño, y reset al valor por defecto
+        SliderRow {
+            icon: Theme.iGaps
+            text: "Interiores"
+            value: gapsIn.intValue / gapsIn.max
+            valueText: gapsIn.intValue
+            resettable: gapsIn.intValue !== gapsIn.fallback
+            onMoved: f => gapsIn.set(f * gapsIn.max)
+            onReset: gapsIn.set(gapsIn.fallback)
+        }
+        SliderRow {
+            icon: Theme.iGaps
+            text: "Exteriores"
+            value: gapsOut.intValue / gapsOut.max
+            valueText: gapsOut.intValue
+            resettable: gapsOut.intValue !== gapsOut.fallback
+            onMoved: f => gapsOut.set(f * gapsOut.max)
+            onReset: gapsOut.set(gapsOut.fallback)
+        }
+    }
+
+    // Espacio para que las acciones queden al pie del panel
+    Item { Layout.fillHeight: true }
+
+    // --- Acciones ---
+    RowLayout {
+        spacing: 8
+
+        TextButton {
+            Layout.fillWidth: true
+            icon: Theme.iLock
+            text: "Bloquear"
+            onClicked: {
+                Config.close();
+                Lock.lock();
+            }
+        }
+        TextButton {
+            Layout.fillWidth: true
+            icon: Theme.iSleep
+            text: "Suspender"
+            onClicked: {
+                Config.close();
+                Quickshell.execDetached(["systemctl", "suspend"]);
+            }
+        }
+    }
+
+    // --- Componentes del panel ---
+
+    // Fila que abre otra ventana: icono, texto y una flecha
+    component NavRow: Rectangle {
+        id: nav
+        property string icon
+        property string text
+        signal clicked()
+
+        Layout.fillWidth: true
+        implicitHeight: 34
+        radius: Theme.radiusSmall
+        color: navMouse.containsMouse ? Theme.surface : "transparent"
+
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 6
+            anchors.rightMargin: 4
+            spacing: 10
+
+            Icon {
+                text: nav.icon
+                color: Theme.subtext
+            }
+            Label {
+                Layout.fillWidth: true
+                text: nav.text
+            }
+            Icon {
+                text: Theme.iChevronRight
+                color: Theme.subtext
+            }
+        }
+        MouseArea {
+            id: navMouse
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: nav.clicked()
+        }
+    }
+
+    // Ajuste con deslizador: icono, texto, barra, valor y botón de restablecer
+    // (siempre en su sitio; apagado si ya está en el valor por defecto)
+    component SliderRow: RowLayout {
+        id: row
+        property string icon
+        property string text
+        property real value
+        property string valueText
+        property int valueWidth: 26
+        property color color: Theme.primary
+        property bool dimmed: false
+        property bool resettable: false
+        signal moved(real fraction)
+        signal reset()
+
+        Layout.leftMargin: 6
+        Layout.rightMargin: 4
+        spacing: 10
+
+        Icon {
+            visible: row.icon !== ""
+            text: row.icon
+            color: Theme.subtext
+        }
+        Label {
+            text: row.text
+            color: row.icon !== "" ? Theme.text : Theme.subtext
+        }
+        Slider {
+            Layout.fillWidth: true
+            value: row.value
+            color: row.color
+            opacity: row.dimmed ? 0.5 : 1
+            onMoved: f => row.moved(f)
+        }
+        Label {
+            Layout.preferredWidth: row.valueWidth
+            text: row.valueText
+            color: Theme.subtext
+        }
+        CircleButton {
+            enabled: row.resettable
+            icon: Theme.iRestore
+            size: 24
+            onClicked: row.reset()
+        }
+    }
+}

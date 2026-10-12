@@ -5,12 +5,15 @@ set -euo pipefail
 # (Que greetd quede activado lo comprueba run_after_greetd-enable.sh.)
 # Se vuelve a ejecutar cuando cambia algún archivo del greeter, los componentes
 # que comparte con la sesión normal o los monitores:
-{{ range (glob (joinPath .chezmoi.sourceDir "dot_config/quickshell-greeter/*")) -}}
+{{ range (glob (joinPath .chezmoi.sourceDir "dot_config/quickshell-greeter/*.*")) -}}
 # {{ base . }}: {{ include . | sha256sum }}
 {{ end -}}
-# Pill.qml: {{ include "dot_config/quickshell/Pill.qml" | sha256sum }}
-# Icon.qml: {{ include "dot_config/quickshell/Icon.qml" | sha256sum }}
-# Label.qml: {{ include "dot_config/quickshell/Label.qml" | sha256sum }}
+{{ range (glob (joinPath .chezmoi.sourceDir "dot_config/quickshell-greeter/services/*.qml")) -}}
+# services/{{ base . }}: {{ include . | sha256sum }}
+{{ end -}}
+# Pill.qml: {{ include "dot_config/quickshell/components/base/Pill.qml" | sha256sum }}
+# Icon.qml: {{ include "dot_config/quickshell/components/base/Icon.qml" | sha256sum }}
+# Label.qml: {{ include "dot_config/quickshell/components/base/Label.qml" | sha256sum }}
 # monitors.lua: {{ include "dot_config/hypr/monitors.lua" | sha256sum }}
 
 "$HOME/.config/quickshell-greeter/install.sh"

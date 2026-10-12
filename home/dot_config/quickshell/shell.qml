@@ -1,27 +1,27 @@
 import QtQuick
 import Quickshell
+import qs.modules.bar
+import qs.modules.clipboard
+import qs.modules.colorpicker
+import qs.modules.config
+import qs.modules.displays
+import qs.modules.keyboard
+import qs.modules.launcher
+import qs.modules.lock
+import qs.modules.notifications
+import qs.modules.power
+import qs.modules.screenshot
+import qs.modules.wallpaper
 
+// Solo instancia la interfaz: la lógica está en services/ y cada ventana en modules/.
+// Las ventanas usan sus servicios, así que estos se crean (y registran su IPC) al iniciar.
 ShellRoot {
-    // Crea al inicio los módulos que se controlan por IPC para que respondan a IPC
-    Component.onCompleted: {
-        Launcher.open = false;
-        PowerMenu.open = false;
-        Screenshot.active = false;
-        Notifs.dnd = false; // inicia el servidor de notificaciones
-        Config.open = false; // crea el panel de ajustes rápidos
-        Wallpaper.open = false; // crea el fondo (y el reloj del escritorio)
-        Lock.locked = false; // registra el IPC de la pantalla de bloqueo
-        ColorPicker.active = false; // registra el IPC del selector de color
-        Updates.checking; // empieza a buscar actualizaciones
-        Recorder.recording; // registra el IPC de la grabación de pantalla
-        Media.player; // registra el IPC del reproductor multimedia
-        Displays.open = false; // registra el IPC del módulo de pantallas
-        SystemStats.cpu; // registra el IPC del panel del sistema
-        AulaKeyboard.open = false; // teclado AULA: IPC y sincronización del reloj al conectarlo
-        Pomodoro.running; // registra el IPC del pomodoro (y avisa si terminó con Quickshell cerrado)
-        Clipboard.open = false; // historial del portapapeles: IPC y vigilancia de lo copiado
-    }
+    // Por monitor: fondo (con el reloj del escritorio) y barra
+    Variants {
+        model: Quickshell.screens
 
+        WallpaperWindow {}
+    }
     Variants {
         model: Quickshell.screens
 
@@ -30,4 +30,37 @@ ShellRoot {
             screen: modelData
         }
     }
+
+    // Capturas y selector de color (uno por monitor). La capa que oculta el cursor
+    // va antes: la usan los dos mientras congelan la pantalla.
+    Variants {
+        model: Quickshell.screens
+
+        CursorHider {}
+    }
+    Variants {
+        model: Quickshell.screens
+
+        CaptureWindow {}
+    }
+    Variants {
+        model: Quickshell.screens
+
+        PickerWindow {}
+    }
+
+    // Paneles laterales y popups de notificaciones
+    ConfigPanel {}
+    NotificationCenter {}
+    NotificationPopups {}
+
+    // Ventanas sobre todo lo demás
+    LauncherWindow {}
+    ClipboardWindow {}
+    PowerMenuWindow {}
+    DisplaysWindow {}
+    KeyboardWindow {}
+    WallpaperPicker {}
+
+    LockScreen {}
 }

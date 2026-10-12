@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
+import qs.services
 
 // Pantalla de inicio de sesión (greeter de greetd), con el mismo diseño que la
 // pantalla de bloqueo. Corre en un Hyprland mínimo
