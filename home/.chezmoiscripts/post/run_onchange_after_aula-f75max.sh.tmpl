@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Permiso para que aulactl (~/.local/bin/aulactl) y el panel de Quickshell configuren el
+# teclado AULA F75 Max por cable sin ser root: acceso a sus /dev/hidraw para el usuario
+# con sesión activa (uaccess). Solo este teclado (USB 0C45:800A).
+
+rule=/etc/udev/rules.d/70-aula-f75max.rules
+content='# AULA F75 Max por cable: acceso para el usuario de la sesión (aulactl / Quickshell)
+KERNEL=="hidraw*", ATTRS{idVendor}=="0c45", ATTRS{idProduct}=="800a", TAG+="uaccess"'
+
+if [ "$(cat "$rule" 2>/dev/null)" != "$content" ]; then
+  printf '%s\n' "$content" | sudo tee "$rule" >/dev/null
+  sudo udevadm control --reload-rules
+  sudo udevadm trigger --subsystem-match=hidraw
+  echo "[OK] Regla de udev del AULA F75 Max instalada."
+fi

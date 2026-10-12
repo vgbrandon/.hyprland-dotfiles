@@ -205,6 +205,7 @@ Singleton {
     readonly property string iList: String.fromCodePoint(0xF0279)
     readonly property string iPlayCircle: String.fromCodePoint(0xF040C)
     readonly property string iPauseCircle: String.fromCodePoint(0xF03E5)
+    readonly property string iKeyboard: String.fromCodePoint(0xF030C)
     readonly property string iTimer: String.fromCodePoint(0xF051B)
     readonly property string iCoffee: String.fromCodePoint(0xF0176)
     readonly property string iBrain: String.fromCodePoint(0xF09D1)

@@ -1,0 +1,392 @@
+#!/usr/bin/env python3
+"""aulactl: configura el teclado AULA F75 Max por cable (USB 0C45:800A) desde Linux.
+
+Habla con el teclado por /dev/hidraw (hace falta la regla de udev que instala chezmoi):
+  - interfaz de comandos (página 0xFF13): reportes "feature" de 64 bytes
+  - interfaz de la pantalla (página 0xFF68): reportes de salida de 4096 bytes
+
+Protocolo (verificado en hardware por la comunidad, ver github.com/mohin7/aula-f75max y
+github.com/parsiya/f108-pro): cada cambio es una transacción "inicio (04 18) → elegir
+bloque → datos → aplicar (04 02)". Tras los pasos de control se lee la respuesta, y el
+teclado acepta cuando el byte 3 vale 1. El teclado NO permite leer su configuración: lo
+aplicado se guarda en ~/.local/state/aula/state.json (lo usa el panel de Quickshell).
+
+Uso:
+  aulactl status                         estado guardado + si está conectado (JSON)
+  aulactl clock [--12h]                  sincroniza la hora de la pantalla
+  aulactl light MODO [opciones]          efecto de luces (MODO: nombre o 0-19)
+  aulactl settings [opciones]            respuesta, suspensión, bloqueos, Fn
+  aulactl screen ARCHIVO [--fit MODO]    imagen o GIF en la pantalla de 128×128
+  aulactl screen-clear                   borra la memoria de la pantalla
+"""
+
+import argparse
+import fcntl
+import glob
+import json
+import os
+import select
+import subprocess
+import sys
+import tempfile
+import time
+
+VID, PID = 0x0C45, 0x800A
+DELAY = 0.035  # el teclado necesita ~35 ms entre paquetes
+# AULA_TRACE=1: muestra cada paquete enviado y cada respuesta (para investigar el protocolo)
+TRACE = os.environ.get("AULA_TRACE") == "1"
+
+
+def trace(direction, data):
+    if TRACE:
+        print(f"{direction} {bytes(data[:16]).hex(' ')}", file=sys.stderr)
+
+
+STATE = os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "aula", "state.json")
+
+# Efectos de luces del firmware (índice = el byte que se envía)
+MODES = ["off", "static", "reactive", "reactive-fade", "glitter", "rain", "colourful", "breathing",
+         "spectrum", "outward", "wave", "rolling", "rotating", "explode", "launch", "ripple",
+         "flowing", "pulse", "tilt", "shuttle"]
+DIRECTIONS = ["right", "down", "left", "up"]
+SLEEP = {"never": 0, "1": 1, "5": 2, "30": 3}  # minutos -> valor del firmware
+
+DEFAULT_STATE = {
+    "light": {"mode": "rolling", "color": "#ffffff", "multicolor": True, "brightness": 4, "speed": 3, "direction": "right"},
+    "settings": {"response": 1, "sleep": "5", "winLock": False, "altF4Lock": False, "altTabLock": False, "fnSwitch": False},
+    "screen": {"file": "", "fit": "fill"},
+    "clock": {"twelveHour": False, "lastSync": 0},
+}
+
+
+class AulaError(Exception):
+    pass
+
+
+# --- ioctl de hidraw (linux/hidraw.h) ---
+def _ioc(direction, nr, size):
+    return (direction << 30) | (size << 16) | (ord("H") << 8) | nr
+
+
+def HIDIOCSFEATURE(size):
+    return _ioc(3, 0x06, size)
+
+
+def HIDIOCGFEATURE(size):
+    return _ioc(3, 0x07, size)
+
+
+def find_hidraw(usage_page):
+    """El /dev/hidrawN del teclado cuyo descriptor empieza por la página de uso dada."""
+    marker = bytes([0x06, usage_page & 0xFF, usage_page >> 8])
+    for path in sorted(glob.glob("/sys/class/hidraw/hidraw*")):
+        try:
+            with open(f"{path}/device/uevent") as f:
+                uevent = f.read()
+            if f"HID_ID=0003:{VID:08X}:{PID:08X}" not in uevent:
+                continue
+            with open(f"{path}/device/report_descriptor", "rb") as f:
+                if f.read(3) == marker:
+                    return "/dev/" + os.path.basename(path)
+        except OSError:
+            continue
+    return None
+
+
+def packet(*fields, **at):
+    """64 bytes: los primeros valores en orden; at={índice: valor} para los demás."""
+    data = bytearray(64)
+    for i, value in enumerate(fields):
+        data[i] = value
+    for key, value in at.items():
+        data[int(key[1:])] = value
+    return bytes(data)
+
+
+class Keyboard:
+    def __init__(self):
+        path = find_hidraw(0xFF13)
+        if not path:
+            raise AulaError("No se encontró el AULA F75 Max conectado por cable (USB 0C45:800A).")
+        try:
+            self.fd = os.open(path, os.O_RDWR)
+        except PermissionError:
+            raise AulaError(f"Sin permiso para {path}: falta la regla de udev (chezmoi apply y reconectar el teclado).")
+
+    def close(self):
+        os.close(self.fd)
+
+    def set_feature(self, data):
+        buf = bytearray(65)  # byte 0 = número de reporte (0: el teclado no usa IDs)
+        buf[1:] = data
+        fcntl.ioctl(self.fd, HIDIOCSFEATURE(65), buf)
+
+    def get_feature(self):
+        buf = bytearray(65)
+        fcntl.ioctl(self.fd, HIDIOCGFEATURE(65), buf)
+        return bytes(buf[1:])
+
+    def run(self, steps):
+        """steps: [(tipo, paquete)]. Tipos: "ack" (debe confirmar), "echo" (se lee la
+        respuesta sin comprobarla), "send" (solo se envía)."""
+        for kind, data in steps:
+            time.sleep(DELAY)
+            trace(">>", data)
+            self.set_feature(data)
+            if kind in ("ack", "echo"):
+                time.sleep(DELAY)
+                reply = self.get_feature()
+                trace("<<", reply)
+                if kind == "ack" and reply[3] != 0x01:
+                    raise AulaError(f"El teclado no confirmó el comando {data[0]:02X} {data[1]:02X}.")
+
+
+BEGIN = ("ack", packet(0x04, 0x18))
+APPLY = ("ack", packet(0x04, 0x02))
+FINISH = ("send", packet(0x04, 0xF0))
+
+
+# --- Comandos ---
+def clock_steps(twelve_hour=False):
+    now = time.localtime()
+    hour = now.tm_hour
+    if twelve_hour:
+        hour = hour % 12 or 12
+    data = packet(0x00, 0x01, 0x5A, (now.tm_year - 2000) % 100, now.tm_mon, now.tm_mday,
+                  hour, now.tm_min, now.tm_sec, 0x00, (now.tm_wday + 1) % 7, b62=0xAA, b63=0x55)
+    return [BEGIN, ("ack", packet(0x04, 0x28, b8=0x01)), ("echo", data), APPLY]
+
+
+def light_steps(light):
+    mode = MODES.index(light["mode"])
+    data = bytearray(64)
+    data[0] = mode
+    if mode != 0:
+        color = light["color"].lstrip("#")
+        data[1:4] = bytes.fromhex(color)
+        data[8] = 1 if light["multicolor"] else 0
+        data[9] = light["brightness"]
+        data[10] = light["speed"]
+        data[11] = DIRECTIONS.index(light["direction"])
+    data[14], data[15] = 0xAA, 0x55
+    return [BEGIN, ("ack", packet(0x04, 0x13, b8=0x01)), ("send", bytes(data)), APPLY, FINISH]
+
+
+def settings_steps(s):
+    data = packet(0x00, 0x01, int(s["winLock"]), int(s["altF4Lock"]), int(s["altTabLock"]),
+                  int(s["fnSwitch"]), SLEEP[s["sleep"]], 0x00, s["response"], b62=0xAA, b63=0x55)
+    return [BEGIN, ("ack", packet(0x04, 0x17, 0x01, b8=0x01)), ("send", data), APPLY]
+
+
+def encode_screen(path, fit):
+    """Imagen/GIF -> flujo de la pantalla: cabecera de 256 bytes (fotogramas, su duración
+    en unidades de 2 ms y el resto 0xFF) + fotogramas 128×128 RGB565 little-endian, en
+    bloques de 4096."""
+    size = 128
+    filters = {
+        "fit": f"scale={size}:{size}:force_original_aspect_ratio=decrease:flags=lanczos,pad={size}:{size}:(ow-iw)/2:(oh-ih)/2:black",
+        "fill": f"scale={size}:{size}:force_original_aspect_ratio=increase:flags=lanczos,crop={size}:{size}",
+        "stretch": f"scale={size}:{size}:flags=lanczos",
+    }[fit]
+    with tempfile.TemporaryDirectory() as tmp:
+        raw = os.path.join(tmp, "frames.raw")
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-frames:v", "255", "-vf", filters,
+                        "-pix_fmt", "rgb565le", "-f", "rawvideo", raw], check=True)
+        with open(raw, "rb") as f:
+            pixels = f.read()
+    frame_size = size * size * 2
+    count = len(pixels) // frame_size
+    if count == 0:
+        raise AulaError("No se pudo leer ningún fotograma de la imagen.")
+    # Duración de cada fotograma (si es una imagen fija, da igual)
+    probe = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                            "frame=duration_time", "-of", "csv=p=0", path], capture_output=True, text=True)
+    delays = []
+    for line in probe.stdout.split():
+        try:
+            delays.append(float(line.strip(",")))
+        except ValueError:
+            pass
+    # Lo que sobra de la cabecera va relleno con 0xFF, como hace el programa oficial:
+    # con ceros, el firmware seguía leyendo "fotogramas" de más y mostraba restos de
+    # subidas anteriores parpadeando
+    header = bytearray(b"\xff" * 256)
+    header[0] = count
+    for i in range(count):
+        ms = delays[i] * 1000 if i < len(delays) and delays[i] > 0 else 100
+        header[1 + i] = round(min(max(ms, 30), 500) / 2)
+    stream = bytes(header) + pixels[:count * frame_size]
+    # La última página se rellena con 0xFF, como el programa oficial
+    stream += b"\xff" * (-len(stream) % 4096)
+    return stream, count
+
+
+def upload_screen(kb, stream, slot=1, progress=None):
+    display_path = find_hidraw(0xFF68)
+    if not display_path:
+        raise AulaError("No se encontró la interfaz de la pantalla del teclado.")
+    chunks = len(stream) // 4096
+    fd = os.open(display_path, os.O_RDWR | os.O_NONBLOCK)
+    try:
+        # Descarta confirmaciones viejas
+        while select.select([fd], [], [], 0)[0]:
+            os.read(fd, 128)
+        kb.run([BEGIN, ("ack", packet(0x04, 0x72, slot, b8=chunks & 0xFF, b9=chunks >> 8))])
+        acked = 0
+        for i in range(chunks):
+            # Reporte de salida (endpoint de interrupción): byte 0 = número de reporte (0),
+            # que el kernel quita antes de enviar. Sin él, los bloques que empiezan por 0x00
+            # pierden su primer byte.
+            trace(f">> página {i + 1}/{chunks}:", stream[i * 4096:(i + 1) * 4096])
+            os.write(fd, b"\x00" + stream[i * 4096:(i + 1) * 4096])
+            if select.select([fd], [], [], 0.4)[0]:
+                ack = os.read(fd, 128)
+                trace("<< confirmación:", ack)
+                # Cada página se confirma con 01 5A 02 …
+                if ack[:2] == b"\x01\x5a":
+                    acked += 1
+            if progress:
+                progress(i + 1, chunks)
+        kb.run([APPLY])
+        return acked, chunks
+    finally:
+        os.close(fd)
+
+
+def screen_clear_steps():
+    """Borra la memoria de la pantalla: la tabla de huecos de imagen (bloque 04 15, 8
+    páginas a cero), donde seguían apuntados los fotogramas de la animación de fábrica.
+    Mismo flujo que el restablecimiento de fábrica de github.com/VitalyArt/Aula-F75-Max-Driver."""
+    zero = bytes(64)
+    return ([("ack", packet(0x04, 0x19)), ("ack", packet(0x04, 0x15, b8=0x08))]
+            + [("send", zero)] * 7 + [("echo", zero), APPLY])
+
+
+# --- Estado guardado ---
+def load_state():
+    state = json.loads(json.dumps(DEFAULT_STATE))
+    try:
+        with open(STATE) as f:
+            saved = json.load(f)
+        for key, value in saved.items():
+            if isinstance(value, dict) and key in state:
+                state[key].update(value)
+    except (OSError, ValueError):
+        pass
+    return state
+
+
+def save_state(state):
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    tmp = STATE + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(state, f, indent=2)
+    os.replace(tmp, STATE)
+
+
+def on_off(value):
+    return value in ("on", "1", "true", "si", "sí", "yes")
+
+
+def main():
+    parser = argparse.ArgumentParser(prog="aulactl", description="Configura el AULA F75 Max por cable.")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    sub.add_parser("status", help="estado guardado y conexión (JSON)")
+
+    p = sub.add_parser("clock", help="sincroniza la hora de la pantalla")
+    p.add_argument("--12h", dest="twelve", action="store_true", help="formato de 12 horas")
+
+    p = sub.add_parser("light", help="efecto de luces")
+    p.add_argument("mode", help="nombre (" + ", ".join(MODES) + ") o número 0-19")
+    p.add_argument("--color", help="color #RRGGBB")
+    p.add_argument("--multicolor", choices=["on", "off"])
+    p.add_argument("--brightness", type=int, choices=range(1, 6))
+    p.add_argument("--speed", type=int, choices=range(1, 6))
+    p.add_argument("--direction", choices=DIRECTIONS)
+
+    p = sub.add_parser("settings", help="ajustes del teclado")
+    p.add_argument("--response", type=int, choices=range(1, 6), help="tiempo de respuesta (1 = más rápido)")
+    p.add_argument("--sleep", choices=list(SLEEP), help="suspensión en minutos (never = nunca)")
+    p.add_argument("--win-lock", choices=["on", "off"])
+    p.add_argument("--alt-f4-lock", choices=["on", "off"])
+    p.add_argument("--alt-tab-lock", choices=["on", "off"])
+    p.add_argument("--fn-switch", choices=["on", "off"])
+
+    sub.add_parser("screen-clear", help="borra la memoria de la pantalla (también la animación de fábrica)")
+
+    p = sub.add_parser("screen", help="imagen o GIF en la pantalla")
+    p.add_argument("file")
+    p.add_argument("--fit", choices=["fit", "fill", "stretch"], default="fill")
+
+    args = parser.parse_args()
+    state = load_state()
+
+    if args.command == "status":
+        state["connected"] = find_hidraw(0xFF13) is not None
+        state["modes"] = MODES
+        print(json.dumps(state))
+        return
+
+    kb = Keyboard()
+    try:
+        if args.command == "clock":
+            kb.run(clock_steps(args.twelve))
+            state["clock"] = {"twelveHour": args.twelve, "lastSync": int(time.time())}
+
+        elif args.command == "light":
+            light = dict(state["light"])
+            light["mode"] = MODES[int(args.mode)] if args.mode.isdigit() else args.mode
+            if light["mode"] not in MODES:
+                raise AulaError(f"Efecto desconocido: {args.mode}")
+            if args.color:
+                light["color"] = "#" + args.color.lstrip("#").lower()
+            if args.multicolor:
+                light["multicolor"] = on_off(args.multicolor)
+            for key in ("brightness", "speed", "direction"):
+                if getattr(args, key) is not None:
+                    light[key] = getattr(args, key)
+            kb.run(light_steps(light))
+            state["light"] = light
+
+        elif args.command == "settings":
+            s = dict(state["settings"])
+            if args.response:
+                s["response"] = args.response
+            if args.sleep:
+                s["sleep"] = args.sleep
+            for arg, key in (("win_lock", "winLock"), ("alt_f4_lock", "altF4Lock"),
+                             ("alt_tab_lock", "altTabLock"), ("fn_switch", "fnSwitch")):
+                if getattr(args, arg):
+                    s[key] = on_off(getattr(args, arg))
+            kb.run(settings_steps(s))
+            state["settings"] = s
+
+        elif args.command == "screen-clear":
+            kb.run(screen_clear_steps())
+            state["screen"] = {"file": "", "fit": state["screen"].get("fit", "fill")}
+
+        elif args.command == "screen":
+            stream, frames = encode_screen(args.file, args.fit)
+
+            def progress(done, total):
+                print(f"progress {done} {total}", flush=True)
+
+            acked, chunks = upload_screen(kb, stream, progress=progress)
+            state["screen"] = {"file": os.path.abspath(args.file), "fit": args.fit, "frames": frames}
+            print(f"Pantalla: {frames} fotograma(s), {acked}/{chunks} bloques confirmados", file=sys.stderr)
+
+        save_state(state)
+    finally:
+        kb.close()
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except AulaError as e:
+        print(f"aulactl: {e}", file=sys.stderr)
+        sys.exit(1)
+    except subprocess.CalledProcessError as e:
+        print(f"aulactl: no se pudo convertir la imagen ({e})", file=sys.stderr)
+        sys.exit(1)

@@ -312,6 +312,44 @@ PanelWindow {
                 }
             }
 
+            // Teclado: abre la ventana del AULA F75 Max
+            Rectangle {
+                Layout.fillWidth: true
+                implicitHeight: 34
+                radius: Theme.radiusSmall
+                color: keyboardMouse.containsMouse ? Theme.surface : "transparent"
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: 6
+                    anchors.rightMargin: 4
+                    spacing: 10
+
+                    Icon {
+                        text: Theme.iKeyboard
+                        color: Theme.subtext
+                    }
+                    Label {
+                        Layout.fillWidth: true
+                        text: "Teclado"
+                    }
+                    Icon {
+                        text: Theme.iChevronRight
+                        color: Theme.subtext
+                    }
+                }
+                MouseArea {
+                    id: keyboardMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Config.close();
+                        AulaKeyboard.toggle();
+                    }
+                }
+            }
+
             // Posición de la barra: un botón por borde
             RowLayout {
                 Layout.leftMargin: 6
