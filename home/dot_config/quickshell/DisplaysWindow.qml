@@ -404,12 +404,14 @@ PanelWindow {
                     color: !Displays.edits.some(e => e.enabled) ? Theme.error : Theme.subtext
                     font.pixelSize: Theme.fontSize
                 }
-                Button {
+
+                TextButton {
                     visible: Displays.dirty
                     text: "Descartar"
                     onClicked: Displays.discard()
                 }
-                Button {
+
+                TextButton {
                     text: "Aplicar"
                     accent: true
                     enabled: Displays.dirty && Displays.edits.some(e => e.enabled)
@@ -447,11 +449,12 @@ PanelWindow {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 8
 
-                    Button {
+                    TextButton {
                         text: "Revertir"
                         onClicked: Displays.revert()
                     }
-                    Button {
+
+                    TextButton {
                         text: "Mantener"
                         accent: true
                         onClicked: Displays.keep()
@@ -461,36 +464,8 @@ PanelWindow {
         }
     }
 
-    // --- Pequeños componentes de esta ventana ---
+    // --- Pequeños componentes de esta ventana (TextButton y Chips están en su archivo) ---
 
-    // Botón de texto (accent = color principal)
-    component Button: Rectangle {
-        id: button
-        property string text
-        property bool accent: false
-        signal clicked()
-
-        implicitWidth: buttonLabel.implicitWidth + 32
-        implicitHeight: 36
-        radius: height / 2
-        opacity: enabled ? 1 : 0.4
-        color: accent ? (buttonMouse.containsMouse ? Qt.lighter(Theme.primary, 1.1) : Theme.primary)
-            : buttonMouse.containsMouse ? Theme.surfaceHigh : Theme.surface
-
-        Label {
-            id: buttonLabel
-            anchors.centerIn: parent
-            text: button.text
-            color: button.accent ? Theme.primaryFg : Theme.text
-        }
-        MouseArea {
-            id: buttonMouse
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: button.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-            onClicked: if (button.enabled) button.clicked()
-        }
-    }
 
     // Valor con flechas a los lados (‹ 1920 × 1080 ›)
     component Cycler: ColumnLayout {
@@ -555,57 +530,6 @@ PanelWindow {
                                 onClicked: cycler.step(slot.modelData < 0 ? -1 : 1)
                             }
                         }
-                    }
-                }
-            }
-        }
-    }
-
-    // Fila de opciones (la elegida resaltada)
-    component Chips: ColumnLayout {
-        id: chips
-        property string label
-        property var options: []
-        property var format: v => String(v)
-        property var value
-        signal picked(var v)
-
-        spacing: 4
-
-        Label {
-            Layout.leftMargin: 4
-            text: chips.label
-            color: Theme.subtext
-            font.pixelSize: Theme.fontSize
-        }
-        Row {
-            spacing: 4
-
-            Repeater {
-                model: chips.options
-
-                Rectangle {
-                    id: chip
-                    required property var modelData
-                    readonly property bool on: Math.abs(Number(chips.value) - Number(modelData)) < 0.001
-
-                    width: chipLabel.implicitWidth + 20
-                    height: 32
-                    radius: height / 2
-                    color: on ? Theme.primary : chipMouse.containsMouse ? Theme.surfaceHigh : Theme.surface
-
-                    Label {
-                        id: chipLabel
-                        anchors.centerIn: parent
-                        text: chips.format(chip.modelData)
-                        color: chip.on ? Theme.primaryFg : Theme.text
-                    }
-                    MouseArea {
-                        id: chipMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: chips.picked(chip.modelData)
                     }
                 }
             }
