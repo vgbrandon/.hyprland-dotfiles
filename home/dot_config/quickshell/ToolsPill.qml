@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-// Herramientas: fondos, selector de color, portapapeles, grabación, captura y luz nocturna.
+// Herramientas: fondos, selector de color, portapapeles, grabación, captura, pomodoro y luz nocturna.
 // En la barra vertical también el volumen (icono y número), donde ocupa menos alto.
 Pill {
     id: root
@@ -57,6 +57,9 @@ Pill {
             }
         }
     }
+
+    // Pomodoro: con una sesión en marcha muestra el tiempo restante
+    PomodoroButton {}
 
     NightLightButton {}
 

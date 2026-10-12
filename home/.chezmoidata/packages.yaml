@@ -48,6 +48,7 @@ packages:
     - xdg-desktop-portal-gtk # fallback GTK para FileChooser/OpenURI
     - polkit-gnome # autenticación gráfica de permisos
     - quickshell # framework de widgets para Wayland
+    - sound-theme-freedesktop # sonidos del aviso del pomodoro de Quickshell (pw-play)
     - greetd # gestor de inicio de sesión (la pantalla de inicio es Quickshell, ver quickshell-greeter)
     - plymouth # pantalla de carga al arrancar (tema propio en ~/.config/plymouth-theme)
     - ttf-jetbrains-mono-nerd # fuente Nerd Font
