@@ -221,6 +221,7 @@ Singleton {
         function pause(): void { root.pause(); }
         function skip(): void { root.skip(); }
         function reset(): void { root.reset(); }
+        function resetCycle(): void { root.resetCycle(); }
         function panel(): void { root.panelRequested(); }
     }
 }
