@@ -65,13 +65,16 @@ Singleton {
     ]
     readonly property var mode: modes.find(m => m.id === light.mode) ?? modes[0]
 
+    // Ruta completa: la sesión (Hyprland) no tiene ~/.local/bin en el PATH
+    readonly property string aulactl: Quickshell.env("HOME") + "/.local/bin/aulactl"
+
     function refresh() {
         statusProc.running = true;
     }
 
     Process {
         id: statusProc
-        command: ["aulactl", "status"]
+        command: [root.aulactl, "status"]
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
@@ -121,7 +124,7 @@ Singleton {
     }
     function next() {
         if (queue.length === 0) return;
-        runner.command = ["aulactl"].concat(queue[0]);
+        runner.command = [root.aulactl].concat(queue[0]);
         queue = queue.slice(1);
         runner.running = true;
     }
