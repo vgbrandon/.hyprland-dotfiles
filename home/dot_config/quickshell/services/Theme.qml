@@ -135,6 +135,7 @@ Singleton {
 
     // Fuentes
     readonly property string font: "sans-serif"
+    readonly property string monoFont: "JetBrainsMono Nerd Font Mono"
     readonly property string iconFont: "JetBrainsMono Nerd Font Propo"
     readonly property int fontSize: 11
 
@@ -212,6 +213,23 @@ Singleton {
     readonly property string iPlus: String.fromCodePoint(0xF0415)
     readonly property string iMinus: String.fromCodePoint(0xF0374)
     readonly property string iClipboard: String.fromCodePoint(0xF0147)
+    readonly property string iSend: String.fromCodePoint(0xF048A)
+    readonly property string iStop: String.fromCodePoint(0xF04DB)
+    readonly property string iCopy: String.fromCodePoint(0xF018F)
+    readonly property string iChevronDown: String.fromCodePoint(0xF0140)
+    readonly property string iChevronUp: String.fromCodePoint(0xF0143)
+    readonly property string iPencil: String.fromCodePoint(0xF03EB)
+    readonly property string iDelete: String.fromCodePoint(0xF01B4)
+    readonly property string iAlert: String.fromCodePoint(0xF0026)
+    readonly property string iConsole: String.fromCodePoint(0xF018D)
+    readonly property string iFolder: String.fromCodePoint(0xF024B)
+    readonly property string iShield: String.fromCodePoint(0xF0498)
+    readonly property string iDots: String.fromCodePoint(0xF01D8)
+    readonly property string iUndo: String.fromCodePoint(0xF054C)
+    readonly property string iCompress: String.fromCodePoint(0xF0615)
+    readonly property string iAttach: String.fromCodePoint(0xF0066)
+    readonly property string iAt: String.fromCodePoint(0xF0065)
+    readonly property string iSlash: String.fromCodePoint(0xF0FDF)
     readonly property string iDockTop: String.fromCodePoint(0xF1513)
     readonly property string iDockBottom: String.fromCodePoint(0xF10A9)
     readonly property string iDockLeft: String.fromCodePoint(0xF10AA)

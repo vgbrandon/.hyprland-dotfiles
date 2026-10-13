@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import qs.modules.ai
 import qs.modules.bar
 import qs.modules.clipboard
 import qs.modules.colorpicker
@@ -50,6 +51,7 @@ ShellRoot {
     }
 
     // Paneles laterales y popups de notificaciones
+    AIPanel {}
     ConfigPanel {}
     NotificationCenter {}
     NotificationPopups {}

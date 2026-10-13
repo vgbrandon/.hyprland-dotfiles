@@ -2,11 +2,12 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Bluetooth
 import Quickshell.Networking
+import qs.components.base
 import qs.components.buttons
 import qs.modules.network
 import qs.services
 
-// Bandeja, red (NetworkManager), Bluetooth, notificaciones, ajustes y energía
+// Bandeja, red (NetworkManager), Bluetooth, asistente de IA, notificaciones, ajustes y energía
 // (en columna si la barra está a un lado)
 GridLayout {
     id: root
@@ -68,6 +69,24 @@ GridLayout {
         BluetoothPanel {
             id: btPanel
             anchorItem: btIcon
+        }
+    }
+
+    // Asistente de IA (logo de OpenCode): de color mientras trabaja; amarillo si espera un permiso
+    Item {
+        implicitWidth: aiLogo.implicitWidth
+        implicitHeight: aiLogo.implicitHeight
+
+        OpenCodeLogo {
+            id: aiLogo
+            size: 15
+            color: AI.permissions.length > 0 ? Theme.warning : AI.busy ? Theme.primary : Theme.text
+        }
+        MouseArea {
+            anchors.fill: parent
+            anchors.margins: -4
+            cursorShape: Qt.PointingHandCursor
+            onClicked: AI.toggle()
         }
     }
 
