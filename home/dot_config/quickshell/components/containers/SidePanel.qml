@@ -81,11 +81,22 @@ PanelWindow {
         border.color: Theme.surfaceHigh
         border.width: 1
 
-        ColumnLayout {
-            id: column
+        // Si el contenido no cabe (monitores bajos), se desplaza con la rueda
+        Flickable {
+            id: flick
             anchors.fill: parent
             anchors.margins: 12
-            spacing: 10
+            contentHeight: column.height
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+
+            ColumnLayout {
+                id: column
+                width: flick.width
+                // Al menos el alto visible: lo que se estira (p. ej. un espaciador) llega al pie
+                height: Math.max(flick.height, implicitHeight)
+                spacing: 10
+            }
         }
     }
 }

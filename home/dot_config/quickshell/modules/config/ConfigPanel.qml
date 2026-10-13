@@ -36,7 +36,7 @@ SidePanel {
 
     Section {
         title: "Dispositivos"
-        contentSpacing: 10
+        contentSpacing: 8
 
         SwitchRow {
             icon: Networking.wifiEnabled ? Theme.iWifi : Theme.iWifiOff
@@ -86,7 +86,7 @@ SidePanel {
 
     Section {
         title: "Apariencia"
-        contentSpacing: 10
+        contentSpacing: 8
 
         NavRow {
             icon: Theme.iMonitor
@@ -176,6 +176,28 @@ SidePanel {
         }
     }
 
+    // Qué pasa tras unos minutos sin usar el equipo (ver services/Idle.qml)
+    Section {
+        title: "Inactividad"
+        contentSpacing: 8
+
+        IdleRow {
+            what: "lock"
+            icon: Theme.iLock
+            text: "Bloquear"
+        }
+        IdleRow {
+            what: "screenOff"
+            icon: Theme.iMonitor
+            text: "Apagar pantallas"
+        }
+        IdleRow {
+            what: "suspend"
+            icon: Theme.iSleep
+            text: "Suspender"
+        }
+    }
+
     // Espacio para que las acciones queden al pie del panel
     Item { Layout.fillHeight: true }
 
@@ -206,16 +228,23 @@ SidePanel {
     // --- Componentes del panel ---
 
     // Fila que abre otra ventana: icono, texto y una flecha
-    component NavRow: Rectangle {
+    // Mismo alto que las filas con interruptor; el resaltado sobresale un poco
+    component NavRow: Item {
         id: nav
         property string icon
         property string text
         signal clicked()
 
         Layout.fillWidth: true
-        implicitHeight: 34
-        radius: Theme.radiusSmall
-        color: navMouse.containsMouse ? Theme.surface : "transparent"
+        implicitHeight: 24
+
+        Rectangle {
+            anchors.fill: parent
+            anchors.topMargin: -4
+            anchors.bottomMargin: -4
+            radius: Theme.radiusSmall
+            color: navMouse.containsMouse ? Theme.surface : "transparent"
+        }
 
         RowLayout {
             anchors.fill: parent
@@ -242,6 +271,59 @@ SidePanel {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: nav.clicked()
+        }
+    }
+
+    // Acción por inactividad: icono, texto, minutos (‹ 5 min ›) e interruptor.
+    // Los minutos se atenúan si está desactivada.
+    component IdleRow: RowLayout {
+        id: idle
+        required property string what
+        property string icon
+        property string text
+        readonly property bool on: Idle[what + "Enabled"]
+
+        Layout.leftMargin: 6
+        Layout.rightMargin: 4
+        spacing: 10
+
+        Icon {
+            text: idle.icon
+            color: Theme.subtext
+        }
+        Label {
+            Layout.fillWidth: true
+            text: idle.text
+        }
+        RowLayout {
+            spacing: 2
+            opacity: idle.on ? 1 : 0.4
+
+            CircleButton {
+                icon: Theme.iChevronLeft
+                size: 24
+                iconSize: 14
+                iconColor: Theme.subtext
+                onClicked: Idle.step(idle.what, -1)
+            }
+            Label {
+                Layout.preferredWidth: 52
+                horizontalAlignment: Text.AlignHCenter
+                text: Idle.label(Idle[idle.what + "Minutes"])
+                color: Theme.subtext
+                font.features: { "tnum": 1 }
+            }
+            CircleButton {
+                icon: Theme.iChevronRight
+                size: 24
+                iconSize: 14
+                iconColor: Theme.subtext
+                onClicked: Idle.step(idle.what, 1)
+            }
+        }
+        Switch {
+            checked: idle.on
+            onToggled: Idle.setEnabled(idle.what, !idle.on)
         }
     }
 

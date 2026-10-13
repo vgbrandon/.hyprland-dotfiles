@@ -8,6 +8,9 @@ import Quickshell.Io
 Item {
     id: root
 
+    // No es visual: oculto, un layout no le reserva sitio (si no, deja huecos)
+    visible: false
+
     required property string option // p. ej. "general:gaps_in"
     // Para opciones numéricas: rango del slider y valor por defecto
     property int max: 100

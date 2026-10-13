@@ -31,6 +31,11 @@ Singleton {
         Hyprland.dispatch(lua ? "hl.dsp.exit()" : "exit");
     }
 
+    // Encender o apagar las pantallas
+    function dpms(on) {
+        Hyprland.dispatch(lua ? `hl.dsp.dpms({ action = "${on ? "on" : "off"}" })` : `dpms ${on ? "on" : "off"}`);
+    }
+
     // Atajo de teclado en la ventana activa, p. ej. sendShortcut("CTRL", "V")
     function sendShortcut(mods, key) {
         Hyprland.dispatch(lua ? `hl.dsp.send_shortcut({ mods = "${mods}", key = "${key}" })` : `sendshortcut ${mods}, ${key},`);

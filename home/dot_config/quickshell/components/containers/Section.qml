@@ -37,7 +37,9 @@ ColumnLayout {
     ColumnLayout {
         id: body
         Layout.fillWidth: true
-        Layout.fillHeight: true
+        // Solo se estira si la sección lo pide (p. ej. una lista que llena el panel);
+        // si no, las secciones reparten el alto sobrante y aparecen huecos
+        Layout.fillHeight: root.Layout.fillHeight
         spacing: 4
     }
 }
