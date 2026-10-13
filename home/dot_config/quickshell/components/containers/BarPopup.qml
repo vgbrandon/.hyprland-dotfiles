@@ -25,7 +25,16 @@ PopupWindow {
     // Abre/cierra desde la barra. Si el mismo clic acaba de cerrarlo, no lo reabre.
     function toggle() {
         if (!visible && Date.now() - closedAt < 300) return;
+        if (!visible) place();
         visible = !visible;
+    }
+
+    // Centro del elemento al abrir. Se fija aquí y no se sigue después: si el
+    // elemento cambia de tamaño con el panel abierto (p. ej. el pomodoro pasa del
+    // icono al tiempo), el panel no se mueve.
+    property point anchorCenter
+    function place() {
+        anchorCenter = anchorItem.mapToItem(null, anchorItem.width / 2, anchorItem.height / 2);
     }
 
     function close() {
@@ -40,11 +49,11 @@ PopupWindow {
     }
 
     visible: false
-    anchor.item: anchorItem
+    // Anclado a la ventana de la barra (no al elemento), junto a la barra esté donde esté
+    anchor.window: anchorItem.QsWindow.window
     anchor.rect.x: popupPos.x
     anchor.rect.y: popupPos.y
-    // Junto a la barra, esté donde esté
-    readonly property point popupPos: Config.popupPos(anchorItem, implicitWidth, implicitHeight, visible)
+    readonly property point popupPos: Config.popupPos(anchorItem.QsWindow.window, anchorCenter, implicitWidth, implicitHeight)
     implicitHeight: {
         const h = column.implicitHeight + padding * 2;
         return maxHeight > 0 ? Math.min(maxHeight, h) : h;

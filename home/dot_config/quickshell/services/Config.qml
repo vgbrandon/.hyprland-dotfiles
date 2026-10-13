@@ -130,24 +130,16 @@ Singleton {
         return barPosition === edge ? Theme.barHeight : 0;
     }
 
-    // Posición de un popup de la barra, relativa al elemento que lo abre:
-    // pegado al borde interior de la barra, centrado en el elemento y sin
-    // salirse del monitor. "open" solo sirve para recalcularla al abrirlo.
-    function popupPos(item, w, h, open) {
-        const win = item?.QsWindow.window;
+    // Posición de un popup de la barra, en coordenadas de la ventana de la barra:
+    // pegado a su borde interior, centrado en "center" (el centro del elemento que
+    // lo abre) y sin salirse del monitor.
+    function popupPos(win, center, w, h) {
         if (!win) return Qt.point(0, 0);
-        const p = item.mapToItem(null, 0, 0);
         const gap = 8;
-        const clamp = (v, size, max) => Math.max(gap, Math.min(max - size - gap, v));
-        let x, y;
-        if (barVertical) {
-            x = barPosition === "left" ? win.width + gap : -w - gap;
-            y = clamp(p.y + item.height / 2 - h / 2, h, win.height);
-        } else {
-            x = clamp(p.x + item.width / 2 - w / 2, w, win.width);
-            y = barPosition === "top" ? win.height + gap : -h - gap;
-        }
-        return Qt.point(x - p.x, y - p.y);
+        const clamp = (v, size, max) => Math.round(Math.max(gap, Math.min(max - size - gap, v)));
+        if (barVertical)
+            return Qt.point(barPosition === "left" ? win.width + gap : -w - gap, clamp(center.y - h / 2, h, win.height));
+        return Qt.point(clamp(center.x - w / 2, w, win.width), barPosition === "top" ? win.height + gap : -h - gap);
     }
 
     FileView {
