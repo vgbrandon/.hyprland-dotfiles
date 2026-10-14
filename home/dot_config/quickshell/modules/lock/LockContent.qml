@@ -225,27 +225,17 @@ Item {
             RowLayout {
                 spacing: 14
 
-                Rectangle {
-                    implicitWidth: 56
-                    implicitHeight: 56
-                    radius: height / 2
-                    color: Theme.primary
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: surface.user.charAt(0).toUpperCase()
-                        color: Theme.primaryFg
-                        font.family: Theme.font
-                        font.pixelSize: 26
-                        font.weight: Font.DemiBold
-                    }
+                Avatar {
+                    size: 56
+                    source: Profile.avatarUrl
+                    initial: Profile.initial
                 }
                 ColumnLayout {
                     Layout.fillWidth: true
                     spacing: 0
 
                     Label {
-                        text: surface.user
+                        text: Profile.name
                         font.pixelSize: 18
                     }
                     RowLayout {

@@ -4,6 +4,7 @@ import Quickshell.Bluetooth
 import Quickshell.Networking
 import qs.components.base
 import qs.components.buttons
+import qs.modules.github
 import qs.modules.network
 import qs.services
 
@@ -69,6 +70,26 @@ GridLayout {
         BluetoothPanel {
             id: btPanel
             anchorItem: btIcon
+        }
+    }
+
+    // GitHub: la cuenta de gh y git (iniciar sesión, cambiar de cuenta…)
+    IconButton {
+        id: ghIcon
+        text: Theme.iGithub
+        // Esperando a que se autorice el inicio de sesión: en color
+        color: GitHub.loggingIn ? Theme.primary : Theme.text
+        onClicked: ghPanel.toggle()
+
+        Connections {
+            target: GitHub
+            function onPanelRequested() {
+                ghPanel.toggleOnFocusedScreen();
+            }
+        }
+        GitHubPanel {
+            id: ghPanel
+            anchorItem: ghIcon
         }
     }
 

@@ -11,6 +11,7 @@ import qs.modules.launcher
 import qs.modules.lock
 import qs.modules.notifications
 import qs.modules.power
+import qs.modules.profile
 import qs.modules.screenshot
 import qs.modules.wallpaper
 
@@ -60,6 +61,7 @@ ShellRoot {
     LauncherWindow {}
     ClipboardWindow {}
     PowerMenuWindow {}
+    ProfileWindow {}
     DisplaysWindow {}
     KeyboardWindow {}
     WallpaperPicker {}

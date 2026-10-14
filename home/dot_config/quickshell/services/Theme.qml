@@ -93,16 +93,19 @@ Singleton {
         }
     }
 
-    // Comparte fondo, colores y usuario con la pantalla de inicio de sesión (greetd):
+    // Comparte fondo, colores, usuario, nombre y foto con la pantalla de inicio de sesión (greetd):
     // el usuario "greeter" no puede leer esta carpeta personal. Si la carpeta
     // compartida no existe (greeter sin instalar), no hace nada.
     function shareWithGreeter() {
         if (wallpaper === "") return;
-        const data = JSON.stringify({ wallpaper: true, user: Quickshell.env("USER"), radius: radius, primary: Displays.primary, scheme: scheme });
+        const data = JSON.stringify({ wallpaper: true, user: Quickshell.env("USER"), name: Profile.name,
+            avatar: Profile.hasAvatar, radius: radius, primary: Displays.primary, scheme: scheme });
+        // También la foto del perfil (o se borra si ya no hay)
         shareProc.command = ["sh", "-c", `d=/var/lib/qs-greeter
             [ -w "$d" ] || exit 0
             cp -f "$1" "$d/wallpaper.tmp" && mv -f "$d/wallpaper.tmp" "$d/wallpaper"
-            printf '%s' "$2" > "$d/theme.json"`, "sh", wallpaper, data];
+            if [ -s "$3" ]; then cp -f "$3" "$d/avatar.tmp" && mv -f "$d/avatar.tmp" "$d/avatar"; else rm -f "$d/avatar"; fi
+            printf '%s' "$2" > "$d/theme.json"`, "sh", wallpaper, data, Profile.avatarPath];
         shareProc.running = true;
     }
     Process {
@@ -230,6 +233,7 @@ Singleton {
     readonly property string iAttach: String.fromCodePoint(0xF0066)
     readonly property string iAt: String.fromCodePoint(0xF0065)
     readonly property string iSlash: String.fromCodePoint(0xF0FDF)
+    readonly property string iGithub: String.fromCodePoint(0xF02A4)
     readonly property string iDockTop: String.fromCodePoint(0xF1513)
     readonly property string iDockBottom: String.fromCodePoint(0xF10A9)
     readonly property string iDockLeft: String.fromCodePoint(0xF10AA)

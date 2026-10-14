@@ -397,3 +397,11 @@ hl.window_rule({
 	size = { "monitor_w * 0.55", "monitor_h * 0.6" },
 	center = true,
 })
+
+-- Terminal para cambiar la contraseña (perfil de Quickshell)
+hl.window_rule({
+	match = { class = "^qs-passwd$" },
+	float = true,
+	size = { 640, 300 },
+	center = true,
+})

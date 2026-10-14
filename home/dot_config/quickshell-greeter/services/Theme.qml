@@ -15,6 +15,9 @@ Singleton {
     property var scheme: ({})
     property string wallpaper: ""
     property string user: ""
+    // Nombre que se muestra y foto del perfil de ese usuario (los comparte la sesión)
+    property string name: ""
+    property string avatar: ""
     // Monitor principal (lo elige el módulo de pantallas de la sesión)
     property string primaryMonitor: ""
 
@@ -46,6 +49,8 @@ Singleton {
                 const d = JSON.parse(text());
                 root.scheme = d.scheme ?? {};
                 root.user = d.user ?? "";
+                root.name = d.name ?? "";
+                if (d.avatar) root.avatar = "file://" + root.shared + "/avatar";
                 root.primaryMonitor = d.primary ?? "";
                 if (d.radius >= 0) root.radius = d.radius;
                 if (d.wallpaper) root.wallpaper = root.shared + "/wallpaper";

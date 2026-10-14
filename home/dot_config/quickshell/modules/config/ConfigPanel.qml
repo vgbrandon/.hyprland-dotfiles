@@ -28,10 +28,54 @@ SidePanel {
 
     readonly property BluetoothAdapter bt: Bluetooth.defaultAdapter
 
-    Label {
-        Layout.leftMargin: 6
-        text: "Configuración"
-        font.pixelSize: 16
+    // Perfil: foto, nombre, usuario@equipo y tiempo encendido. Clic = ventana del perfil
+    Rectangle {
+        Layout.fillWidth: true
+        implicitHeight: 64
+        radius: Theme.radiusSmall
+        color: profileMouse.containsMouse ? Theme.surfaceHigh : Theme.surface
+
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 12
+            anchors.rightMargin: 10
+            spacing: 12
+
+            Avatar {
+                size: 44
+                source: Profile.avatarUrl
+                initial: Profile.initial
+            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 0
+                Label {
+                    Layout.fillWidth: true
+                    text: Profile.name
+                    font.pixelSize: 16
+                }
+                Label {
+                    Layout.fillWidth: true
+                    text: `${Profile.user}@${Profile.host}  ·  encendido hace ${Profile.uptimeText}`
+                    color: Theme.subtext
+                    font.pixelSize: Theme.fontSize
+                }
+            }
+            Icon {
+                text: Theme.iChevronRight
+                color: Theme.subtext
+            }
+        }
+        MouseArea {
+            id: profileMouse
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                Config.close();
+                Profile.open = true;
+            }
+        }
     }
 
     Section {

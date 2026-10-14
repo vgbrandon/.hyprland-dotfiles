@@ -222,27 +222,32 @@ Item {
             RowLayout {
                 spacing: 14
 
-                Rectangle {
+                // Foto del perfil (si el usuario es el de la sesión que la compartió);
+                // si no, la inicial, o un icono sin usuario
+                Item {
+                    readonly property bool owner: Auth.user !== "" && Auth.user === Theme.user
                     implicitWidth: 56
                     implicitHeight: 56
-                    radius: height / 2
-                    color: Theme.primary
 
-                    Text {
-                        anchors.centerIn: parent
+                    Avatar {
                         visible: Auth.user !== ""
-                        text: Auth.user.charAt(0).toUpperCase()
-                        color: Theme.primaryFg
-                        font.family: Theme.font
-                        font.pixelSize: 26
-                        font.weight: Font.DemiBold
+                        anchors.fill: parent
+                        size: 56
+                        source: parent.owner ? Theme.avatar : ""
+                        initial: (parent.owner && Theme.name !== "" ? Theme.name : Auth.user).charAt(0).toUpperCase()
                     }
-                    Icon {
-                        anchors.centerIn: parent
+                    Rectangle {
                         visible: Auth.user === ""
-                        text: Theme.iAccount
-                        color: Theme.primaryFg
-                        font.pixelSize: 28
+                        anchors.fill: parent
+                        radius: height / 2
+                        color: Theme.primary
+
+                        Icon {
+                            anchors.centerIn: parent
+                            text: Theme.iAccount
+                            color: Theme.primaryFg
+                            font.pixelSize: 28
+                        }
                     }
                 }
                 ColumnLayout {

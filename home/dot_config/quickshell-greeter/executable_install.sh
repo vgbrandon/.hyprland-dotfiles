@@ -18,11 +18,11 @@ fi
 sudo rm -rf /etc/greetd/quickshell
 sudo install -d -m 755 /etc/greetd/quickshell
 # Misma estructura que la sesión: services/ (Theme, Config y Auth propios del greeter)
-# y components/base (Pill, Icon y Label de la sesión normal)
+# y components/base (Pill, Icon, Label y Avatar de la sesión normal)
 sudo install -d -m 755 /etc/greetd/quickshell/services /etc/greetd/quickshell/components/base
 sudo install -m 644 "$greeter"/{shell,GreeterContent}.qml /etc/greetd/quickshell/
 sudo install -m 644 "$greeter"/services/{Auth,Theme,Config}.qml /etc/greetd/quickshell/services/
-sudo install -m 644 "$shell"/components/base/{Pill,Icon,Label}.qml /etc/greetd/quickshell/components/base/
+sudo install -m 644 "$shell"/components/base/{Pill,Icon,Label,Avatar}.qml /etc/greetd/quickshell/components/base/
 
 # Hyprland del greeter (con los mismos monitores) y configuración de greetd
 sudo install -m 755 "$greeter"/start-greeter.sh /etc/greetd/start-greeter.sh
