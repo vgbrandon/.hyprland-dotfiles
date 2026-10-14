@@ -52,7 +52,7 @@ SidePanel {
 
                 NotificationCard {
                     required property var modelData
-                    notif: modelData
+                    entry: modelData
                     width: list.width
                 }
             }

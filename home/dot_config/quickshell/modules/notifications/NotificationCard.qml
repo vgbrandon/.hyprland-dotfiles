@@ -7,18 +7,19 @@ import qs.services
 import qs.components.base
 import qs.components.buttons
 
-// Tarjeta de una notificación (se usa en los popups y en el centro)
+// Tarjeta de una notificación del historial (Notifs.Entry; se usa en los popups y en el
+// centro). Si la app ya la cerró, sus botones no sirven: clic = abrir la app.
 Rectangle {
     id: card
 
-    required property Notification notif
+    required property var entry
     property bool popup: false
     readonly property bool hovered: hover.hovered
-    readonly property var defaultAction: notif.actions.find(a => a.identifier === "default") ?? null
-    readonly property var buttons: notif.actions.filter(a => a.identifier !== "default")
+    readonly property var defaultAction: entry.actions.find(a => a.identifier === "default") ?? null
+    readonly property var buttons: entry.actions.filter(a => a.identifier !== "default")
     readonly property string iconSource: {
-        if (notif.image !== "") return notif.image;
-        const i = notif.appIcon;
+        if (entry.image !== "") return entry.image;
+        const i = entry.appIcon;
         if (i === "") return "";
         if (i.startsWith("/") ) return "file://" + i;
         if (i.includes("://")) return i;
@@ -27,14 +28,19 @@ Rectangle {
 
     function activate(action) {
         Notifs.closeCenter();
+        if (!entry.live) {
+            Notifs.openApp(entry);
+            return;
+        }
         action?.invoke();
-        if (!notif.resident) notif.dismiss();
+        // La app puede cerrarla al invocar la acción
+        if (entry.notif && !entry.notif.resident) entry.notif.dismiss();
     }
 
     implicitHeight: content.implicitHeight + 24
     radius: Theme.radius
     color: Theme.surface
-    border.color: notif.urgency === NotificationUrgency.Critical ? Theme.error : Theme.surfaceHigh
+    border.color: entry.urgency === NotificationUrgency.Critical ? Theme.error : Theme.surfaceHigh
     border.width: 1
 
     HoverHandler {
@@ -44,8 +50,8 @@ Rectangle {
     // Clic en la tarjeta = acción por defecto
     MouseArea {
         anchors.fill: parent
-        cursorShape: card.defaultAction ? Qt.PointingHandCursor : Qt.ArrowCursor
-        onClicked: if (card.defaultAction) card.activate(card.defaultAction)
+        cursorShape: card.defaultAction || !card.entry.live ? Qt.PointingHandCursor : Qt.ArrowCursor
+        onClicked: if (card.defaultAction || !card.entry.live) card.activate(card.defaultAction)
     }
 
     RowLayout {
@@ -92,7 +98,7 @@ Rectangle {
 
                 Label {
                     Layout.fillWidth: true
-                    text: [card.notif.appName, Notifs.ago(card.notif)].filter(s => s !== "").join(" • ")
+                    text: [card.entry.appName, Notifs.ago(card.entry)].filter(s => s !== "").join(" • ")
                     color: Theme.subtext
                     font.pixelSize: Theme.fontSize - 1
                 }
@@ -101,20 +107,20 @@ Rectangle {
                     color: hovered ? Theme.text : Theme.subtext
                     font.pixelSize: 14
                     hitMargin: 4
-                    onClicked: card.notif.dismiss()
+                    onClicked: Notifs.dismiss(card.entry)
                 }
             }
 
             Label {
                 Layout.fillWidth: true
-                text: card.notif.summary
+                text: card.entry.summary
                 font.weight: Font.DemiBold
             }
 
             Text {
                 Layout.fillWidth: true
                 visible: text !== ""
-                text: card.notif.body
+                text: card.entry.body
                 textFormat: Text.StyledText
                 wrapMode: Text.Wrap
                 maximumLineCount: card.popup ? 4 : 8

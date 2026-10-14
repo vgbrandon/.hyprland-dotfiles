@@ -41,7 +41,7 @@ PanelWindow {
                 id: popupCard
                 required property var modelData
 
-                notif: modelData
+                entry: modelData
                 popup: true
                 width: column.width
 
@@ -62,11 +62,11 @@ PanelWindow {
 
                 // Se oculta tras su tiempo (las críticas se quedan); pausa con el ratón encima
                 Timer {
-                    interval: popupCard.notif.expireTimeout > 0 ? popupCard.notif.expireTimeout : 5000
-                    running: popupCard.notif.urgency !== NotificationUrgency.Critical && !popupCard.hovered
+                    interval: popupCard.entry.expireTimeout > 0 ? popupCard.entry.expireTimeout : 5000
+                    running: popupCard.entry.urgency !== NotificationUrgency.Critical && !popupCard.hovered
                     onTriggered: {
-                        Notifs.removePopup(popupCard.notif);
-                        if (popupCard.notif.transient) popupCard.notif.expire();
+                        Notifs.removePopup(popupCard.entry);
+                        if (popupCard.entry.notif?.transient) popupCard.entry.notif.expire();
                     }
                 }
             }
