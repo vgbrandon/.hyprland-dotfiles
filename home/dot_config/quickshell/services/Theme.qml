@@ -37,6 +37,14 @@ Singleton {
     // Azul armonizado con el fondo (custom_colors de matugen)
     property color blue: pick("blue", "#61afef")
 
+    // Fondo de la barra y de los paneles: translúcido si se activa en ajustes (la regla
+    // de capa de hyprland.lua desenfoca lo que hay detrás)
+    property real glassAlpha: Config.translucent ? 0.85 : 1
+    Behavior on glassAlpha { NumberAnimation { duration: 250 } }
+    function glass(c) {
+        return withAlpha(c, glassAlpha);
+    }
+
     Behavior on barBg { ColorAnimation { duration: 600 } }
     Behavior on panelBg { ColorAnimation { duration: 600 } }
     Behavior on surface { ColorAnimation { duration: 600 } }
@@ -234,6 +242,7 @@ Singleton {
     readonly property string iAt: String.fromCodePoint(0xF0065)
     readonly property string iSlash: String.fromCodePoint(0xF0FDF)
     readonly property string iGithub: String.fromCodePoint(0xF02A4)
+    readonly property string iOpacity: String.fromCodePoint(0xF05CC)
     readonly property string iDockTop: String.fromCodePoint(0xF1513)
     readonly property string iDockBottom: String.fromCodePoint(0xF10A9)
     readonly property string iDockLeft: String.fromCodePoint(0xF10AA)

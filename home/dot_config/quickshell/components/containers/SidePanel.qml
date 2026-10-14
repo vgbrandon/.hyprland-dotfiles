@@ -82,7 +82,7 @@ PanelWindow {
             }
         }
 
-        color: Theme.panelBg
+        color: Theme.glass(Theme.panelBg)
         border.color: Theme.surfaceHigh
         border.width: 1
 

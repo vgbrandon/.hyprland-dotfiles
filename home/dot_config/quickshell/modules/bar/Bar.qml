@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Wayland
 import qs.services
 import qs.components.base
 import qs.components.buttons
@@ -22,6 +23,8 @@ PanelWindow {
     implicitWidth: Theme.barHeight
     // El fondo va dentro del contenido para deslizarse con él
     color: "transparent"
+    // Nombre de la capa: la regla de hyprland.lua la desenfoca (y a sus paneles) si es translúcida
+    WlrLayershell.namespace: "quickshell:bar"
     // Barra vertical en un monitor bajo: no cabe todo, se ocultan CPU y RAM
     readonly property bool compact: vertical && height < 900
     // Barra horizontal en un monitor estrecho: títulos más cortos para que quepa todo
@@ -38,7 +41,7 @@ PanelWindow {
 
         Rectangle {
             anchors.fill: parent
-            color: Theme.barBg
+            color: Theme.glass(Theme.barBg)
         }
 
         // Inicio (izquierda / arriba): logo + ventana activa

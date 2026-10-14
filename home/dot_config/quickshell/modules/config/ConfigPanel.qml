@@ -192,6 +192,14 @@ SidePanel {
             checked: blur.boolValue
             onToggled: blur.set(!blur.boolValue)
         }
+        // Fondo de la barra y los paneles semitransparente; el desenfoque de detrás
+        // depende del de Hyprland (la opción de arriba)
+        SwitchRow {
+            icon: Theme.iOpacity
+            text: "Barra y paneles translúcidos"
+            checked: Config.translucent
+            onToggled: Config.setTranslucent(!Config.translucent)
+        }
         SwitchRow {
             icon: Theme.iShadow
             text: "Sombras"

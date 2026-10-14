@@ -40,6 +40,13 @@ Singleton {
         settingsFile.writeAdapter();
     }
 
+    // Barra y paneles translúcidos (Hyprland desenfoca lo que hay detrás)
+    readonly property bool translucent: settings.translucent
+    function setTranslucent(on) {
+        settings.translucent = on;
+        settingsFile.writeAdapter();
+    }
+
     function setBarPosition(position) {
         settings.barPosition = position;
         settingsFile.writeAdapter();
@@ -165,6 +172,8 @@ Singleton {
             property string primaryMonitor: ""
             // Temperatura de la luz nocturna en K (0 = la de por defecto)
             property int nightLightTemp: 0
+            // Barra y paneles translúcidos con desenfoque
+            property bool translucent: false
         }
     }
 

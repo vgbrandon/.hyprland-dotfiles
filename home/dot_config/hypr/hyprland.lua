@@ -114,8 +114,10 @@ hl.config({
 
 		blur = {
 			enabled = true,
-			size = 3,
-			passes = 1,
+			-- Más fuerte que el de por defecto: cristal esmerilado en la barra y los
+			-- paneles translúcidos de Quickshell (y en las ventanas translúcidas)
+			size = 6,
+			passes = 2,
 			vibrancy = 0.1696,
 		},
 	},
@@ -372,6 +374,18 @@ hl.window_rule({
 --     no_anim = true,
 -- })
 -- overlayLayerRule:set_enabled(false)
+
+-- Barra y paneles de Quickshell: desenfoque detrás. Solo se nota con su fondo
+-- translúcido (Ajustes → Apariencia → Barra y paneles translúcidos). blur_popups
+-- incluye los paneles que salen de la barra; ignore_alpha deja sin desenfocar lo
+-- totalmente transparente (las esquinas redondeadas)
+hl.layer_rule({
+	name = "blur-quickshell",
+	match = { namespace = "^quickshell:(bar|config-panel|notification-center|ai)$" },
+	blur = true,
+	blur_popups = true,
+	ignore_alpha = 0.2,
+})
 
 -- Hyprland-run windowrule
 hl.window_rule({
