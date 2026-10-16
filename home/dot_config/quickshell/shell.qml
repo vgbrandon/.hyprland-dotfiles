@@ -13,6 +13,7 @@ import qs.modules.notifications
 import qs.modules.power
 import qs.modules.profile
 import qs.modules.screenshot
+import qs.modules.shortcuts
 import qs.modules.wallpaper
 
 // Solo instancia la interfaz: la lógica está en services/ y cada ventana en modules/.
@@ -62,6 +63,7 @@ ShellRoot {
     ClipboardWindow {}
     PowerMenuWindow {}
     ProfileWindow {}
+    ShortcutsWindow {}
     DisplaysWindow {}
     KeyboardWindow {}
     WallpaperPicker {}
