@@ -128,6 +128,49 @@ SidePanel {
         }
     }
 
+    // Brillo de cada monitor (DDC/CI con ddcutil; solo si se detectan)
+    Section {
+        visible: Brightness.available
+        title: "Brillo"
+        contentSpacing: 2
+
+        Repeater {
+            model: Brightness.displays
+
+            RowLayout {
+                id: bright
+                required property var modelData
+                Layout.leftMargin: 6
+                Layout.rightMargin: 4
+                spacing: 10
+
+                Icon {
+                    text: bright.modelData.value < 0.34 ? Theme.iBrightnessLow
+                        : bright.modelData.value < 0.67 ? Theme.iBrightnessMedium : Theme.iBrightnessHigh
+                    color: Theme.subtext
+                }
+                Label {
+                    Layout.preferredWidth: 90
+                    text: bright.modelData.model || bright.modelData.output
+                    elide: Text.ElideRight
+                }
+                Slider {
+                    Layout.fillWidth: true
+                    value: bright.modelData.value
+                    // Sin el aviso flotante: el nivel ya se ve aquí
+                    onMoved: f => Brightness.set(bright.modelData.output, f, false)
+                }
+                Label {
+                    Layout.preferredWidth: 34
+                    horizontalAlignment: Text.AlignRight
+                    text: Math.round(bright.modelData.value * 100) + "%"
+                    color: Theme.subtext
+                    font.pixelSize: Theme.fontSize
+                }
+            }
+        }
+    }
+
     Section {
         title: "Apariencia"
         contentSpacing: 8

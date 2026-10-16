@@ -19,6 +19,7 @@ packages:
     - adw-gtk-theme # port no oficial del tema de libadwaita para GTK 3
     - hypridle # demonio de inactividad de Hyprland
     - hyprsunset # filtro de luz azul para Hyprland
+    - ddcutil # brillo de los monitores externos por DDC/CI (módulo de brillo de Quickshell)
     - grim # capturas de pantalla (Quickshell: capturas, selector de color)
     - libvips # vipsthumbnail: miniaturas del selector de fondos de Quickshell
     - networkmanager # gestiona la red (cable y WiFi); lo usa el panel de WiFi de Quickshell
