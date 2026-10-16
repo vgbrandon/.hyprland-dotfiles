@@ -6,6 +6,7 @@ import qs.components.base
 import qs.components.buttons
 import qs.modules.github
 import qs.modules.network
+import qs.modules.servers
 import qs.services
 
 // Bandeja, red (NetworkManager), Bluetooth, asistente de IA, notificaciones, ajustes y energía
@@ -70,6 +71,47 @@ GridLayout {
         BluetoothPanel {
             id: btPanel
             anchorItem: btIcon
+        }
+    }
+
+    // Servidores locales: solo si hay alguno en marcha, con cuántos
+    Item {
+        id: serversIcon
+        visible: LocalServers.servers.length > 0
+        implicitWidth: serversRow.implicitWidth
+        implicitHeight: serversRow.implicitHeight
+
+        Row {
+            id: serversRow
+            spacing: 3
+            Icon {
+                anchors.verticalCenter: parent.verticalCenter
+                text: Theme.iServer
+                color: Theme.primary
+            }
+            Label {
+                visible: !Config.barVertical
+                anchors.verticalCenter: parent.verticalCenter
+                text: LocalServers.servers.length
+                color: Theme.primary
+                font.pixelSize: Theme.fontSize
+            }
+        }
+        MouseArea {
+            anchors.fill: parent
+            anchors.margins: -4
+            cursorShape: Qt.PointingHandCursor
+            onClicked: serversPanel.toggle()
+        }
+        Connections {
+            target: LocalServers
+            function onPanelRequested() {
+                serversPanel.toggleOnFocusedScreen();
+            }
+        }
+        ServersPanel {
+            id: serversPanel
+            anchorItem: serversIcon
         }
     }
 
