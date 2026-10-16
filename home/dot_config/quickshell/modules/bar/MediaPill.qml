@@ -25,7 +25,7 @@ Pill {
 
     // Play/pausa: un solo icono (círculo relleno con el símbolo recortado)
     IconButton {
-        text: root.player?.isPlaying ? Theme.iPauseCircle : Theme.iPlayCircle
+        text: Media.isPlaying ? Theme.iPauseCircle : Theme.iPlayCircle
         color: root.player?.canTogglePlaying ? Theme.text : Theme.dot
         font.pixelSize: 19
         acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -42,11 +42,7 @@ Pill {
     Label {
         visible: root.active && !root.vertical
         Layout.maximumWidth: root.titleWidth
-        text: {
-            const p = root.player;
-            if (!p) return "";
-            return p.trackArtist ? `${p.trackTitle} • ${p.trackArtist}` : p.trackTitle;
-        }
+        text: Media.artist ? `${Media.title} • ${Media.artist}` : Media.title
 
         MouseArea {
             anchors.fill: parent
