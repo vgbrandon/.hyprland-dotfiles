@@ -10,6 +10,7 @@ import qs.modules.keyboard
 import qs.modules.launcher
 import qs.modules.lock
 import qs.modules.notifications
+import qs.modules.osd
 import qs.modules.power
 import qs.modules.profile
 import qs.modules.screenshot
@@ -57,6 +58,7 @@ ShellRoot {
     ConfigPanel {}
     NotificationCenter {}
     NotificationPopups {}
+    OsdWindow {}
 
     // Ventanas sobre todo lo demás
     LauncherWindow {}

@@ -23,10 +23,14 @@ Rectangle {
     // Mismo margen a los dos lados: número a la izquierda, final de la barra a la derecha
     readonly property int side: 12
 
+    // Cambios desde aquí: sin el aviso flotante (el nivel ya se ve en la píldora)
     function setLevel(v) {
-        if (sink?.audio) sink.audio.volume = Math.max(0, Math.min(1, v));
+        Osd.quiet();
+        // En pasos de 1 %: sin decimales arrastrados (0.27000001…)
+        if (sink?.audio) sink.audio.volume = Math.max(0, Math.min(1, Math.round(v * 100) / 100));
     }
     function toggleMute() {
+        Osd.quiet();
         if (sink?.audio) sink.audio.muted = !sink.audio.muted;
     }
 
@@ -44,7 +48,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
-        onWheel: e => root.setLevel(root.level + (e.angleDelta.y > 0 ? 0.05 : -0.05))
+        onWheel: e => root.setLevel(root.level + (e.angleDelta.y > 0 ? 0.01 : -0.01))
     }
 
     // --- Barra vertical: icono y número (clic = silenciar) ---
