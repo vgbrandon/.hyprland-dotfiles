@@ -257,83 +257,85 @@ hl.device({
 
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
--- Example binds, see https://wiki.hypr.land/configuring/core/binds/ for more
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
-local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
--- closeWindowBind:set_enabled(false)
+-- Cada atajo lleva una descripción "Grupo: Acción": la muestra la ventana de atajos
+-- de Quickshell (Super + F1), que los lee en vivo de Hyprland.
+-- Ver https://wiki.hypr.land/configuring/core/binds/
+
+-- Aplicaciones
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal), { description = "Aplicaciones: Abrir la terminal" })
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("[float] " .. terminal), { description = "Aplicaciones: Abrir una terminal flotante" })
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "Aplicaciones: Abrir el gestor de archivos" })
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(menu), { description = "Aplicaciones: Lanzador de aplicaciones" })
+
+-- Herramientas de Quickshell
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("quickshell ipc call screenshot open"), { description = "Herramientas: Captura de pantalla" })
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("quickshell ipc call clipboard toggle"), { description = "Herramientas: Historial del portapapeles" })
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("quickshell ipc call ai toggle"), { description = "Herramientas: Asistente de IA (OpenCode)" })
+hl.bind(mainMod .. " + F1", hl.dsp.exec_cmd("quickshell ipc call shortcuts toggle"), { description = "Herramientas: Ver los atajos de teclado" })
+
+-- Sistema
+hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("quickshell ipc call power toggle"), { description = "Sistema: Menú de energía" })
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("quickshell ipc call lock lock"), { description = "Sistema: Bloquear la pantalla" })
 hl.bind(
 	mainMod .. " + M",
-	hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'")
+	hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"),
+	{ description = "Sistema: Cerrar la sesión" }
 )
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("quickshell ipc call power toggle"))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("quickshell ipc call lock lock"))
-hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("quickshell ipc call screenshot open")) -- captura de pantalla
-hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("quickshell ipc call clipboard toggle")) -- historial del portapapeles
-hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("quickshell ipc call ai toggle")) -- asistente de IA (OpenCode)
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(menu))
-hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 
--- Mis binds
-hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("[float] " .. terminal))
+-- Ventanas
+local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Ventanas: Cerrar la ventana" })
+-- closeWindowBind:set_enabled(false)
+hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }), { description = "Ventanas: Flotante / en mosaico" })
+hl.bind(mainMod .. " + P", hl.dsp.window.pseudo(), { description = "Ventanas: Pseudo-mosaico" })
+hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"), { description = "Ventanas: Cambiar la división (horizontal / vertical)" }) -- dwindle only
+hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }), { description = "Ventanas: Enfocar la de la izquierda" })
+hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }), { description = "Ventanas: Enfocar la de la derecha" })
+hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }), { description = "Ventanas: Enfocar la de arriba" })
+hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }), { description = "Ventanas: Enfocar la de abajo" })
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true, description = "Ventanas: Mover arrastrando" })
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Ventanas: Cambiar el tamaño arrastrando" })
 
--- Move focus with mainMod + arrow keys
-hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
-
--- Switch workspaces with mainMod + [0-9]
--- Move active window to a workspace with mainMod + SHIFT + [0-9]
+-- Escritorios: Super + [0-9] ir; Super + Shift + [0-9] mover la ventana
 for i = 1, 10 do
 	local key = i % 10 -- 10 maps to key 0
-	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }), { description = "Escritorios: Ir al escritorio " .. i })
+	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }), { description = "Escritorios: Mover la ventana al escritorio " .. i })
 end
+-- Escritorio especial (scratchpad)
+hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"), { description = "Escritorios: Mostrar u ocultar el escritorio especial" })
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }), { description = "Escritorios: Mover la ventana al escritorio especial" })
+-- Rueda del ratón: escritorios con ventanas
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }), { description = "Escritorios: Siguiente escritorio" })
+hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }), { description = "Escritorios: Escritorio anterior" })
 
--- Example special workspace (scratchpad)
-hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
-
--- Scroll through existing workspaces with mainMod + scroll
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
-
--- Move/resize windows with mainMod + LMB/RMB and dragging
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
-hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
-
--- Laptop multimedia keys for volume and LCD brightness
+-- Multimedia: volumen, brillo y reproducción (playerctl)
 hl.bind(
 	"XF86AudioRaiseVolume",
-	hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
-	{ locked = true, repeating = true }
+	hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 1%+"),
+	{ locked = true, repeating = true, description = "Multimedia: Subir el volumen" }
 )
 hl.bind(
 	"XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
-	{ locked = true, repeating = true }
+	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"),
+	{ locked = true, repeating = true, description = "Multimedia: Bajar el volumen" }
 )
 hl.bind(
 	"XF86AudioMute",
 	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
-	{ locked = true, repeating = true }
+	{ locked = true, repeating = true, description = "Multimedia: Silenciar" }
 )
 hl.bind(
 	"XF86AudioMicMute",
 	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
-	{ locked = true, repeating = true }
+	{ locked = true, repeating = true, description = "Multimedia: Silenciar el micrófono" }
 )
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
-
--- Requires playerctl
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+-- Brillo del monitor enfocado por DDC/CI (módulo de brillo de Quickshell, con ddcutil)
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("quickshell ipc call brightness up"), { locked = true, repeating = true, description = "Multimedia: Subir el brillo" })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("quickshell ipc call brightness down"), { locked = true, repeating = true, description = "Multimedia: Bajar el brillo" })
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true, description = "Multimedia: Siguiente canción" })
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true, description = "Multimedia: Reproducir / pausar" })
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true, description = "Multimedia: Reproducir / pausar" })
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true, description = "Multimedia: Canción anterior" })
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
@@ -381,7 +383,7 @@ hl.window_rule({
 -- totalmente transparente (las esquinas redondeadas)
 hl.layer_rule({
 	name = "blur-quickshell",
-	match = { namespace = "^quickshell:(bar|config-panel|notification-center|ai)$" },
+	match = { namespace = "^quickshell:(bar|config-panel|notification-center|ai|osd)$" },
 	blur = true,
 	blur_popups = true,
 	ignore_alpha = 0.2,
