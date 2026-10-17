@@ -8,11 +8,12 @@ import Quickshell.Widgets
 import qs.services
 import qs.components.base
 import qs.components.buttons
+import qs.components.design
 
-// Contenido de la pantalla de bloqueo de un monitor (lo usa LockSurface).
-// Mismo estilo que la barra y sus paneles (sólidos, colores de matugen):
-// reloj grande a la izquierda, tarjeta con la contraseña a la derecha y una
-// mini barra abajo (reproductor y energía). En los demás monitores, solo el reloj.
+// Contenido de la pantalla de bloqueo de un monitor (lo usa LockSurface), con el
+// diseño Prisma (docs/prisma.md): reloj grande a la izquierda, tarjeta de vidrio
+// con la contraseña a la derecha y una mini barra abajo (reproductor y energía). En
+// los demás monitores, solo el reloj. La de inicio de sesión (quickshell-greeter) es igual.
 Item {
     id: surface
 
@@ -27,8 +28,8 @@ Item {
     // Monitor bajo (768 px): todo un poco más pequeño
     readonly property real k: Math.min(1, height / 1080)
     // Franja central donde van el reloj (a la izquierda) y la tarjeta (a la
-    // derecha): en pantallas muy anchas no se separan más de 1500 px
-    readonly property real stageWidth: Math.min(width * 0.82, 1500)
+    // derecha): lo que miden los dos más un hueco entre ellos, centrada
+    readonly property real stageWidth: Math.min(width * 0.82, clockBlock.width + 260 * k + card.width)
     readonly property real stageLeft: (width - stageWidth) / 2
     readonly property real stageRight: stageLeft + stageWidth
 
@@ -81,7 +82,7 @@ Item {
         precision: SystemClock.Seconds
     }
 
-    // --- Fondo: desenfocado y oscurecido con el color del tema ---
+    // --- Fondo: nítido, con un velo suave (el desenfoque va solo detrás del vidrio) ---
     Rectangle {
         anchors.fill: parent
         color: "black"
@@ -95,26 +96,17 @@ Item {
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
         cache: true
-        visible: false
-    }
-    MultiEffect {
-        anchors.fill: parent
-        source: wallpaper
         opacity: surface.backdrop
-        blurEnabled: true
-        blur: 0.7
-        blurMax: 64
-        saturation: 0.1
     }
-    // Velo del color de los paneles, más denso hacia la izquierda
+    // Velo con el tinte del diseño, más denso hacia la izquierda (bajo el reloj)
     Rectangle {
         anchors.fill: parent
         opacity: surface.backdrop
         gradient: Gradient {
             orientation: Gradient.Horizontal
-            GradientStop { position: 0; color: Theme.withAlpha(Theme.panelBg, 0.75) }
-            GradientStop { position: 0.6; color: Theme.withAlpha(Theme.panelBg, 0.35) }
-            GradientStop { position: 1; color: Theme.withAlpha(Theme.panelBg, 0.55) }
+            GradientStop { position: 0; color: Design.alpha(Design.background, 0.55) }
+            GradientStop { position: 0.6; color: Design.alpha(Design.background, 0.15) }
+            GradientStop { position: 1; color: Design.alpha(Design.background, 0.3) }
         }
     }
 
@@ -135,26 +127,50 @@ Item {
             font.family: Theme.font
             font.pixelSize: 200 * surface.k
             font.weight: Font.Light
+            font.features: { "tnum": 1 }
+            // Dígitos más juntos (a este tamaño la fuente los separa mucho)
+            font.letterSpacing: -6 * surface.k
         }
         Text {
             Layout.alignment: surface.main ? Qt.AlignLeft : Qt.AlignHCenter
             // Pegado a las horas (la fuente deja mucho aire arriba y abajo)
-            Layout.topMargin: -70 * surface.k
+            Layout.topMargin: -82 * surface.k
             text: Qt.formatDateTime(clock.date, "mm")
-            color: Theme.primary
+            color: Design.accent
             font.family: Theme.font
             font.pixelSize: 200 * surface.k
             font.weight: Font.Light
+            font.features: { "tnum": 1 }
+            // Dígitos más juntos (a este tamaño la fuente los separa mucho)
+            font.letterSpacing: -6 * surface.k
         }
 
-        // Fecha en una píldora, como el reloj de la barra
+        // Fecha en una cápsula de vidrio
         Rectangle {
             Layout.alignment: surface.main ? Qt.AlignLeft : Qt.AlignHCenter
             Layout.topMargin: 18 * surface.k
             implicitWidth: dateRow.implicitWidth + 32
             implicitHeight: 40
-            radius: height / 2
-            color: Theme.surface
+            radius: Design.radiusMd
+            color: "transparent"
+            Surface {
+                anchors.fill: parent
+                z: -1
+                material: "glass"
+                backdrop: wallpaper
+                radius: parent.radius
+                tintOpacity: 0.78
+                bordered: false
+                elevation: 0
+                // Se recoloca al moverse (entrada, temblor)
+                scrollY: clockBlock.x + clockBlock.y
+            }
+            border.color: Design.border
+            border.width: 1
+
+            GlassEdge {
+                inset: Design.radiusMd
+            }
 
             RowLayout {
                 id: dateRow
@@ -173,7 +189,7 @@ Item {
                     implicitWidth: 6
                     implicitHeight: 6
                     radius: 3
-                    color: Theme.primary
+                    color: Design.accent
                     opacity: clock.date.getSeconds() % 2 === 0 ? 1 : 0.25
                     Behavior on opacity { NumberAnimation { duration: 400 } }
                 }
@@ -194,11 +210,28 @@ Item {
         opacity: surface.shown
         width: 380
         height: cardLayout.implicitHeight + 48
-        radius: Theme.radius
-        color: Theme.panelBg
-        border.color: Lock.error !== "" ? Theme.withAlpha(Theme.error, 0.6) : Theme.surfaceHigh
+        // Vidrio (el fondo desenfocado está justo detrás)
+        radius: Design.radiusLg
+        color: "transparent"
+        Surface {
+            anchors.fill: parent
+            z: -1
+            material: "glass"
+            backdrop: wallpaper
+            radius: parent.radius
+            tintOpacity: 0.78
+            bordered: false
+            elevation: 0
+            // Se recoloca al moverse (entrada, temblor)
+            scrollY: card.x + card.y
+        }
+        border.color: Lock.error !== "" ? Design.alpha(Design.error, 0.6) : Design.border
         border.width: 1
         Behavior on border.color { ColorAnimation { duration: 200 } }
+
+        GlassEdge {
+            inset: Design.radiusLg
+        }
 
         // Temblor al fallar
         SequentialAnimation {
@@ -259,9 +292,9 @@ Item {
 
                 Layout.fillWidth: true
                 implicitHeight: 52
-                radius: height / 2
-                color: Theme.surface
-                border.color: input.activeFocus ? Theme.withAlpha(Theme.primary, 0.5) : "transparent"
+                radius: Design.radiusMd
+                color: Design.alpha(Design.surface0, 0.8)
+                border.color: input.activeFocus ? Design.alpha(Design.accent, 0.6) : Design.outlineVariant
                 border.width: 1
 
                 // El texto real va oculto; lo que se ve son los puntos
@@ -337,8 +370,8 @@ Item {
                     Rectangle {
                         implicitWidth: 38
                         implicitHeight: 38
-                        radius: height / 2
-                        color: input.text !== "" || Lock.unlocking ? Theme.primary : Theme.surfaceHigh
+                        radius: Design.radiusSm
+                        color: input.text !== "" || Lock.unlocking ? Design.accent : Design.surface3
                         Behavior on color { ColorAnimation { duration: 150 } }
 
                         Icon {
@@ -346,7 +379,7 @@ Item {
                             anchors.centerIn: parent
                             // ✓ cuando la contraseña es correcta
                             text: Lock.unlocking ? Theme.iCheck : Theme.iChevronRight
-                            color: input.text !== "" || Lock.unlocking ? Theme.primaryFg : Theme.subtext
+                            color: input.text !== "" || Lock.unlocking ? Design.onAccent : Design.onSurfaceVariant
                             font.pixelSize: 20
                             RotationAnimation on rotation {
                                 running: Lock.checking
@@ -384,49 +417,41 @@ Item {
         anchors.bottomMargin: 24 - (1 - surface.shown) * 60
         anchors.horizontalCenter: parent.horizontalCenter
         opacity: surface.shown
-        spacing: Theme.gap
+        spacing: 8
 
         // Reproductor
-        Pill {
+        GlassBlock {
             visible: surface.player !== null
-            vertical: false
-            implicitHeight: 40
-            padding: 16
-            spacing: 14
 
-            IconButton {
-                text: Theme.iPrev
-                color: surface.player?.canGoPrevious ? Theme.text : Theme.dot
-                onClicked: if (surface.player?.canGoPrevious) surface.player.previous()
+            LockButton {
+                icon: Theme.iPrev
+                enabled: surface.player?.canGoPrevious ?? false
+                onClicked: surface.player.previous()
             }
-            IconButton {
-                text: surface.player?.isPlaying ? Theme.iPause : Theme.iPlay
-                color: Theme.primary
-                font.pixelSize: 18
+            LockButton {
+                icon: surface.player?.isPlaying ? Theme.iPause : Theme.iPlay
+                iconColor: Design.accent
                 onClicked: surface.player?.togglePlaying()
             }
-            IconButton {
-                text: Theme.iNext
-                color: surface.player?.canGoNext ? Theme.text : Theme.dot
-                onClicked: if (surface.player?.canGoNext) surface.player.next()
+            LockButton {
+                icon: Theme.iNext
+                enabled: surface.player?.canGoNext ?? false
+                onClicked: surface.player.next()
             }
             Label {
+                Layout.leftMargin: 6
+                Layout.rightMargin: 8
                 Layout.maximumWidth: 320
                 text: {
                     const p = surface.player;
                     if (!p) return "";
-                    return p.trackArtist ? `${p.trackTitle} • ${p.trackArtist}` : p.trackTitle;
+                    return p.trackArtist ? `${p.trackTitle} · ${p.trackArtist}` : p.trackTitle;
                 }
             }
         }
 
         // Energía
-        Pill {
-            vertical: false
-            implicitHeight: 40
-            padding: 16
-            spacing: 18
-
+        GlassBlock {
             Repeater {
                 model: [
                     { icon: Theme.iSleep, cmd: ["systemctl", "suspend"] },
@@ -434,16 +459,51 @@ Item {
                     { icon: Theme.iPower, cmd: ["systemctl", "poweroff"] }
                 ]
 
-                IconButton {
+                LockButton {
                     required property var modelData
-
-                    text: modelData.icon
-                    color: hovered ? Theme.primary : Theme.text
-                    font.pixelSize: 18
-                    hitMargin: 6
+                    icon: modelData.icon
                     onClicked: Quickshell.execDetached(modelData.cmd)
                 }
             }
         }
+    }
+
+    // Bloque de vidrio de la mini barra
+    component GlassBlock: Rectangle {
+        default property alias content: blockRow.data
+        implicitWidth: blockRow.implicitWidth + 12
+        implicitHeight: 44
+        radius: Design.radiusMd
+        color: "transparent"
+        Surface {
+            anchors.fill: parent
+            z: -1
+            material: "glass"
+            backdrop: wallpaper
+            radius: parent.radius
+            tintOpacity: 0.6
+            bordered: false
+            elevation: 0
+            // Se recoloca al moverse (entrada, temblor)
+            scrollY: x + (parent ? parent.x + parent.y : 0)
+        }
+        border.color: Design.border
+        border.width: 1
+
+        GlassEdge {
+            inset: Design.radiusMd
+        }
+        RowLayout {
+            id: blockRow
+            anchors.centerIn: parent
+            spacing: 2
+        }
+    }
+
+    // Botón de la mini barra (con la capa de hover del diseño)
+    component LockButton: IconBtn {
+        size: 32
+        iconSize: 18
+        iconColor: Design.onSurface
     }
 }

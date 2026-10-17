@@ -204,7 +204,7 @@ PanelWindow {
         y: 24
         width: toolbar.implicitWidth + 12
         height: 48
-        radius: height / 2
+        radius: Design.radiusMd
         color: Theme.surface
         border.color: Theme.surfaceHigh
         border.width: 1
@@ -229,7 +229,7 @@ PanelWindow {
 
                     implicitWidth: btnRow.implicitWidth + 28
                     implicitHeight: 36
-                    radius: height / 2
+                    radius: Design.radiusSm
                     color: current ? Theme.primary : btnMouse.containsMouse ? Theme.surfaceHigh : "transparent"
                     Behavior on color { ColorAnimation { duration: 120 } }
 

@@ -81,7 +81,7 @@ El repo tiene dos partes claramente separadas:
 ├── .chezmoiroot        → le dice a chezmoi que la raíz real es "home/"
 ├── install.sh          → bootstrap: instala chezmoi y aplica el repo
 ├── assets/             → binarios que NO son dotfiles
-├── docs/               → documentación adicional
+├── docs/               → documentación adicional (prisma.md: el diseño de la shell)
 ├── scripts/            → scripts sueltos de mantenimiento, fuera de chezmoi
 │
 └── home/               → todo lo que chezmoi gestiona vive aquí

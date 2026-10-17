@@ -9,7 +9,7 @@ RowLayout {
     id: root
 
     property string icon
-    property color iconColor: Theme.text
+    property color iconColor: Design.onSurface
     property string title
     property string subtitle
     default property alias trailing: trailingRow.data
@@ -31,14 +31,15 @@ RowLayout {
         Label {
             Layout.fillWidth: true
             text: root.title
-            font.pixelSize: 16
+            font.pixelSize: Design.headline.size
+            font.weight: Design.headline.weight
         }
         Label {
             Layout.fillWidth: true
             visible: root.subtitle !== ""
             text: root.subtitle
-            color: Theme.subtext
-            font.pixelSize: Theme.fontSize
+            color: Design.onSurfaceVariant
+            font.pixelSize: Design.caption.size
         }
     }
     RowLayout {

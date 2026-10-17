@@ -130,7 +130,7 @@ BarPopup {
 
                 Layout.fillWidth: true
                 implicitHeight: 36
-                radius: height / 2
+                radius: Design.radiusSm
                 color: modelData.isToday ? Theme.primary : "transparent"
 
                 Label {

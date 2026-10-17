@@ -3,7 +3,8 @@ pragma Singleton
 import QtQuick
 import Quickshell
 
-// Solo para Pill.qml (components/base, copiado de la sesión normal): aquí no hay barra.
+// Solo para Design.qml (copiado de la sesión normal): translucidez de los materiales
+// (esta pantalla pinta su propio vidrio).
 Singleton {
-    readonly property bool barVertical: false
+    readonly property bool translucent: false
 }

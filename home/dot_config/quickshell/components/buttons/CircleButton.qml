@@ -2,7 +2,7 @@ import QtQuick
 import qs.components.base
 import qs.services
 
-// Botón redondo con un icono. Sin fondo hasta pasar el ratón (filled = siempre con
+// Botón con un icono: cuadrado redondeado (más redondeado cuanto más grande). Sin fondo hasta pasar el ratón (filled = siempre con
 // fondo); accent = relleno de color (accentColor). Desactivado, el icono se apaga.
 //   CircleButton { icon: Theme.iRefresh; onClicked: … }
 Rectangle {
@@ -24,7 +24,7 @@ Rectangle {
 
     implicitWidth: size
     implicitHeight: size
-    radius: size / 2
+    radius: size < 36 ? Design.radiusSm : size < 48 ? Design.radiusMd : Design.radiusLg
     color: accent ? (hovered ? Qt.lighter(accentColor, 1.1) : accentColor)
         : hovered ? hoverColor : filled ? Theme.surface : "transparent"
 

@@ -52,7 +52,7 @@ OverlayWindow {
         Rectangle {
             implicitWidth: statusRow.implicitWidth + 20
             implicitHeight: 28
-            radius: height / 2
+            radius: Design.radiusSm
             color: Theme.surface
 
             RowLayout {

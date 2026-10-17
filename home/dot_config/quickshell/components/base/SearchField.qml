@@ -19,9 +19,11 @@ Rectangle {
     }
 
     Layout.fillWidth: true
-    implicitHeight: 48
-    radius: height / 2
-    color: Theme.surfaceHigh
+    implicitHeight: 44
+    radius: Design.radiusMd
+    color: Design.surface0
+    border.color: input.activeFocus ? Design.alpha(Design.accent, 0.6) : Design.outlineVariant
+    border.width: 1
 
     RowLayout {
         anchors.fill: parent
@@ -39,7 +41,7 @@ Rectangle {
             id: input
             Layout.fillWidth: true
             color: Theme.text
-            selectionColor: Theme.dot
+            selectionColor: Design.alpha(Design.accent, 0.4)
             font.family: Theme.font
             font.pixelSize: 16
             clip: true

@@ -62,7 +62,7 @@ Item {
         Label {
             visible: Pomodoro.active
             Layout.alignment: Qt.AlignCenter
-            // En la barra vertical: minutos sobre segundos
+            // En una barra lateral: minutos sobre segundos
             text: Config.barVertical ? Pomodoro.timeText().replace(":", "\n") : Pomodoro.timeText()
             horizontalAlignment: Text.AlignHCenter
             lineHeight: 0.9
@@ -81,11 +81,11 @@ Item {
         }
     }
 
-    // IPC: se abre en la barra del monitor enfocado
+    // IPC: se abre en la barra del monitor principal
     Connections {
         target: Pomodoro
         function onPanelRequested() {
-            panel.toggleOnFocusedScreen();
+            panel.toggleOnMainScreen();
         }
     }
 

@@ -18,14 +18,16 @@ ColumnLayout {
     Label {
         Layout.leftMargin: 4
         text: cycler.label
-        color: Theme.subtext
-        font.pixelSize: Theme.fontSize
+        color: Design.onSurfaceVariant
+        font.pixelSize: Design.caption.size
     }
     Rectangle {
         Layout.fillWidth: true
-        implicitHeight: 38
-        radius: height / 2
-        color: Theme.surface
+        implicitHeight: 36
+        radius: Design.radiusSm
+        color: Design.surface2
+        border.color: Design.border
+        border.width: 1
 
         RowLayout {
             anchors.fill: parent

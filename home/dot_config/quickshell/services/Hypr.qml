@@ -16,8 +16,11 @@ Singleton {
         return !!screen && Hyprland.focusedMonitor?.name === screen.name;
     }
 
-    // Monitor enfocado (donde se abren los paneles y las ventanas)
+    // Monitor enfocado
     readonly property ShellScreen focusedScreen: Quickshell.screens.find(s => isFocused(s)) ?? Quickshell.screens[0] ?? null
+    // Monitor principal (el elegido en el módulo de pantallas o, si no, el más grande):
+    // ahí se abren los paneles, las ventanas, las notificaciones y los avisos
+    readonly property ShellScreen mainScreen: Quickshell.screens.find(s => s.name === Displays.primary) ?? focusedScreen
 
     function focusWorkspace(ws) {
         Hyprland.dispatch(lua ? `hl.dsp.focus({ workspace = "${ws}" })` : `workspace ${ws}`);

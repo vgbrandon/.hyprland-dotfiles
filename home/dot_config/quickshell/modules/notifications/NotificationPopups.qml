@@ -4,12 +4,12 @@ import Quickshell.Wayland
 import Quickshell.Services.Notifications
 import qs.services
 
-// Popups de notificaciones arriba a la derecha del monitor enfocado
+// Popups de notificaciones arriba a la derecha del monitor principal
 PanelWindow {
     id: win
 
     visible: Notifs.popups.length > 0 && !Notifs.centerOpen
-    screen: Hypr.focusedScreen
+    screen: Hypr.mainScreen
     anchors {
         top: true
         right: true

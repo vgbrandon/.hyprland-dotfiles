@@ -5,7 +5,7 @@ import qs.components.base
 import qs.components.containers
 import qs.services
 
-// Centro de notificaciones: panel que entra desde la derecha del monitor enfocado
+// Centro de notificaciones: panel que entra desde la derecha del monitor principal
 //   quickshell ipc call notifications toggle
 SidePanel {
     open: Notifs.centerOpen

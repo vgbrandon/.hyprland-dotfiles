@@ -238,6 +238,10 @@ hl.config({
 	},
 })
 
+-- Distribuciones de teclado (idiomas): las elige el módulo de teclado de Quickshell
+-- y las guarda en keyboard.lua (sustituyen a kb_layout y kb_variant de arriba)
+pcall(require, "keyboard")
+
 hl.gesture({
 	fingers = 3,
 	direction = "horizontal",
@@ -419,5 +423,13 @@ hl.window_rule({
 	match = { class = "^qs-passwd$" },
 	float = true,
 	size = { 640, 300 },
+	center = true,
+})
+
+-- Guía de estilo del diseño nuevo de Quickshell (quickshell ipc call styleguide toggle)
+hl.window_rule({
+	match = { class = "^org.quickshell$", title = "^Guía de estilo$" },
+	float = true,
+	size = { 1280, 880 },
 	center = true,
 })

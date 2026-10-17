@@ -1,9 +1,9 @@
 import QtQuick
 import qs.services
 
-// Botón de texto en forma de píldora, con icono opcional.
-// accent = color principal; small = más bajo (cabeceras y pies); flat = sin fondo
-// hasta pasar el ratón.
+// Botón de texto con icono opcional (diseño Prisma, como Btn).
+// accent = relleno de acento (lo principal); normal = tonal; flat = sin fondo hasta
+// pasar el ratón; small = más bajo (cabeceras y pies).
 Rectangle {
     id: button
 
@@ -14,14 +14,21 @@ Rectangle {
     property bool flat: false
     signal clicked()
 
-    readonly property color foreground: accent ? Theme.primaryFg : Theme.text
+    readonly property color foreground: accent ? Design.onAccent : flat ? Design.onSurface : Design.onTonal
 
-    implicitWidth: row.implicitWidth + (small ? 24 : 32)
-    implicitHeight: small ? 30 : 36
-    radius: height / 2
-    opacity: enabled ? 1 : 0.4
-    color: accent ? (buttonMouse.containsMouse ? Qt.lighter(Theme.primary, 1.1) : Theme.primary)
-        : buttonMouse.containsMouse ? Theme.surfaceHigh : flat ? "transparent" : Theme.surface
+    implicitWidth: row.implicitWidth + (small ? 20 : 28)
+    implicitHeight: small ? 28 : 34
+    radius: Design.radiusSm
+    opacity: enabled ? 1 : 0.38
+    color: accent ? Design.accent : flat ? "transparent" : Design.tonal
+
+    // Capa de estado
+    Rectangle {
+        anchors.fill: parent
+        radius: parent.radius
+        color: buttonMouse.pressed ? Design.pressLayer : buttonMouse.containsMouse ? Design.hoverLayer : "transparent"
+        Behavior on color { ColorAnimation { duration: Design.fast } }
+    }
 
     Row {
         id: row
@@ -39,7 +46,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             text: button.text
             color: button.foreground
-            font.pixelSize: button.small ? Theme.fontSize + 1 : Theme.fontSize + 2
+            font.pixelSize: Design.label.size
+            font.weight: Design.label.weight
         }
     }
     MouseArea {

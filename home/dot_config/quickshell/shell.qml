@@ -15,7 +15,9 @@ import qs.modules.power
 import qs.modules.profile
 import qs.modules.screenshot
 import qs.modules.shortcuts
+import qs.modules.styleguide
 import qs.modules.wallpaper
+import qs.services
 
 // Solo instancia la interfaz: la lógica está en services/ y cada ventana en modules/.
 // Las ventanas usan sus servicios, así que estos se crean (y registran su IPC) al iniciar.
@@ -68,7 +70,10 @@ ShellRoot {
     ShortcutsWindow {}
     DisplaysWindow {}
     KeyboardWindow {}
-    WallpaperPicker {}
+    StyleGuideWindow {}
+    // Selector de fondos: carrusel o cuadrícula (Ajustes → Selector de fondos)
+    WallpaperCarousel {}
+    WallpaperGrid {}
 
     LockScreen {}
 }

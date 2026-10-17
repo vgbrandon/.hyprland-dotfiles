@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
+import qs.components.design
 import qs.services
 
 // Panel que entra deslizándose desde un lado (edge: "right" o "left") del monitor
@@ -23,7 +24,7 @@ PanelWindow {
 
     // Se mantiene mapeado mientras dura la animación de salida
     visible: open || slide.running
-    screen: Hypr.focusedScreen
+    screen: Hypr.mainScreen
     anchors {
         top: true
         bottom: true
@@ -72,7 +73,7 @@ PanelWindow {
     Rectangle {
         width: parent.width
         height: parent.height
-        radius: Theme.radius
+        radius: Design.radiusMd
         x: panel.open ? 0 : (panel.fromLeft ? -1 : 1) * (panel.implicitWidth + 16)
         Behavior on x {
             NumberAnimation {
@@ -82,9 +83,14 @@ PanelWindow {
             }
         }
 
-        color: Theme.glass(Theme.panelBg)
-        border.color: Theme.surfaceHigh
+        // Vidrio (docs/prisma.md)
+        color: Design.alpha(Design.glassTint, Design.glassOpacity)
+        border.color: Design.border
         border.width: 1
+
+        GlassEdge {
+            inset: Design.radiusMd
+        }
 
         // Si el contenido no cabe (monitores bajos), se desplaza con la rueda
         Flickable {

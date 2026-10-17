@@ -15,7 +15,9 @@ Singleton {
     // Posición de la barra: top | bottom | left | right (se guarda en settings.json).
     // barTarget es la elegida; barPosition, la que se ve: cambia a mitad de la
     // animación, cuando la barra está escondida.
-    readonly property string barTarget: settings.barPosition
+    readonly property string barTarget: savedPosition
+    // La guardada (si no es válida, arriba)
+    readonly property string savedPosition: ["top", "bottom", "left", "right"].includes(settings.barPosition) ? settings.barPosition : "top"
     property string barPosition: "top"
     readonly property bool barVertical: barPosition === "left" || barPosition === "right"
     // 0 = barra visible, 1 = escondida fuera de su borde. Empieza escondida:
@@ -44,6 +46,14 @@ Singleton {
     readonly property bool translucent: settings.translucent
     function setTranslucent(on) {
         settings.translucent = on;
+        settingsFile.writeAdapter();
+    }
+
+    // Selector de fondos: "carousel" (el elegido al centro, flechas) o "grid" (todos a
+    // pantalla completa, con buscador)
+    readonly property string wallpaperPicker: settings.wallpaperPicker === "grid" ? "grid" : "carousel"
+    function setWallpaperPicker(style) {
+        settings.wallpaperPicker = style;
         settingsFile.writeAdapter();
     }
 
@@ -89,7 +99,7 @@ Singleton {
         target: settings
         function onBarPositionChanged() {
             if (!root.settingsLoaded) return;
-            if (settings.barPosition !== root.barPosition || moveAnim.running) {
+            if (root.savedPosition !== root.barPosition || moveAnim.running) {
                 introAnim.stop();
                 moveAnim.restart();
             }
@@ -119,7 +129,7 @@ Singleton {
             duration: 200
             easing.type: Easing.InCubic
         }
-        ScriptAction { script: root.barPosition = settings.barPosition }
+        ScriptAction { script: root.barPosition = root.savedPosition }
         // Deja que la barra se recoloque en el borde nuevo antes de entrar
         PauseAnimation { duration: 100 }
         NumberAnimation {
@@ -160,7 +170,7 @@ Singleton {
         onFileChanged: reload()
         onLoaded: {
             if (root.settingsLoaded) return;
-            root.barPosition = settings.barPosition;
+            root.barPosition = root.savedPosition;
             root.settingsLoaded = true;
         }
         onLoadFailed: root.settingsLoaded = true
@@ -168,6 +178,8 @@ Singleton {
         JsonAdapter {
             id: settings
             property string barPosition: "top"
+            // Selector de fondos: "carousel" o "grid"
+            property string wallpaperPicker: "carousel"
             // Monitor principal elegido en el módulo de pantallas ("" = automático)
             property string primaryMonitor: ""
             // Temperatura de la luz nocturna en K (0 = la de por defecto)

@@ -10,7 +10,7 @@ import qs.components.containers
 import qs.components.controls
 import qs.services
 
-// Panel de ajustes rápidos: entra desde la derecha del monitor enfocado
+// Panel de ajustes rápidos: entra desde la derecha del monitor principal
 // (como el centro de notificaciones).
 //   quickshell ipc call config toggle
 SidePanel {
@@ -219,6 +219,35 @@ SidePanel {
                     icon: modelData.icon
                     selected: Config.barTarget === modelData.position
                     onClicked: Config.setBarPosition(modelData.position)
+                }
+            }
+        }
+
+        // Selector de fondos: carrusel o cuadrícula a pantalla completa
+        RowLayout {
+            Layout.leftMargin: 6
+            Layout.rightMargin: 4
+            spacing: 10
+
+            Icon {
+                text: Theme.iImage
+                color: Theme.subtext
+            }
+            Label {
+                Layout.fillWidth: true
+                text: "Selector de fondos"
+            }
+            Repeater {
+                model: [
+                    { style: "carousel", label: "Carrusel" },
+                    { style: "grid", label: "Cuadrícula" }
+                ]
+
+                Chip {
+                    required property var modelData
+                    text: modelData.label
+                    selected: Config.wallpaperPicker === modelData.style
+                    onClicked: Config.setWallpaperPicker(modelData.style)
                 }
             }
         }

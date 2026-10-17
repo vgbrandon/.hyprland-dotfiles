@@ -128,7 +128,7 @@ Rectangle {
                         && ((field.f.options ?? []).length === 0 || field.f.custom === true)
                     Layout.fillWidth: true
                     implicitHeight: 34
-                    radius: height / 2
+                    radius: Design.radiusSm
                     color: Theme.surface
                     border.color: textField.activeFocus ? Theme.withAlpha(Theme.primary, 0.5) : Theme.surfaceHigh
                     border.width: 1

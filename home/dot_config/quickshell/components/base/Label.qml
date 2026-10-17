@@ -1,6 +1,7 @@
 import QtQuick
 import qs.services
 
+// Texto de la interfaz
 Text {
     color: Theme.text
     font.family: Theme.font

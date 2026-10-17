@@ -67,7 +67,8 @@ Singleton {
     readonly property int gap: 6
 
     // Fuentes
-    readonly property string font: "sans-serif"
+    // La del diseño de la sesión (Design.font)
+    readonly property string font: "Adwaita Sans"
     readonly property string iconFont: "JetBrainsMono Nerd Font Propo"
     readonly property int fontSize: 11
 

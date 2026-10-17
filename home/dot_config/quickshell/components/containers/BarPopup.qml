@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
+import qs.components.design
 import qs.services
 
 // Panel que se abre junto a la barra, pegado al elemento que lo abre (anchorItem),
@@ -89,9 +90,10 @@ PopupWindow {
         }
     }
 
-    // Para el IPC: solo lo abre la barra del monitor enfocado
-    function toggleOnFocusedScreen() {
-        if (Hypr.isFocused(anchorItem.QsWindow.window?.screen)) toggle();
+    // Para el IPC: solo lo abre la barra del monitor principal
+    function toggleOnMainScreen() {
+        const win = anchorItem.QsWindow.window;
+        if (win?.visible && win.screen === Hypr.mainScreen) toggle();
     }
 
     visible: false
@@ -135,13 +137,18 @@ PopupWindow {
             y: (1 - popup.reveal) * popup.toBar.y * 24
         }
 
+        // Vidrio (docs/prisma.md): tinte translúcido, borde de 1 px y brillo en el canto
         Rectangle {
             id: background
             anchors.fill: parent
-            radius: Theme.radius
-            color: Theme.glass(Theme.panelBg)
-            border.color: Theme.surfaceHigh
+            radius: Design.radiusMd
+            color: Design.alpha(Design.glassTint, Design.glassOpacity)
+            border.color: Design.border
             border.width: 1
+
+            GlassEdge {
+                inset: background.radius
+            }
         }
 
         ColumnLayout {

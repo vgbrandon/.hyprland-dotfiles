@@ -212,7 +212,7 @@ PanelWindow {
         y: 24
         width: help.implicitWidth + 32
         height: 40
-        radius: height / 2
+        radius: Design.radiusSm
         color: Theme.panelBg
         border.color: Theme.surfaceHigh
         border.width: 1

@@ -18,8 +18,10 @@ Rectangle {
 
     implicitWidth: layout.implicitWidth + padding * 2
     implicitHeight: layout.implicitHeight + padding * 2
-    radius: Theme.radiusSmall
-    color: Theme.surface
+    radius: Design.radiusSm
+    color: Design.surface1
+    border.color: Design.border
+    border.width: 1
 
     ColumnLayout {
         id: layout
@@ -36,7 +38,7 @@ Rectangle {
             Icon {
                 visible: card.icon !== ""
                 text: card.icon
-                color: Theme.primary
+                color: Design.accent
             }
             Label {
                 text: card.title
@@ -45,8 +47,8 @@ Rectangle {
                 Layout.fillWidth: true
                 visible: card.subtitle !== ""
                 text: card.subtitle
-                color: Theme.subtext
-                font.pixelSize: Theme.fontSize
+                color: Design.onSurfaceVariant
+                font.pixelSize: Design.caption.size
             }
         }
 

@@ -145,7 +145,7 @@ Rectangle {
             visible: row.askingKey
             Layout.fillWidth: true
             implicitHeight: 40
-            radius: height / 2
+            radius: Design.radiusSm
             color: Theme.surface
             border.color: secretField.activeFocus ? Theme.primary : Theme.surfaceHigh
             border.width: 1

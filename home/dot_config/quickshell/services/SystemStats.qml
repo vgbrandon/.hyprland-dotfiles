@@ -113,7 +113,7 @@ Singleton {
         onLoaded: root.kernel = text().trim()
     }
 
-    // Pide abrir/cerrar el panel (lo abre la píldora del monitor enfocado)
+    // Pide abrir/cerrar el panel (lo abre la barra del monitor principal)
     signal panelRequested()
 
     IpcHandler {

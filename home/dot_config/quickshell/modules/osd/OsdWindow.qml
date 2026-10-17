@@ -4,10 +4,11 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import qs.components.base
+import qs.components.design
 import qs.services
 
 // Aviso flotante de volumen, micrófono y brillo (lógica en services/Osd.qml): una
-// píldora como las de la barra, abajo en el centro del monitor enfocado, con el icono,
+// píldora como las de la barra, abajo en el centro del monitor principal, con el icono,
 // una barra fina y el porcentaje. La etiqueta (salida de audio, monitor del brillo)
 // solo aparece cuando aporta algo. Sube y se funde al aparecer; el ratón la atraviesa
 // y no roba el foco.
@@ -15,7 +16,7 @@ PanelWindow {
     id: win
 
     visible: Osd.shown || fade.running
-    screen: Hypr.focusedScreen
+    screen: Hypr.mainScreen
     anchors.bottom: true
     // Por encima de la barra si está abajo (el margen extra es para la sombra)
     margins.bottom: Config.reserve("bottom") + 40
@@ -54,12 +55,12 @@ PanelWindow {
             Behavior on y { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
         }
 
-        // Píldora (fondo de la barra, con sombra suave)
+        // Vidrio con sombra suave (diseño Prisma)
         Rectangle {
             anchors.fill: parent
-            radius: height / 2
-            color: Theme.glass(Theme.panelBg)
-            border.color: Theme.surfaceHigh
+            radius: Design.radiusMd
+            color: Design.alpha(Design.glassTint, Design.glassOpacity)
+            border.color: Design.border
             border.width: 1
             layer.enabled: true
             layer.effect: MultiEffect {
@@ -110,15 +111,15 @@ PanelWindow {
                 }
                 Rectangle {
                     Layout.fillWidth: true
-                    implicitHeight: 6
-                    radius: 3
-                    color: Theme.surfaceHigh
+                    implicitHeight: 4
+                    radius: 2
+                    color: Design.surface3
 
                     Rectangle {
                         width: parent.width * Math.max(0, Math.min(1, Osd.level))
                         height: parent.height
-                        radius: 3
-                        color: Osd.muted ? Theme.subtext : Theme.primary
+                        radius: 2
+                        color: Osd.muted ? Design.muted : Design.accent
                         Behavior on width { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
                         Behavior on color { ColorAnimation { duration: 150 } }
                     }

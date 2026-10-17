@@ -12,7 +12,7 @@ ColumnLayout {
     property alias contentSpacing: body.spacing
     property string title
     property string icon
-    property color iconColor: Theme.subtext
+    property color iconColor: Design.onSurfaceVariant
 
     Layout.fillWidth: true
     spacing: 6
@@ -30,8 +30,9 @@ ColumnLayout {
         }
         Label {
             text: root.title
-            color: Theme.subtext
-            font.pixelSize: Theme.fontSize
+            color: Design.onSurfaceVariant
+            font.pixelSize: Design.caption.size
+            font.weight: Font.Medium
         }
     }
     ColumnLayout {

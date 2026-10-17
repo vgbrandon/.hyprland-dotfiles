@@ -232,7 +232,7 @@ SidePanel {
             Rectangle {
                 Layout.fillWidth: true
                 implicitHeight: 32
-                radius: height / 2
+                radius: Design.radiusSm
                 color: Theme.panelBg
 
                 TextInput {
@@ -505,7 +505,7 @@ SidePanel {
                                     required property string modelData
                                     implicitWidth: fileLabel.implicitWidth + 30
                                     implicitHeight: 22
-                                    radius: height / 2
+                                    radius: Design.radiusSm
                                     color: Theme.surface
                                     Icon {
                                         anchors.left: parent.left
@@ -1087,7 +1087,7 @@ SidePanel {
                 Rectangle {
                     implicitWidth: modelChip.implicitWidth + 20
                     implicitHeight: 28
-                    radius: height / 2
+                    radius: Design.radiusSm
                     color: chipMouse.containsMouse || panel.showModels ? Theme.surfaceHigh : "transparent"
 
                     RowLayout {
@@ -1128,7 +1128,7 @@ SidePanel {
                         readonly property bool on: AI.agent === modelData.id
                         implicitWidth: agentLabel.implicitWidth + 18
                         implicitHeight: 26
-                        radius: height / 2
+                        radius: Design.radiusSm
                         color: on ? Theme.withAlpha(Theme.primary, 0.18) : agentMouse.containsMouse ? Theme.surfaceHigh : "transparent"
 
                         Label {

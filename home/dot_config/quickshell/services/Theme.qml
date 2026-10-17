@@ -22,7 +22,6 @@ Singleton {
     }
 
     // Colores (cambian con una transición suave al cambiar el fondo)
-    property color barBg: pick("surface", "#121214")
     property color panelBg: pick("surface", "#121214")
     property color surface: pick("surface_container", "#1f1e22")
     property color surfaceHigh: pick("surface_container_highest", "#2b2a30")
@@ -37,15 +36,6 @@ Singleton {
     // Azul armonizado con el fondo (custom_colors de matugen)
     property color blue: pick("blue", "#61afef")
 
-    // Fondo de la barra y de los paneles: translúcido si se activa en ajustes (la regla
-    // de capa de hyprland.lua desenfoca lo que hay detrás)
-    property real glassAlpha: Config.translucent ? 0.85 : 1
-    Behavior on glassAlpha { NumberAnimation { duration: 250 } }
-    function glass(c) {
-        return withAlpha(c, glassAlpha);
-    }
-
-    Behavior on barBg { ColorAnimation { duration: 600 } }
     Behavior on panelBg { ColorAnimation { duration: 600 } }
     Behavior on surface { ColorAnimation { duration: 600 } }
     Behavior on surfaceHigh { ColorAnimation { duration: 600 } }
@@ -123,7 +113,8 @@ Singleton {
     // Redondeo de los paneles: el mismo que las ventanas de Hyprland
     // (decoration:rounding), leído al iniciar. Los elementos de dentro usan uno menor.
     property int radius: 10
-    readonly property int radiusSmall: Math.max(4, radius - 4)
+    // Elementos de dentro de los paneles: el radio del diseño nuevo (Design.radiusSm)
+    readonly property int radiusSmall: 8
 
     Process {
         command: ["hyprctl", "getoption", "decoration:rounding", "-j"]
@@ -139,13 +130,11 @@ Singleton {
         }
     }
 
-    // Tamaños
+    // Alto de la barra
     readonly property int barHeight: 38
-    readonly property int pillHeight: 28
-    readonly property int gap: 6
 
-    // Fuentes
-    readonly property string font: "sans-serif"
+    // Fuentes (la de la interfaz es la del diseño, Design.font)
+    readonly property string font: "Adwaita Sans"
     readonly property string monoFont: "JetBrainsMono Nerd Font Mono"
     readonly property string iconFont: "JetBrainsMono Nerd Font Propo"
     readonly property int fontSize: 11
@@ -187,14 +176,13 @@ Singleton {
     readonly property string iPacman: String.fromCodePoint(0xF0BAF)
     readonly property string iGhost: String.fromCodePoint(0xF02A0)
     readonly property string iVideo: String.fromCodePoint(0xF0567)
-    readonly property string iRecord: String.fromCodePoint(0xF044A)
     readonly property string iMic: String.fromCodePoint(0xF036C)
-    readonly property string iBrightnessLow: String.fromCodePoint(0xF00DE)
-    readonly property string iBrightnessMedium: String.fromCodePoint(0xF00DF)
-    readonly property string iBrightnessHigh: String.fromCodePoint(0xF00E0)
     readonly property string iMicOff: String.fromCodePoint(0xF036D)
     readonly property string iVolumeLow: String.fromCodePoint(0xF057F)
     readonly property string iVolumeMedium: String.fromCodePoint(0xF0580)
+    readonly property string iBrightnessLow: String.fromCodePoint(0xF00DE)
+    readonly property string iBrightnessMedium: String.fromCodePoint(0xF00DF)
+    readonly property string iBrightnessHigh: String.fromCodePoint(0xF00E0)
     readonly property string iBell: String.fromCodePoint(0xF009A)
     readonly property string iBellBadge: String.fromCodePoint(0xF116B)
     readonly property string iBellEmpty: String.fromCodePoint(0xF009C)
@@ -221,8 +209,6 @@ Singleton {
     readonly property string iArrowDown: String.fromCodePoint(0xF0045)
     readonly property string iArrowUp: String.fromCodePoint(0xF005D)
     readonly property string iList: String.fromCodePoint(0xF0279)
-    readonly property string iPlayCircle: String.fromCodePoint(0xF040C)
-    readonly property string iPauseCircle: String.fromCodePoint(0xF03E5)
     readonly property string iKeyboard: String.fromCodePoint(0xF030C)
     readonly property string iTimer: String.fromCodePoint(0xF051B)
     readonly property string iCoffee: String.fromCodePoint(0xF0176)

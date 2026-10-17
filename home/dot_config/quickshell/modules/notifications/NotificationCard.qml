@@ -6,6 +6,7 @@ import Quickshell.Services.Notifications
 import qs.services
 import qs.components.base
 import qs.components.buttons
+import qs.components.design
 
 // Tarjeta de una notificación del historial (Notifs.Entry; se usa en los popups y en el
 // centro). Si la app ya la cerró, sus botones no sirven: clic = abrir la app.
@@ -38,10 +39,15 @@ Rectangle {
     }
 
     implicitHeight: content.implicitHeight + 24
-    radius: Theme.radius
-    color: Theme.surface
-    border.color: entry.urgency === NotificationUrgency.Critical ? Theme.error : Theme.surfaceHigh
+    // Superficie sólida con el canto del vidrio (diseño Prisma)
+    radius: Design.radiusMd
+    color: Design.surface1
+    border.color: entry.urgency === NotificationUrgency.Critical ? Design.error : Design.border
     border.width: 1
+
+    GlassEdge {
+        inset: Design.radiusMd
+    }
 
     HoverHandler {
         id: hover
@@ -148,14 +154,14 @@ Rectangle {
 
                         width: btnLabel.implicitWidth + 24
                         height: 30
-                        radius: height / 2
-                        color: btnMouse.containsMouse ? Theme.primary : Theme.surfaceHigh
+                        radius: Design.radiusSm
+                        color: btnMouse.containsMouse ? Qt.tint(Design.tonal, Design.hoverLayer) : Design.tonal
 
                         Label {
                             id: btnLabel
                             anchors.centerIn: parent
                             text: btn.modelData.text
-                            color: btnMouse.containsMouse ? Theme.primaryFg : Theme.text
+                            color: Design.onTonal
                             font.pixelSize: Theme.fontSize + 1
                         }
                         MouseArea {

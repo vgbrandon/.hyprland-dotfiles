@@ -2,17 +2,19 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.components.base
-import qs.components.buttons
 import qs.components.containers
-import qs.components.controls
+import qs.components.design
 import qs.services
 
-// Panel del pomodoro (clic en el temporizador de la barra): fase, anillo con el
-// tiempo, controles, rondas del ciclo y duraciones. El estado está en Pomodoro.
+// Panel del pomodoro (clic en el temporizador de la barra), con el diseño Prisma
+// (docs/prisma.md de los dotfiles): fase, anillo con el tiempo, rondas del ciclo, controles,
+// duraciones y opciones. El estado está en Pomodoro.
 BarPopup {
     id: panel
 
-    readonly property color phaseColor: Pomodoro.isBreak ? Theme.blue : Theme.error
+    // Enfoque en rojo, descansos en azul (armonizados con el fondo)
+    readonly property color phaseColor: Pomodoro.isBreak ? Design.info : Design.error
+    readonly property var phases: ["work", "short", "long"]
 
     implicitWidth: 340
     padding: 16
@@ -20,70 +22,33 @@ BarPopup {
 
     // --- Cabecera ---
     RowLayout {
-        spacing: 8
+        spacing: 6
 
-        Label {
+        Txt {
             Layout.fillWidth: true
             text: "Pomodoro"
-            font.pixelSize: 16
+            textStyle: Design.headline
         }
         Icon {
             text: Theme.iCheck
-            color: Theme.subtext
+            color: Design.onSurfaceVariant
             font.pixelSize: 14
         }
-        Label {
+        Txt {
             text: Pomodoro.todayCount === 1 ? "1 hoy" : `${Pomodoro.todayCount} hoy`
-            color: Theme.subtext
-            font.pixelSize: Theme.fontSize
+            textStyle: Design.caption
+            color: Design.onSurfaceVariant
         }
     }
 
     // --- Fase (elegirla la reinicia) ---
-    Rectangle {
+    Segmented {
         Layout.fillWidth: true
-        implicitHeight: 36
-        radius: height / 2
-        color: Theme.surface
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: 3
-            spacing: 3
-
-            Repeater {
-                model: [
-                    { id: "work", label: "Enfoque" },
-                    { id: "short", label: "Corto" },
-                    { id: "long", label: "Largo" }
-                ]
-
-                Rectangle {
-                    id: seg
-                    required property var modelData
-                    readonly property bool on: Pomodoro.phase === modelData.id
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    radius: height / 2
-                    color: on ? panel.phaseColor : segMouse.containsMouse ? Theme.surfaceHigh : "transparent"
-                    Behavior on color { ColorAnimation { duration: 150 } }
-
-                    Label {
-                        anchors.centerIn: parent
-                        text: seg.modelData.label
-                        color: seg.on ? Theme.primaryFg : Theme.text
-                        font.pixelSize: Theme.fontSize + 1
-                    }
-                    MouseArea {
-                        id: segMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: if (!seg.on) Pomodoro.setPhase(seg.modelData.id)
-                    }
-                }
-            }
+        options: ["Enfoque", "Corto", "Largo"]
+        current: panel.phases.indexOf(Pomodoro.phase)
+        follow: false
+        onSelected: i => {
+            if (panel.phases[i] !== Pomodoro.phase) Pomodoro.setPhase(panel.phases[i]);
         }
     }
 
@@ -97,7 +62,7 @@ BarPopup {
             anchors.fill: parent
             readonly property real progress: Pomodoro.progress
             readonly property color fg: panel.phaseColor
-            readonly property color track: Theme.surfaceHigh
+            readonly property color track: Design.surface3
             onProgressChanged: requestPaint()
             onFgChanged: requestPaint()
             onTrackChanged: requestPaint()
@@ -105,7 +70,7 @@ BarPopup {
             onPaint: {
                 const ctx = getContext("2d");
                 ctx.reset();
-                const c = width / 2, w = 10, r = c - w / 2 - 1;
+                const c = width / 2, w = 8, r = c - w / 2 - 1;
                 ctx.lineWidth = w;
                 ctx.lineCap = "round";
                 ctx.strokeStyle = track;
@@ -130,20 +95,21 @@ BarPopup {
                 color: panel.phaseColor
                 font.pixelSize: 20
             }
-            Label {
+            Txt {
                 Layout.alignment: Qt.AlignHCenter
                 text: Pomodoro.timeText()
-                font.pixelSize: 40
-                font.weight: Font.DemiBold
+                font.pixelSize: 42
+                font.weight: Font.Medium
                 font.features: { "tnum": 1 }
                 opacity: Pomodoro.running || !Pomodoro.active ? 1 : 0.55
+                Behavior on opacity { NumberAnimation { duration: Design.normal } }
             }
-            Label {
+            Txt {
                 Layout.alignment: Qt.AlignHCenter
                 text: Pomodoro.running ? Pomodoro.phaseNames[Pomodoro.phase]
                     : Pomodoro.active ? "En pausa" : Pomodoro.phaseNames[Pomodoro.phase]
-                color: Theme.subtext
-                font.pixelSize: Theme.fontSize
+                textStyle: Design.caption
+                color: Design.onSurfaceVariant
             }
         }
     }
@@ -165,8 +131,9 @@ BarPopup {
                 width: current ? 20 : 8
                 height: 8
                 radius: 4
-                color: done ? Theme.error : current ? Theme.withAlpha(Theme.error, 0.5) : Theme.surfaceHigh
-                Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+                color: done ? Design.error : current ? Design.alpha(Design.error, 0.5) : Design.surface3
+                Behavior on width { NumberAnimation { duration: Design.normal; easing.type: Design.easing } }
+                Behavior on color { ColorAnimation { duration: Design.normal } }
             }
         }
     }
@@ -176,26 +143,31 @@ BarPopup {
         Layout.alignment: Qt.AlignHCenter
         spacing: 16
 
-        CircleButton {
+        IconBtn {
             icon: Theme.iRefresh
+            kind: "tonal"
             size: 40
             iconSize: 19
-            filled: true
+            radius: Design.radiusMd
             onClicked: Pomodoro.reset()
         }
-        CircleButton {
+        // Empezar / pausar, en el color de la fase
+        IconBtn {
             icon: Pomodoro.running ? Theme.iPause : Theme.iPlay
+            kind: "filled"
             size: 56
-            iconSize: 27
-            accent: true
-            accentColor: panel.phaseColor
+            iconSize: 26
+            radius: Design.radiusLg
+            color: panel.phaseColor
+            iconColor: Design.background
             onClicked: Pomodoro.toggle()
         }
-        CircleButton {
+        IconBtn {
             icon: Theme.iNext
+            kind: "tonal"
             size: 40
             iconSize: 19
-            filled: true
+            radius: Design.radiusMd
             onClicked: Pomodoro.skip()
         }
     }
@@ -203,7 +175,7 @@ BarPopup {
     Rectangle {
         Layout.fillWidth: true
         implicitHeight: 1
-        color: Theme.surfaceHigh
+        color: Design.outlineVariant
     }
 
     // --- Duraciones y opciones ---
@@ -219,9 +191,8 @@ BarPopup {
                 { id: "long", label: "Descanso largo" }
             ]
 
-            Stepper {
+            NumberStep {
                 required property var modelData
-                Layout.fillWidth: true
                 label: modelData.label
                 unit: "min"
                 value: Pomodoro.minutesOf(modelData.id)
@@ -230,31 +201,29 @@ BarPopup {
                 onChanged: v => Pomodoro.setMinutes(modelData.id, v)
             }
         }
-        Stepper {
-            Layout.fillWidth: true
+        NumberStep {
             label: "Rondas hasta el largo"
             value: Pomodoro.rounds
             onChanged: v => Pomodoro.setRounds(v)
         }
 
-        SwitchRow {
-            Layout.leftMargin: 0
-            Layout.rightMargin: 0
+        ToggleRow {
+            Layout.topMargin: 4
             text: "Seguir automáticamente"
             checked: Pomodoro.autoStart
             onToggled: Pomodoro.setAutoStart(!Pomodoro.autoStart)
         }
-        SwitchRow {
-            Layout.leftMargin: 0
-            Layout.rightMargin: 0
+        ToggleRow {
             text: "Sonido al terminar"
             checked: Pomodoro.sound
             onToggled: Pomodoro.setSound(!Pomodoro.sound)
         }
     }
 
-    TextButton {
+    Btn {
         Layout.alignment: Qt.AlignHCenter
+        kind: "text"
+        small: true
         text: "Reiniciar ciclo"
         enabled: Pomodoro.round > 0 || Pomodoro.phase !== "work" || Pomodoro.active
         onClicked: Pomodoro.resetCycle()

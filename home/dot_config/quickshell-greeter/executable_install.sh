@@ -17,12 +17,15 @@ fi
 # (se borra antes para no dejar archivos de versiones anteriores)
 sudo rm -rf /etc/greetd/quickshell
 sudo install -d -m 755 /etc/greetd/quickshell
-# Misma estructura que la sesión: services/ (Theme, Config y Auth propios del greeter)
-# y components/base (Pill, Icon, Label y Avatar de la sesión normal)
-sudo install -d -m 755 /etc/greetd/quickshell/services /etc/greetd/quickshell/components/base
+# Misma estructura que la sesión: services/ (Theme, Config y Auth propios del greeter,
+# y Design, los tokens del diseño de la sesión), components/base (Icon, Label y Avatar)
+# y components/design (IconBtn, GlassEdge y Surface) de la sesión normal
+sudo install -d -m 755 /etc/greetd/quickshell/services /etc/greetd/quickshell/components/base /etc/greetd/quickshell/components/design
 sudo install -m 644 "$greeter"/{shell,GreeterContent}.qml /etc/greetd/quickshell/
 sudo install -m 644 "$greeter"/services/{Auth,Theme,Config}.qml /etc/greetd/quickshell/services/
-sudo install -m 644 "$shell"/components/base/{Pill,Icon,Label,Avatar}.qml /etc/greetd/quickshell/components/base/
+sudo install -m 644 "$shell"/services/Design.qml /etc/greetd/quickshell/services/
+sudo install -m 644 "$shell"/components/base/{Icon,Label,Avatar}.qml /etc/greetd/quickshell/components/base/
+sudo install -m 644 "$shell"/components/design/{IconBtn,GlassEdge,Surface}.qml /etc/greetd/quickshell/components/design/
 
 # Hyprland del greeter (con los mismos monitores) y configuración de greetd
 sudo install -m 755 "$greeter"/start-greeter.sh /etc/greetd/start-greeter.sh

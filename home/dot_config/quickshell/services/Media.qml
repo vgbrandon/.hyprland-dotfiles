@@ -75,7 +75,7 @@ Singleton {
         onTriggered: root.applyShown()
     }
 
-    // Pide abrir/cerrar el panel (lo abre la píldora del monitor enfocado)
+    // Pide abrir/cerrar el panel (lo abre la barra del monitor principal)
     signal panelRequested()
 
     function togglePlaying() {

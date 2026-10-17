@@ -2,9 +2,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import qs.components.design
 import qs.services
 
-// Ventana a pantalla completa en el monitor enfocado, por encima de todo: fondo
+// Ventana a pantalla completa en el monitor principal, por encima de todo: fondo
 // oscurecido y una tarjeta con el contenido (en columna). Clic fuera de la tarjeta
 // o Esc (si nada dentro lo usa) = closeRequested().
 //   OverlayWindow { open: Servicio.open; onCloseRequested: Servicio.open = false; cardWidth: 600; … }
@@ -23,13 +24,13 @@ PanelWindow {
     // Tarjeta: ancho (0 = el del contenido), margen y color
     property int cardWidth: 0
     property int padding: 16
-    property color cardColor: Theme.panelBg
+    property color cardColor: Design.glassTint
     // Alto con el que se centra la tarjeta (0 = el suyo). Con listas que se filtran,
     // centrarla según su alto máximo evita que el buscador se mueva al escribir.
     property int centerHeight: 0
 
     visible: open
-    screen: Hypr.focusedScreen
+    screen: Hypr.mainScreen
     anchors {
         top: true
         bottom: true
@@ -61,10 +62,15 @@ PanelWindow {
             y: Math.max(0, Math.round((parent.height - (win.centerHeight > 0 ? win.centerHeight : height)) / 2))
             width: win.cardWidth > 0 ? win.cardWidth : column.implicitWidth + win.padding * 2
             height: column.implicitHeight + win.padding * 2
-            radius: Theme.radius
-            color: win.cardColor
-            border.color: Theme.surfaceHigh
+            // Vidrio casi opaco: estas capas no las desenfoca Hyprland (docs/prisma.md)
+            radius: Design.radiusMd
+            color: Design.alpha(win.cardColor, Design.glassOpacity < 1 ? 0.94 : 1)
+            border.color: Design.border
             border.width: 1
+
+            GlassEdge {
+                inset: Design.radiusMd
+            }
 
             opacity: win.open ? 1 : 0
             scale: win.open ? 1 : 0.96
