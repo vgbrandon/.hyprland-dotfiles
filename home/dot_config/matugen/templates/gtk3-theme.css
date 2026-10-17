@@ -5,3 +5,15 @@
  */
 @import url("file:///usr/share/themes/adw-gtk3-dark/gtk-3.0/gtk.css");
 @import url("colors.css");
+
+/* Selección de Thunar (y otras apps de Xfce): la pintan con este color tal cual, en
+   sólido, y tapaba las carpetas (del mismo color) y el texto. Translúcido, como en
+   adw-gtk3. El propio tema no lo usa. */
+@define-color theme_selected_bg_color alpha(@accent_bg_color, 0.3);
+
+/* Thunar tiñe el icono seleccionado multiplicándolo por el fondo de selección de la
+   vista de iconos; con la ventana sin foco usa el de :active, que es el fondo oscuro,
+   y el icono salía negro. En blanco, multiplicar no lo cambia. */
+.thunar widget.view:active {
+  background-color: #ffffff;
+}
