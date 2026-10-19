@@ -9,7 +9,7 @@ import Quickshell.Io
 // cambiar entre ellas y añadir o quitar. Se guardan en ~/.config/hypr/keyboard.lua
 // (lo carga hyprland.lua después de su bloque input) y se aplican al momento. El
 // catálogo para añadir sale de scripts/xkb-layouts.py. Panel en modules/kblayout.
-//   quickshell ipc call kblayout toggle | next | add <layout> <variant> | remove <índice>
+//   quickshell ipc call kblayout toggle | next | map | add <layout> <variant> | remove <índice>
 Singleton {
     id: root
 
@@ -22,6 +22,33 @@ Singleton {
     property var catalog: []
 
     signal panelRequested()
+
+    // --- Ver la distribución (modules/kblayout/LayoutMapWindow.qml) ---
+    property bool mapOpen: false
+    // La que se muestra ({ layout, variant }) y qué escribe cada tecla:
+    // { "AE01": [normal, Mayús, AltGr, AltGr + Mayús], … }
+    property var mapLayout: null
+    property var mapKeys: ({})
+    function showMap(l) {
+        mapLayout = l ?? current;
+        mapOpen = true;
+    }
+    onMapLayoutChanged: {
+        if (!mapLayout) return;
+        mapKeys = {};
+        keysProc.command = ["python3", "-I", Quickshell.shellPath("scripts/xkb-keys.py"), mapLayout.layout, mapLayout.variant];
+        keysProc.running = true;
+    }
+    Process {
+        id: keysProc
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    root.mapKeys = JSON.parse(this.text);
+                } catch (e) {}
+            }
+        }
+    }
 
     function find(l) {
         return catalog.find(c => c.layout === l.layout && c.variant === l.variant) ?? null;
@@ -161,6 +188,8 @@ Singleton {
 
         function toggle(): void { root.panelRequested(); }
         function next(): void { root.next(); }
+        // Ver la distribución activa
+        function map(): void { root.showMap(); }
         // p. ej. add latam "" | add us intl
         function add(layout: string, variant: string): void { root.add({ layout: layout, variant: variant }); }
         function remove(index: int): void { root.remove(index); }

@@ -39,6 +39,17 @@ BarPopup {
         icon: Theme.iKeyboard
         title: "Teclado"
         subtitle: KeyboardLayout.currentName
+
+        // Ver la distribución activa
+        CircleButton {
+            icon: Theme.iEye
+            size: 28
+            iconSize: 16
+            onClicked: {
+                panel.close();
+                KeyboardLayout.showMap();
+            }
+        }
     }
 
     // --- Distribuciones que tienes ---
@@ -241,13 +252,25 @@ BarPopup {
                 }
             }
 
-            // Ordenar y quitar (solo con varias, al pasar el ratón)
+            // Ver, ordenar y quitar (al pasar el ratón; ordenar y quitar, solo con varias)
             Row {
-                visible: row.many && (rowMouse.containsMouse || upBtn.hovered || downBtn.hovered || delBtn.hovered)
+                visible: rowMouse.containsMouse || eyeBtn.hovered || upBtn.hovered || downBtn.hovered || delBtn.hovered
                 spacing: 2
 
                 CircleButton {
+                    id: eyeBtn
+                    icon: Theme.iEye
+                    size: 26
+                    iconSize: 15
+                    onClicked: {
+                        panel.close();
+                        KeyboardLayout.showMap(row.entry);
+                    }
+                }
+
+                CircleButton {
                     id: upBtn
+                    visible: row.many
                     icon: Theme.iChevronUp
                     size: 26
                     iconSize: 15
@@ -256,6 +279,7 @@ BarPopup {
                 }
                 CircleButton {
                     id: downBtn
+                    visible: row.many
                     icon: Theme.iChevronDown
                     size: 26
                     iconSize: 15
@@ -264,6 +288,7 @@ BarPopup {
                 }
                 CircleButton {
                     id: delBtn
+                    visible: row.many
                     icon: Theme.iDelete
                     size: 26
                     iconSize: 14
