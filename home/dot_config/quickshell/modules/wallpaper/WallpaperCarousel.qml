@@ -61,7 +61,7 @@ PickerLayer {
     function use(i) {
         if (i >= 0 && i < count) Wallpaper.choose(Wallpaper.files[i]);
     }
-    // Al abrir (y cuando llega la lista, que se relee al abrir): en el fondo actual
+    // Al abrir (y cuando llega la lista o cambia el fondo): en el fondo actual
     function center() {
         // Al abrir, directamente ahí (sin recorrer el carrusel): sin animación mientras
         // cambia (pos sigue enlazada a current, no se asigna)
@@ -73,10 +73,15 @@ PickerLayer {
         center();
         keys.forceActiveFocus();
     }
+    // También cerrado: así el actual y sus vecinos ya tienen cargada la imagen a buena
+    // resolución y al abrir no se ve primero la miniatura borrosa
     Connections {
         target: Wallpaper
         function onFilesChanged() {
-            if (win.open) win.center();
+            win.center();
+        }
+        function onCurrentChanged() {
+            if (!win.open) win.center();
         }
     }
 

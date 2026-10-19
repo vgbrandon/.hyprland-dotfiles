@@ -54,8 +54,10 @@ Singleton {
                     files.push(file);
                     thumbs[file] = thumb || file;
                 }
-                root.thumbs = thumbs;
-                root.files = files;
+                // Solo si cambió algo: así el selector no rehace sus imágenes (y las ya
+                // cargadas a buena resolución se ven nítidas al abrir)
+                if (JSON.stringify(thumbs) !== JSON.stringify(root.thumbs)) root.thumbs = thumbs;
+                if (JSON.stringify(files) !== JSON.stringify(root.files)) root.files = files;
                 if (root.current === "" && root.files.length > 0) root.choose(root.files[0]);
             }
         }
