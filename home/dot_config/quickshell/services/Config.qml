@@ -57,6 +57,46 @@ Singleton {
         settingsFile.writeAdapter();
     }
 
+    // Módulos de la barra que se ocultan (Ajustes → Módulos de la barra). Las claves
+    // están en barModules; los ajustes no se pueden quitar (si no, no se podría volver).
+    readonly property var barModules: [
+        { key: "launcher", label: "Lanzador", icon: Theme.iApps },
+        { key: "workspaces", label: "Escritorios", icon: Theme.iWindow },
+        { key: "window", label: "Ventana activa", icon: Theme.iWindow },
+        { key: "media", label: "Multimedia", icon: Theme.iMusic },
+        { key: "clock", label: "Reloj", icon: Theme.iTimer },
+        { key: "resources", label: "CPU y RAM", icon: Theme.iCpu },
+        { key: "wallpaper", label: "Fondos", icon: Theme.iImage },
+        { key: "picker", label: "Selector de color", icon: Theme.iPicker },
+        { key: "clipboard", label: "Portapapeles", icon: Theme.iClipboard },
+        { key: "record", label: "Grabar", icon: Theme.iVideo },
+        { key: "screenshot", label: "Captura", icon: Theme.iCamera },
+        { key: "pomodoro", label: "Pomodoro", icon: Theme.iCoffee },
+        { key: "nightlight", label: "Luz nocturna", icon: Theme.iNight },
+        { key: "tray", label: "Bandeja", icon: Theme.iApps },
+        { key: "updates", label: "Actualizaciones", icon: Theme.iPacman },
+        { key: "bitwarden", label: "Bitwarden", icon: Theme.iKey },
+        { key: "keyboard", label: "Teclado", icon: Theme.iKeyboard },
+        { key: "network", label: "Red", icon: Theme.iWifi },
+        { key: "bluetooth", label: "Bluetooth", icon: Theme.iBt },
+        { key: "servers", label: "Servidores", icon: Theme.iServer },
+        { key: "github", label: "GitHub", icon: Theme.iGithub },
+        { key: "ai", label: "IA", icon: Theme.iBrain },
+        { key: "volume", label: "Volumen", icon: Theme.iVolume },
+        { key: "notifications", label: "Notificaciones", icon: Theme.iBell },
+        { key: "power", label: "Energía", icon: Theme.iPower }
+    ]
+    readonly property var barHidden: Array.from(settings.barHidden ?? [])
+    function barShows(key) {
+        return !barHidden.includes(key);
+    }
+    function toggleBarModule(key) {
+        const hidden = barHidden.filter(k => k !== key);
+        if (hidden.length === barHidden.length) hidden.push(key);
+        settings.barHidden = hidden;
+        settingsFile.writeAdapter();
+    }
+
     function setBarPosition(position) {
         settings.barPosition = position;
         settingsFile.writeAdapter();
@@ -186,6 +226,8 @@ Singleton {
             property int nightLightTemp: 0
             // Barra y paneles translúcidos con desenfoque
             property bool translucent: false
+            // Módulos de la barra ocultos (claves de barModules)
+            property list<string> barHidden: []
         }
     }
 

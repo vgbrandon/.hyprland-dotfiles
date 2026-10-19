@@ -300,6 +300,31 @@ SidePanel {
         }
     }
 
+    // Qué se ve en la barra: cada módulo es una opción; marcada = en la barra.
+    // Los ajustes (el engranaje) no se pueden quitar.
+    Section {
+        title: "Módulos de la barra"
+        contentSpacing: 8
+
+        Flow {
+            Layout.fillWidth: true
+            Layout.leftMargin: 2
+            spacing: 6
+
+            Repeater {
+                model: Config.barModules
+
+                Chip {
+                    required property var modelData
+                    icon: modelData.icon
+                    text: modelData.label
+                    selected: Config.barShows(modelData.key)
+                    onClicked: Config.toggleBarModule(modelData.key)
+                }
+            }
+        }
+    }
+
     // Qué pasa tras unos minutos sin usar el equipo (ver services/Idle.qml)
     Section {
         title: "Inactividad"

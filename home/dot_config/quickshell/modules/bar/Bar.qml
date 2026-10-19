@@ -10,6 +10,8 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import qs.components.base
 import qs.components.design
+import qs.modules.audio
+import qs.modules.bitwarden
 import qs.modules.calendar
 import qs.modules.github
 import qs.modules.kblayout
@@ -83,11 +85,15 @@ PanelWindow {
 
             BarIcon {
                 Layout.alignment: Qt.AlignCenter
+                visible: showLauncher.on
+                BarShow { id: showLauncher; key: "launcher" }
                 icon: Theme.iLogo
                 onClicked: Launcher.toggle()
             }
             Workspaces {
                 Layout.alignment: Qt.AlignCenter
+                visible: showWorkspaces.on
+                BarShow { id: showWorkspaces; key: "workspaces" }
                 screen: bar.screen
                 vertical: bar.vertical
                 shown: bar.compact ? 6 : 8
@@ -96,7 +102,8 @@ PanelWindow {
             }
             // Título de la ventana activa (no cabe en monitores estrechos ni en los laterales)
             Txt {
-                visible: !bar.narrow && !bar.vertical
+                visible: !bar.narrow && !bar.vertical && showWindow.on
+                BarShow { id: showWindow; key: "window" }
                 Layout.leftMargin: 6
                 Layout.maximumWidth: 300
                 text: activeWin.title
@@ -120,7 +127,8 @@ PanelWindow {
             GridLayout {
                 id: media
                 Layout.alignment: Qt.AlignCenter
-                visible: Media.player !== null && !bar.compact
+                visible: Media.player !== null && !bar.compact && showMedia.on
+                BarShow { id: showMedia; key: "media" }
                 columns: bar.vertical ? 1 : -1
                 columnSpacing: 6
 
@@ -174,6 +182,8 @@ PanelWindow {
             // Hora · fecha (clic = calendario). En un lateral, horas sobre minutos
             Rectangle {
                 id: clockBox
+                visible: showClock.on
+                BarShow { id: showClock; key: "clock" }
                 Layout.alignment: Qt.AlignCenter
                 implicitWidth: bar.vertical ? bar.btn : clockText.implicitWidth + 20
                 implicitHeight: bar.vertical ? clockText.implicitHeight + 10 : 26
@@ -228,7 +238,8 @@ PanelWindow {
             // CPU y RAM (clic = panel del sistema; no caben en un lateral)
             Rectangle {
                 id: res
-                visible: !bar.vertical
+                visible: !bar.vertical && showResources.on
+                BarShow { id: showResources; key: "resources" }
                 implicitWidth: resRow.implicitWidth + 16
                 implicitHeight: 26
                 radius: Design.radiusSm - 2
@@ -265,11 +276,28 @@ PanelWindow {
             Gap {}
 
             // Herramientas
-            BarIcon { icon: Theme.iImage; onClicked: Wallpaper.toggle() }
-            BarIcon { icon: Theme.iPicker; onClicked: ColorPicker.pick() }
-            BarIcon { icon: Theme.iClipboard; onClicked: Clipboard.toggle() }
+            BarIcon {
+                visible: showWallpaper.on
+                icon: Theme.iImage
+                onClicked: Wallpaper.toggle()
+                BarShow { id: showWallpaper; key: "wallpaper" }
+            }
+            BarIcon {
+                visible: showPicker.on
+                icon: Theme.iPicker
+                onClicked: ColorPicker.pick()
+                BarShow { id: showPicker; key: "picker" }
+            }
+            BarIcon {
+                visible: showClipboard.on
+                icon: Theme.iClipboard
+                onClicked: Clipboard.toggle()
+                BarShow { id: showClipboard; key: "clipboard" }
+            }
             // Grabación y pomodoro (con su menú y su panel)
             HoverBox {
+                visible: showRecord.on
+                BarShow { id: showRecord; key: "record" }
                 implicitWidth: bar.vertical ? bar.btn : Math.max(bar.btn, record.implicitWidth + 12)
                 implicitHeight: bar.vertical ? Math.max(bar.btn, record.implicitHeight + 10) : bar.btn
                 RecordButton {
@@ -278,11 +306,15 @@ PanelWindow {
                 }
             }
             BarIcon {
+                visible: showScreenshot.on
+                BarShow { id: showScreenshot; key: "screenshot" }
                 icon: Theme.iCamera
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: button => button === Qt.RightButton ? Screenshot.screenNow() : Screenshot.open()
             }
             HoverBox {
+                visible: showPomodoro.on
+                BarShow { id: showPomodoro; key: "pomodoro" }
                 implicitWidth: bar.vertical ? bar.btn : Math.max(bar.btn, pomodoro.implicitWidth + 12)
                 implicitHeight: bar.vertical ? Math.max(bar.btn, pomodoro.implicitHeight + 10) : bar.btn
                 PomodoroButton {
@@ -291,6 +323,8 @@ PanelWindow {
                 }
             }
             BarIcon {
+                visible: showNightlight.on
+                BarShow { id: showNightlight; key: "nightlight" }
                 enabled: NightLight.available
                 icon: NightLight.enabled ? Theme.iNight : Theme.iSun
                 checked: NightLight.enabled
@@ -306,9 +340,12 @@ PanelWindow {
                 Item {
                     id: trayItem
                     required property SystemTrayItem modelData
+                    visible: showTray.on
                     Layout.alignment: Qt.AlignCenter
                     implicitWidth: bar.btn
                     implicitHeight: bar.btn
+
+                    BarShow { id: showTray; key: "tray" }
 
                     Rectangle {
                         anchors.fill: parent
@@ -340,10 +377,16 @@ PanelWindow {
                         onClicked: e => {
                             const item = trayItem.modelData;
                             if (e.button === Qt.MiddleButton) item.secondaryActivate();
-                            else if (e.button === Qt.RightButton || item.onlyMenu) bar.showTrayMenu(trayItem);
-                            else item.activate();
+                            else if (e.button === Qt.RightButton || item.onlyMenu) {
+                                if (item.hasMenu) trayMenu.toggle();
+                            } else item.activate();
                         }
                         onWheel: e => trayItem.modelData.scroll(e.angleDelta.y, false)
+                    }
+                    TrayMenu {
+                        id: trayMenu
+                        anchorItem: trayItem
+                        menu: trayItem.modelData.menu
                     }
                 }
             }
@@ -351,6 +394,8 @@ PanelWindow {
             // Actualizaciones (de blanco a amarillo según cuántas haya)
             BarIcon {
                 id: updatesIcon
+                visible: showUpdates.on
+                BarShow { id: showUpdates; key: "updates" }
                 icon: Theme.iPacman
                 iconColor: Updates.totalColor()
                 onClicked: updatesPanel.toggle()
@@ -360,9 +405,40 @@ PanelWindow {
                 }
             }
 
+            // Bitwarden (su logo): de color con la bóveda abierta. Clic = buscar, clic
+            // derecho = cerrarla
+            Rectangle {
+                id: bwIcon
+                visible: Bitwarden.installed && showBitwarden.on
+                BarShow { id: showBitwarden; key: "bitwarden" }
+                implicitWidth: bar.btn
+                implicitHeight: bar.btn
+                radius: Design.radiusSm
+                color: bwMouse.containsMouse ? Design.hoverLayer : "transparent"
+                BitwardenLogo {
+                    anchors.centerIn: parent
+                    size: bar.compact ? 14 : 15
+                    color: Bitwarden.unlocked ? Design.accent : Design.onSurfaceVariant
+                }
+                MouseArea {
+                    id: bwMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: e => e.button === Qt.RightButton ? Bitwarden.lock() : bwPanel.toggle()
+                }
+                BitwardenPanel {
+                    id: bwPanel
+                    anchorItem: bwIcon
+                }
+            }
+
             // Teclado: clic = distribuciones, clic derecho = la siguiente
             BarIcon {
                 id: kbIcon
+                visible: showKeyboard.on
+                BarShow { id: showKeyboard; key: "keyboard" }
                 icon: Theme.iKeyboard
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: button => button === Qt.RightButton ? KeyboardLayout.next() : kbPanel.toggle()
@@ -381,6 +457,8 @@ PanelWindow {
             // Red: clic = Wi-Fi, clic derecho = encender/apagar
             BarIcon {
                 id: netIcon
+                visible: showNetwork.on
+                BarShow { id: showNetwork; key: "network" }
                 readonly property bool wiredUp: Networking.devices.values.some(d => d.type === DeviceType.Wired && d.connected)
                 readonly property var wifiNet: Networking.devices.values.find(d => d.type === DeviceType.Wifi)?.networks.values.find(n => n.connected) ?? null
                 icon: {
@@ -407,7 +485,8 @@ PanelWindow {
                 id: btIcon
                 readonly property BluetoothAdapter bt: Bluetooth.defaultAdapter
                 readonly property bool connected: bt?.devices.values.some(d => d.connected) ?? false
-                visible: bt !== null
+                visible: bt !== null && showBluetooth.on
+                BarShow { id: showBluetooth; key: "bluetooth" }
                 icon: !bt?.enabled ? Theme.iBtOff : connected ? Theme.iBtOn : Theme.iBt
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: button => button === Qt.RightButton ? btPanel.setPower(!btPanel.on) : btPanel.toggle()
@@ -420,7 +499,8 @@ PanelWindow {
             // Servidores locales (solo si hay alguno)
             BarIcon {
                 id: serversIcon
-                visible: LocalServers.servers.length > 0
+                visible: LocalServers.servers.length > 0 && showServers.on
+                BarShow { id: showServers; key: "servers" }
                 icon: Theme.iServer
                 iconColor: Design.accent
                 onClicked: serversPanel.toggle()
@@ -439,6 +519,8 @@ PanelWindow {
             // GitHub
             BarIcon {
                 id: ghIcon
+                visible: showGithub.on
+                BarShow { id: showGithub; key: "github" }
                 icon: Theme.iGithub
                 checked: GitHub.loggingIn
                 onClicked: ghPanel.toggle()
@@ -456,6 +538,8 @@ PanelWindow {
 
             // Asistente de IA (logo de OpenCode): de color mientras trabaja
             Rectangle {
+                visible: showAi.on
+                BarShow { id: showAi; key: "ai" }
                 implicitWidth: bar.btn
                 implicitHeight: bar.btn
                 radius: Design.radiusSm
@@ -476,13 +560,15 @@ PanelWindow {
 
             Gap {}
 
-            // Volumen: icono y número. Clic = silenciar, rueda = ±1 %
+            // Volumen: icono y número. Clic = panel de sonido, clic derecho = silenciar,
+            // rueda = ±1 %
             Rectangle {
                 id: volume
                 readonly property PwNode sink: Pipewire.defaultAudioSink
                 readonly property real level: sink?.audio?.volume ?? 0
                 readonly property bool muted: (sink?.audio?.muted ?? false) || Math.round(level * 100) === 0
-                visible: sink?.audio !== undefined
+                visible: sink?.audio !== undefined && showVolume.on
+                BarShow { id: showVolume; key: "volume" }
                 implicitWidth: bar.vertical ? bar.btn : volRow.implicitWidth + 16
                 implicitHeight: bar.vertical ? volRow.implicitHeight + 10 : bar.btn
                 radius: Design.radiusSm
@@ -490,6 +576,16 @@ PanelWindow {
 
                 PwObjectTracker {
                     objects: [volume.sink]
+                }
+                AudioPanel {
+                    id: audioPanel
+                    anchorItem: volume
+                }
+                Connections {
+                    target: Audio
+                    function onPanelRequested() {
+                        audioPanel.toggleOnMainScreen();
+                    }
                 }
                 GridLayout {
                     id: volRow
@@ -515,10 +611,11 @@ PanelWindow {
                     id: volMouse
                     anchors.fill: parent
                     hoverEnabled: true
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        Osd.quiet();
-                        if (volume.sink?.audio) volume.sink.audio.muted = !volume.sink.audio.muted;
+                    onClicked: e => {
+                        if (e.button === Qt.RightButton) Audio.toggleMute(volume.sink);
+                        else audioPanel.toggle();
                     }
                     onWheel: e => {
                         Osd.quiet();
@@ -530,11 +627,18 @@ PanelWindow {
 
             // Notificaciones, ajustes y energía
             BarIcon {
+                visible: showNotifications.on
+                BarShow { id: showNotifications; key: "notifications" }
                 icon: Notifs.dnd ? Theme.iBellOff : Notifs.count > 0 ? Theme.iBellBadge : Theme.iBell
                 onClicked: Notifs.toggleCenter()
             }
             BarIcon { icon: Theme.iSettings; onClicked: Config.toggle() }
-            BarIcon { icon: Theme.iPower; onClicked: PowerMenu.toggle() }
+            BarIcon {
+                visible: showPower.on
+                icon: Theme.iPower
+                onClicked: PowerMenu.toggle()
+                BarShow { id: showPower; key: "power" }
+            }
         }
     }
 
@@ -549,16 +653,6 @@ PanelWindow {
             return ws.toplevels.values[0].wayland ?? null;
         }
         readonly property string title: win ? win.title : "Escritorio"
-    }
-
-    // Menú de una app de la bandeja, junto a la barra
-    function showTrayMenu(icon) {
-        const item = icon.modelData;
-        if (!item.hasMenu) return;
-        const p = icon.mapToItem(null, 0, 0);
-        const x = bar.edge === "left" ? bar.width : bar.edge === "right" ? 0 : Math.round(p.x);
-        const y = bar.edge === "top" ? bar.height : bar.edge === "bottom" ? 0 : Math.round(p.y);
-        item.display(bar, x, y);
     }
 
     // Botón de icono de la barra
