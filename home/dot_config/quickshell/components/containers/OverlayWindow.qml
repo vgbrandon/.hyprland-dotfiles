@@ -29,7 +29,16 @@ PanelWindow {
     // centrarla según su alto máximo evita que el buscador se mueva al escribir.
     property int centerHeight: 0
 
-    visible: open
+    // 0 → 1 al abrir y de vuelta a 0 al cerrar; la ventana se oculta al terminar
+    property real shown: open ? 1 : 0
+    Behavior on shown {
+        NumberAnimation {
+            duration: Design.normal
+            easing.type: Design.easing
+        }
+    }
+
+    visible: open || shown > 0
     screen: Hypr.mainScreen
     anchors {
         top: true
@@ -37,7 +46,7 @@ PanelWindow {
         left: true
         right: true
     }
-    color: Qt.rgba(0, 0, 0, dim)
+    color: Qt.rgba(0, 0, 0, dim * shown)
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: open ? focusMode : WlrKeyboardFocus.None
@@ -61,7 +70,17 @@ PanelWindow {
             anchors.horizontalCenter: parent.horizontalCenter
             y: Math.max(0, Math.round((parent.height - (win.centerHeight > 0 ? win.centerHeight : height)) / 2))
             width: win.cardWidth > 0 ? win.cardWidth : column.implicitWidth + win.padding * 2
-            height: column.implicitHeight + win.padding * 2
+            // Si el contenido cambia de alto (p. ej. al filtrar), la tarjeta se anima
+            readonly property real contentHeight: column.implicitHeight + win.padding * 2
+            height: contentHeight
+            Behavior on height {
+                enabled: win.open && win.shown >= 1
+                NumberAnimation {
+                    duration: Design.normal
+                    easing.type: Design.easing
+                }
+            }
+            clip: true
             // Vidrio casi opaco: estas capas no las desenfoca Hyprland (docs/prisma.md)
             radius: Design.radiusMd
             color: Design.alpha(win.cardColor, Design.glassOpacity < 1 ? 0.94 : 1)
@@ -72,20 +91,21 @@ PanelWindow {
                 inset: Design.radiusMd
             }
 
-            opacity: win.open ? 1 : 0
-            scale: win.open ? 1 : 0.96
-            Behavior on opacity { NumberAnimation { duration: 150 } }
-            Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
+            opacity: win.shown
+            scale: 0.96 + 0.04 * win.shown
 
             // Evita que el clic llegue al fondo
             MouseArea {
                 anchors.fill: parent
             }
 
+            // Con su alto final: mientras la tarjeta se anima, lo que no cabe se recorta
             ColumnLayout {
                 id: column
-                anchors.fill: parent
-                anchors.margins: win.padding
+                x: win.padding
+                y: win.padding
+                width: card.width - win.padding * 2
+                height: implicitHeight
                 spacing: 12
             }
         }

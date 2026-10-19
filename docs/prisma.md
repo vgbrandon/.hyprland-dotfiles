@@ -108,7 +108,7 @@ Números que cambian (hora, porcentajes, contadores): `font.features: { "tnum": 
 | `Slide` | Deslizador | `Slide { value: 0.4; onMoved: v => … }` |
 | `Segmented` | Control segmentado | `Segmented { options: ["Día", "Mes"] }` |
 | `Check` | Casilla con texto | `Check { text: "Recordar" }` |
-| `Field` | Campo de texto con anillo de foco; `focusInput()` le da el foco y `keyPressed(e)` deja manejar teclas (flechas, Enter…) | `Field { icon: Theme.iSearch; placeholder: "Buscar" }` |
+| `Field` | Campo de texto (al enfocarlo, el borde en acento, sin halo); `big: true` es el buscador grande de las ventanas (lanzador, portapapeles, atajos, Bitwarden). `focusInput()` le da el foco y `keyPressed(e)` deja manejar teclas (flechas, Enter…) | `Field { icon: Theme.iSearch; placeholder: "Buscar" }` |
 | `ListRow` | Fila de lista; `selected` = tonal | `ListRow { icon: …; title: …; subtitle: … }` |
 | `Tile` | Mosaico de ajuste rápido | `Tile { icon: Theme.iWifi; title: "Wi-Fi"; checked: true }` |
 | `NumberStep` | Ajuste numérico: nombre y − valor + | `NumberStep { label: "Enfoque"; value: 25; unit: "min"; onChanged: v => … }` |
@@ -148,8 +148,8 @@ tokens de `Design` con la API de siempre:
   pantallas, teclado, perfil…) son de vidrio con borde de 1 px y `GlassEdge` (el brillo
   del canto). `OverlayWindow` va casi opaco: Hyprland no desenfoca esas capas.
 - `PanelHeader`, `Section`, `Card`, `Chip`/`Chips`, `TextButton` (como `Btn`),
-  `Switch` (es el `Toggle`), `SwitchRow`, `Slider` (con bola si es interactivo),
-  `Cycler` y `SearchField`.
+  `Switch` (es el `Toggle`), `SwitchRow`, `Slider` (con bola si es interactivo)
+  y `Cycler`.
 - `Theme.font` es la fuente del diseño (Adwaita Sans) y `Theme.radiusSmall` el radio de
   los elementos (8). Los colores de `Theme` son los mismos roles de matugen que los de
   `Design`, así que lo que aún los usa encaja.

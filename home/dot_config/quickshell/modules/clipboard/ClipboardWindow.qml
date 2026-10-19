@@ -4,6 +4,7 @@ import Quickshell
 import qs.components.base
 import qs.components.buttons
 import qs.components.containers
+import qs.components.design
 import qs.services
 
 // Ventana del historial del portapapeles (la lógica está en services/Clipboard.qml).
@@ -25,7 +26,7 @@ OverlayWindow {
     // Se reinicia al cerrar para que al volver a abrir ya esté arriba
     onVisibleChanged: {
         if (visible) {
-            input.forceActiveFocus();
+            input.focusInput();
         } else {
             input.text = "";
             list.currentIndex = 0;
@@ -34,8 +35,10 @@ OverlayWindow {
     }
 
     // Buscador
-    SearchField {
+    Field {
         id: input
+        big: true
+        Layout.fillWidth: true
         icon: Theme.iClipboard
         placeholder: "Buscar en el portapapeles…"
         onTextChanged: {

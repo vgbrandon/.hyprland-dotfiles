@@ -3,52 +3,51 @@ import QtQuick.Layouts
 import qs.components.base
 import qs.services
 
-// Campo de texto: fondo hundido, y al enfocarlo un anillo de acento (como en macOS).
+// Campo de texto: fondo hundido y, al enfocarlo, el borde en acento. big = el buscador
+// grande de las ventanas (lanzador, portapapeles, atajos…).
 // focusInput() le da el foco; cada tecla pasa antes por keyPressed(evento): quien lo
 // usa maneja las suyas (flechas, Enter…) y marca e.accepted = true.
 //   Field { icon: Theme.iSearch; placeholder: "Buscar" }
+//   Field { big: true; Layout.fillWidth: true; icon: Theme.iSearch; placeholder: "Buscar…" }
 Rectangle {
     id: root
 
     property string icon
     property string placeholder
     property alias text: input.text
+    property bool big: false
+    // TextInput.Password para contraseñas
+    property alias echoMode: input.echoMode
     signal keyPressed(var event)
 
     function focusInput() {
         input.forceActiveFocus();
     }
+    // Pega lo que hay en el portapapeles
+    function paste() {
+        input.paste();
+        input.forceActiveFocus();
+    }
 
     implicitWidth: 240
-    implicitHeight: 34
-    radius: Design.radiusSm
+    implicitHeight: big ? 44 : 34
+    radius: big ? Design.radiusMd : Design.radiusSm
     color: Design.surface0
-    border.color: input.activeFocus ? Design.accent : Design.outlineVariant
+    border.color: input.activeFocus ? Design.alpha(Design.accent, 0.6) : Design.outlineVariant
     border.width: 1
-
-    // Anillo de foco
-    Rectangle {
-        anchors.fill: parent
-        anchors.margins: -3
-        radius: parent.radius + 3
-        color: "transparent"
-        border.color: Design.alpha(Design.accent, 0.35)
-        border.width: 3
-        opacity: input.activeFocus ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: Design.fast } }
-    }
+    Behavior on border.color { ColorAnimation { duration: Design.fast } }
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
-        spacing: 8
+        anchors.leftMargin: root.big ? 18 : 10
+        anchors.rightMargin: root.big ? 18 : 10
+        spacing: root.big ? 12 : 8
 
         Icon {
             visible: root.icon !== ""
             text: root.icon
             color: Design.onSurfaceVariant
-            font.pixelSize: 15
+            font.pixelSize: root.big ? 20 : 15
         }
         TextInput {
             id: input
@@ -57,7 +56,7 @@ Rectangle {
             selectionColor: Design.alpha(Design.accent, 0.4)
             selectedTextColor: Design.onSurface
             font.family: Design.font
-            font.pixelSize: Design.body.size
+            font.pixelSize: root.big ? 16 : Design.body.size
             clip: true
             Keys.onPressed: e => root.keyPressed(e)
 

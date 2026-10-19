@@ -388,7 +388,7 @@ FloatingWindow {
             // --- Controles ---
             Section {
                 heading: "Controles"
-                note: "Interruptores y deslizadores finos con la bola en relieve; el segmentado eleva la opción elegida; los campos se hunden y muestran un anillo al enfocarse."
+                note: "Interruptores y deslizadores finos con la bola en relieve; el segmentado eleva la opción elegida; los campos se hunden y, al enfocarse, el borde pasa a acento."
 
                 GridLayout {
                     columns: 2

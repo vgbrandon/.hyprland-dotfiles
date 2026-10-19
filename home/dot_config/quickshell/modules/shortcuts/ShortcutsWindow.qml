@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import qs.components.base
 import qs.components.containers
+import qs.components.design
 import qs.services
 
 // Ventana de atajos (Super + F1): los de Hyprland agrupados, con buscador. Se leen en
@@ -34,7 +35,7 @@ OverlayWindow {
     }
 
     onVisibleChanged: {
-        if (visible) search.forceActiveFocus();
+        if (visible) search.focusInput();
         else search.text = "";
     }
 
@@ -50,8 +51,9 @@ OverlayWindow {
             text: "Atajos de teclado"
             font.pixelSize: 17
         }
-        SearchField {
+        Field {
             id: search
+            big: true
             Layout.fillWidth: true
             icon: Theme.iSearch
             placeholder: "Buscar un atajo…"
