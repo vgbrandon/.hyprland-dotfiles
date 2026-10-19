@@ -198,5 +198,6 @@ lo mismo con su estructura de `/etc/greetd/quickshell`.
 | Paneles de la barra, ajustes, notificaciones, IA, lanzador, portapapeles, energía, atajos, pantallas, teclado, perfil, fondos | Prisma |
 | Notificaciones emergentes y aviso de volumen/brillo | Prisma |
 | Selector de fondos | Prisma, en dos formas a elegir en Ajustes → Selector de fondos: **carrusel** (el señalado grande en el centro y los vecinos más pequeños; `WallpaperCarousel.qml`) o **cuadrícula** a pantalla completa con buscador (`WallpaperGrid.qml`). Comparten `WallpaperThumb.qml` y `PickerLayer.qml` (la capa que oscurece el escritorio) |
+| Lanzador | Prisma, como paleta de comandos (`modules/launcher/LauncherWindow.qml`): apps y acciones de la shell en una lista agrupada; las acciones muestran su atajo de `hyprland.lua` (por la descripción del bind). Las acciones están en `services/Launcher.qml` (`actions`) |
 | Reloj del escritorio | Prisma, apilado como el de la pantalla de bloqueo (`modules/wallpaper/DesktopClock.qml`) |
 | Pantalla de bloqueo y de inicio de sesión | Prisma (ver su sección) |
