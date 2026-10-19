@@ -276,6 +276,7 @@ hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("quickshell ipc call screensh
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("quickshell ipc call clipboard toggle"), { description = "Herramientas: Historial del portapapeles" })
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("quickshell ipc call ai toggle"), { description = "Herramientas: Asistente de IA (OpenCode)" })
 hl.bind(mainMod .. " + F1", hl.dsp.exec_cmd("quickshell ipc call shortcuts toggle"), { description = "Herramientas: Ver los atajos de teclado" })
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("quickshell ipc call bitwarden toggle"), { description = "Herramientas: Contraseñas (Bitwarden)" })
 
 -- Sistema
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("quickshell ipc call power toggle"), { description = "Sistema: Menú de energía" })
