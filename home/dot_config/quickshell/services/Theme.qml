@@ -226,6 +226,7 @@ Singleton {
     readonly property string iChevronDown: String.fromCodePoint(0xF0140)
     readonly property string iChevronUp: String.fromCodePoint(0xF0143)
     readonly property string iPencil: String.fromCodePoint(0xF03EB)
+    readonly property string iNote: String.fromCodePoint(0xF082E)
     readonly property string iEye: String.fromCodePoint(0xF0208)
     readonly property string iEyeOff: String.fromCodePoint(0xF0209)
     readonly property string iAccount: String.fromCodePoint(0xF0004)

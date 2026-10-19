@@ -9,6 +9,7 @@ import qs.modules.displays
 import qs.modules.keyboard
 import qs.modules.launcher
 import qs.modules.lock
+import qs.modules.notes
 import qs.modules.notifications
 import qs.modules.osd
 import qs.modules.power
@@ -68,6 +69,7 @@ ShellRoot {
     PowerMenuWindow {}
     ProfileWindow {}
     ShortcutsWindow {}
+    NotesWindow {}
     DisplaysWindow {}
     KeyboardWindow {}
     StyleGuideWindow {}
