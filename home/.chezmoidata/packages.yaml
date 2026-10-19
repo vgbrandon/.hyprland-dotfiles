@@ -66,6 +66,14 @@ packages:
     - os-prober # detección de otros sistemas operativos
     - refind # gestor de arranque UEFI
 
+  # Se desinstalan si están (p. ej. los que trae el perfil de Hyprland de archinstall
+  # y aquí se reemplazan por Quickshell)
+  remove:
+    - dunst # notificaciones: las muestra Quickshell (si dunst arranca antes, se queda con ellas)
+    - wofi # lanzador: lo hace Quickshell (Super + L)
+    - dolphin # gestor de archivos de KDE: se usa Thunar
+    - polkit-kde-agent # agente de permisos de KDE: se usa polkit-gnome (lo arranca hyprland.lua)
+
   aur:
     - python-pywalfox # app nativa para la extensión de navegador Pywalfox
     - tidal-hifi # cliente de escritorio de Tidal con soporte HiFi

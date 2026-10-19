@@ -37,4 +37,26 @@ echo "[WARN] AUR deshabilitado (enableAur=false en 'chezmoi init'). Paquetes omi
 echo "[WARN] Para habilitarlo: chezmoi data | grep enableAur, y editá ~/.config/chezmoi/chezmoi.toml"
 {{ end -}}
 
+echo "[INFO] Quitando paquetes que no se usan..."
+
+REMOVE_PACKAGES=(
+{{ range .packages.remove }}  "{{ . }}"
+{{ end }}
+)
+
+installed=()
+for pkg in "${REMOVE_PACKAGES[@]}"; do
+  if pacman -Qq "$pkg" >/dev/null 2>&1; then
+    installed+=("$pkg")
+  fi
+done
+if [ "${#installed[@]}" -gt 0 ]; then
+  # Solo esos paquetes (-Rn, sin -s): sus dependencias pueden usarlas otros programas
+  # (dolphin arrastraría ~70, entre ellos sound-theme-freedesktop o ripgrep). Las que
+  # queden sin uso se ven con: pacman -Qdtq
+  # Si otro paquete depende de alguno, pacman no lo quita: se avisa y se sigue
+  sudo pacman -Rn --noconfirm "${installed[@]}" \
+    || echo "[WARN] No se pudo quitar: ${installed[*]} (¿lo necesita otro paquete?)"
+fi
+
 echo "[OK] Paquetes instalados correctamente."
