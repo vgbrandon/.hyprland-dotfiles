@@ -18,6 +18,7 @@ import qs.modules.profile
 import qs.modules.screenshot
 import qs.modules.shortcuts
 import qs.modules.styleguide
+import qs.modules.visualizer
 import qs.modules.wallpaper
 import qs.services
 
@@ -71,6 +72,7 @@ ShellRoot {
     ProfileWindow {}
     ShortcutsWindow {}
     NotesWindow {}
+    VisualizerPicker {}
     DisplaysWindow {}
     KeyboardWindow {}
     LayoutMapWindow {}

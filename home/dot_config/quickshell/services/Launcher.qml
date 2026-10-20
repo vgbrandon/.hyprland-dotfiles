@@ -41,6 +41,7 @@ Singleton {
         { title: "Nota nueva", icon: Theme.iPlus, keywords: "nota nueva apuntar crear", run: () => { Notes.open = true; Notes.create(); } },
         { title: "Contraseñas (Bitwarden)", icon: Theme.iBitwarden, keywords: "bitwarden contraseñas claves bóveda password", bind: "Herramientas: Contraseñas (Bitwarden)", run: () => Bitwarden.open = true },
         { title: "Generar una contraseña", icon: Theme.iKey, keywords: "generar contraseña aleatoria password bitwarden", run: () => Bitwarden.openGenerator() },
+        { title: "Visualizador de audio", icon: Theme.iMusic, keywords: "visualizador audio música espectro barras ondas", run: () => Visualizer.pickerOpen = true },
         { title: "Notificaciones", icon: Theme.iBell, keywords: "notificaciones avisos", run: () => Notifs.toggleCenter() },
         { title: "No molestar (activar o desactivar)", icon: Theme.iBellOff, keywords: "no molestar silencio dnd", run: () => Notifs.dnd = !Notifs.dnd },
         { title: "Luz nocturna (activar o desactivar)", icon: Theme.iNight, keywords: "luz nocturna noche filtro", run: () => NightLight.toggle() },

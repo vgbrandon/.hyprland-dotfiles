@@ -93,6 +93,14 @@ PanelWindow {
         onStatusChanged: if (status === Image.Ready) win.reveal(imgB)
     }
 
+    // Visualizador de audio (solo en el monitor principal)
+    Loader {
+        z: 2
+        anchors.fill: parent
+        active: win.modelData === Hypr.mainScreen
+        sourceComponent: DesktopVisualizer {}
+    }
+
     // Aparece junto con el primer fondo, no antes
     DesktopClock {
         z: 2

@@ -252,6 +252,15 @@ SidePanel {
             }
         }
 
+        // Visualizador de audio del escritorio: abre el selector de estilos
+        NavRow {
+            icon: Theme.iMusic
+            text: `Visualizador · ${Visualizer.labelOf(Visualizer.style)}`
+            onClicked: {
+                Config.close();
+                Visualizer.pickerOpen = true;
+            }
+        }
         SwitchRow {
             icon: Theme.iAnimation
             text: "Animaciones"

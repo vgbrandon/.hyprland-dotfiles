@@ -15,6 +15,7 @@ packages:
     - wl-clipboard # utilidades de copiar/pegar para Wayland
     - cliphist # historial del portapapeles (Quickshell, Super + Shift + V)
     - rbw # cliente de Bitwarden (módulo de contraseñas de Quickshell, Super + B)
+    - cava # análisis del audio para el visualizador del escritorio de Quickshell
     - swayimg # visor de imágenes liviano para Wayland
     - matugen # generador de paletas de color Material You
     - adw-gtk-theme # port no oficial del tema de libadwaita para GTK 3

@@ -97,6 +97,19 @@ Singleton {
         settingsFile.writeAdapter();
     }
 
+    // Visualizador de audio del escritorio: "off" o un estilo de Visualizer.styles
+    readonly property string visualizerStyle: settings.visualizerStyle
+    function setVisualizerStyle(style) {
+        settings.visualizerStyle = style;
+        settingsFile.writeAdapter();
+    }
+    // Color del visualizador: "theme", "gradient" o "white"
+    readonly property string visualizerColor: settings.visualizerColor
+    function setVisualizerColor(mode) {
+        settings.visualizerColor = mode;
+        settingsFile.writeAdapter();
+    }
+
     function setBarPosition(position) {
         settings.barPosition = position;
         settingsFile.writeAdapter();
@@ -226,6 +239,9 @@ Singleton {
             property int nightLightTemp: 0
             // Barra y paneles translúcidos con desenfoque
             property bool translucent: false
+            // Estilo del visualizador de audio del escritorio ("off" = apagado)
+            property string visualizerStyle: "bars"
+            property string visualizerColor: "theme"
             // Módulos de la barra ocultos (claves de barModules)
             property list<string> barHidden: []
         }
