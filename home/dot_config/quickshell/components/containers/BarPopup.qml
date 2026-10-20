@@ -135,6 +135,7 @@ PopupWindow {
     function fitWindow() {
         windowHeight = Math.max(contentHeight, maxHeight);
     }
+    implicitWidth: Design.popupWidth
     implicitHeight: windowHeight
     color: "transparent"
     mask: Region {

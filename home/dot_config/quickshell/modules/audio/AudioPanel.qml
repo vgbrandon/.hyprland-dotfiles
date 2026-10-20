@@ -15,7 +15,6 @@ import qs.services
 BarPopup {
     id: panel
 
-    implicitWidth: 400
     padding: 14
     spacing: 12
 

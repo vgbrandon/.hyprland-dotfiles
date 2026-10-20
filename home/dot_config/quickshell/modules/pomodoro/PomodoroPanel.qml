@@ -16,7 +16,6 @@ BarPopup {
     readonly property color phaseColor: Pomodoro.isBreak ? Design.info : Design.error
     readonly property var phases: ["work", "short", "long"]
 
-    implicitWidth: 340
     padding: 16
     spacing: 14
 

@@ -33,7 +33,6 @@ BarPopup {
         else bt.enabled = value;
     }
 
-    implicitWidth: 360
     maxHeight: 520
 
     Process {

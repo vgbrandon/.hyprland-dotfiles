@@ -148,8 +148,9 @@ capturas).
 El diseño llega a casi todo a través de los componentes compartidos, que ya usan los
 tokens de `Design` con la API de siempre:
 
-- Contenedores: `BarPopup` (paneles de la barra), `SidePanel` (ajustes,
-  notificaciones, IA) y `OverlayWindow` (lanzador, portapapeles, energía, atajos,
+- Contenedores: `BarPopup` (paneles de la barra, todos de `Design.popupWidth` = 360 px
+  de ancho; los menús, como el de la bandeja, son más estrechos), `SidePanel` (ajustes,
+  notificaciones, IA; 400 px) y `OverlayWindow` (lanzador, portapapeles, energía, atajos,
   pantallas, teclado, perfil…) son de vidrio con borde de 1 px y `GlassEdge` (el brillo
   del canto). `OverlayWindow` va casi opaco: Hyprland no desenfoca esas capas.
 - `PanelHeader`, `Section`, `Card`, `Chip`/`Chips`, `TextButton` (como `Btn`),

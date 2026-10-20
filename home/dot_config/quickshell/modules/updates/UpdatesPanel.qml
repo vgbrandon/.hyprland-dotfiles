@@ -10,7 +10,6 @@ import qs.services
 BarPopup {
     id: panel
 
-    implicitWidth: 380
     maxHeight: 560
 
     PanelHeader {

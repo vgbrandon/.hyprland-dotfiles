@@ -43,7 +43,6 @@ BarPopup {
         shown = new Date(year, month + delta, 1);
     }
 
-    implicitWidth: 320
     padding: 16
     spacing: 12
 

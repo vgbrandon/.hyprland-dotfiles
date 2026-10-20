@@ -93,6 +93,9 @@ Singleton {
     readonly property int radiusMd: 12
     readonly property int radiusLg: 16
 
+    // Ancho de los paneles que se abren desde la barra (todos iguales; los menús, no)
+    readonly property int popupWidth: 360
+
     // --- Espaciado (escala de 4) ---
     readonly property var space: [0, 4, 8, 12, 16, 20, 24, 32]
 

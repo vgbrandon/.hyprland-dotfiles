@@ -43,7 +43,6 @@ BarPopup {
         return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
     }
 
-    implicitWidth: 380
     padding: 0
     // El fondo es la carátula desenfocada
     background.visible: false

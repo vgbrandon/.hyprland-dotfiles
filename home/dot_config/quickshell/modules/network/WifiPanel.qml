@@ -17,7 +17,6 @@ BarPopup {
     readonly property var networks: (wifi?.networks.values ?? []).filter(n => n.name !== "").slice()
         .sort((a, b) => (b.connected - a.connected) || (b.known - a.known) || (b.signalStrength - a.signalStrength))
 
-    implicitWidth: 360
     maxHeight: 560
 
     // Busca redes solo mientras el panel está abierto

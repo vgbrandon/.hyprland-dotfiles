@@ -19,7 +19,6 @@ BarPopup {
 
     readonly property var info: SystemStats.info
 
-    implicitWidth: 520
     onVisibleChanged: SystemStats.detailed = visible
 
     // --- Cabecera ---
@@ -157,11 +156,12 @@ BarPopup {
                 fraction: panel.info?.gpu?.vramTotal ? panel.info.gpu.vramUsed / panel.info.gpu.vramTotal : 0
             }
             Stat {
+                Layout.fillWidth: true
                 icon: Theme.iThermometer
                 text: {
                     const g = panel.info?.gpu;
                     if (g?.temp == null) return "—";
-                    return g.hotspot != null ? `${Math.round(g.temp)} °C · punto caliente ${Math.round(g.hotspot)} °C` : `${Math.round(g.temp)} °C`;
+                    return g.hotspot != null ? `${Math.round(g.temp)} °C · máx. ${Math.round(g.hotspot)} °C` : `${Math.round(g.temp)} °C`;
                 }
                 color: panel.info?.gpu?.hotspot != null ? panel.level(panel.info.gpu.hotspot / 100) : Theme.text
             }
@@ -262,13 +262,17 @@ BarPopup {
         spacing: 4
 
         RowLayout {
+            Layout.fillWidth: true
             Label {
                 Layout.fillWidth: true
                 text: meter.label
                 color: Theme.subtext
                 font.pixelSize: Theme.fontSize
             }
+            // El valor tiene preferencia (la etiqueta se encoge antes); si aun así no
+            // cabe, se corta con "…"
             Label {
+                Layout.minimumWidth: 0
                 text: meter.value
                 font.pixelSize: Theme.fontSize
             }
@@ -295,6 +299,7 @@ BarPopup {
             font.pixelSize: 14
         }
         Label {
+            Layout.fillWidth: stat.Layout.fillWidth
             text: stat.text
             color: stat.color
         }

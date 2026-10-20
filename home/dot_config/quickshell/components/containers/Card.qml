@@ -33,6 +33,8 @@ Rectangle {
 
         RowLayout {
             visible: card.title !== ""
+            // Con el ancho de la tarjeta: el subtítulo largo se corta con "…"
+            Layout.fillWidth: true
             spacing: 8
 
             Icon {
