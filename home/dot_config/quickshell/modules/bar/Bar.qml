@@ -407,27 +407,14 @@ PanelWindow {
 
             // Bitwarden (su logo): de color con la bóveda abierta. Clic = buscar, clic
             // derecho = cerrarla
-            Rectangle {
+            BarIcon {
                 id: bwIcon
                 visible: Bitwarden.installed && showBitwarden.on
+                icon: Theme.iBitwarden
+                iconColor: Bitwarden.unlocked ? Design.accent : Design.onSurfaceVariant
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: button => button === Qt.RightButton ? Bitwarden.lock() : bwPanel.toggle()
                 BarShow { id: showBitwarden; key: "bitwarden" }
-                implicitWidth: bar.btn
-                implicitHeight: bar.btn
-                radius: Design.radiusSm
-                color: bwMouse.containsMouse ? Design.hoverLayer : "transparent"
-                BitwardenLogo {
-                    anchors.centerIn: parent
-                    size: bar.compact ? 14 : 15
-                    color: Bitwarden.unlocked ? Design.accent : Design.onSurfaceVariant
-                }
-                MouseArea {
-                    id: bwMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    acceptedButtons: Qt.LeftButton | Qt.RightButton
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: e => e.button === Qt.RightButton ? Bitwarden.lock() : bwPanel.toggle()
-                }
                 BitwardenPanel {
                     id: bwPanel
                     anchorItem: bwIcon
@@ -536,26 +523,15 @@ PanelWindow {
                 }
             }
 
-            // Asistente de IA (logo de OpenCode): de color mientras trabaja
-            Rectangle {
+            // Asistente de IA (logo de OpenCode): de color mientras trabaja; en amarillo si
+            // espera un permiso
+            BarIcon {
                 visible: showAi.on
+                icon: Theme.iOpenCode
+                checked: AI.busy
+                iconColor: AI.permissions.length > 0 ? Design.warning : AI.busy ? Design.onTonal : Design.onSurfaceVariant
+                onClicked: AI.toggle()
                 BarShow { id: showAi; key: "ai" }
-                implicitWidth: bar.btn
-                implicitHeight: bar.btn
-                radius: Design.radiusSm
-                color: AI.busy ? Design.tonal : aiMouse.containsMouse ? Design.hoverLayer : "transparent"
-                OpenCodeLogo {
-                    anchors.centerIn: parent
-                    size: 14
-                    color: AI.permissions.length > 0 ? Design.warning : AI.busy ? Design.onTonal : Design.onSurfaceVariant
-                }
-                MouseArea {
-                    id: aiMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: AI.toggle()
-                }
             }
 
             Gap {}

@@ -52,9 +52,10 @@ Rectangle {
 
         RowLayout {
             spacing: 8
-            OpenCodeLogo {
-                size: 15
+            Icon {
+                text: Theme.iOpenCode
                 color: Theme.primary
+                font.pixelSize: 15
             }
             Label {
                 Layout.fillWidth: true

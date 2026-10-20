@@ -72,7 +72,12 @@ nueva con material transparente necesita su namespace en esa regla.
 ### Tipografía
 
 Fuente `Adwaita Sans` (basada en Inter); `JetBrainsMono Nerd Font` para lo monoespaciado.
-Los iconos siguen siendo los de Nerd Font (`Theme.i*`).
+Los iconos siguen siendo los de Nerd Font (`Theme.i*`). Los que no trae (como el logo de
+Bitwarden) están en una fuente propia, **Prisma Icons** (`assets/fonts/PrismaIcons.otf`),
+para que se vean igual de nítidos: se dibujan como letras, no como imágenes. Para añadir
+uno: su SVG en `assets/icons/<nombre>.svg` (caja de 24×24), su código en
+`assets/icons/iconos.json` (área privada `U+100000…`), `scripts/build-icons.py` (ver su
+cabecera) y `Theme.i<Nombre>`. `Icon` usa esa fuente sola para esos códigos.
 
 | Estilo | Tamaño | Peso | Uso |
 | --- | --- | --- | --- |

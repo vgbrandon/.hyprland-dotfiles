@@ -17,7 +17,6 @@ import qs.services
 BarPopup {
     id: win
 
-    implicitWidth: 440
     padding: 12
     spacing: 12
     maxHeight: 640
@@ -111,9 +110,10 @@ BarPopup {
         Layout.leftMargin: 4
         spacing: 10
 
-        BitwardenLogo {
-            size: 22
+        Icon {
+            text: Theme.iBitwarden
             color: Bitwarden.unlocked ? Design.accent : Design.onSurfaceVariant
+            font.pixelSize: 22
         }
         ColumnLayout {
             Layout.fillWidth: true
@@ -128,7 +128,7 @@ BarPopup {
                 text: Bitwarden.busy !== "" ? Bitwarden.busy
                     : confirmSwitch.running ? "Pulsa otra vez para cambiar de cuenta"
                     : Bitwarden.error !== "" ? Bitwarden.error
-                    : Bitwarden.unlocked ? `${Bitwarden.email} · ${Bitwarden.items.length} ${Bitwarden.items.length === 1 ? "entrada" : "entradas"}` : Bitwarden.email
+                    : Bitwarden.email
                 textStyle: Design.caption
                 color: Bitwarden.busy === "" && (confirmSwitch.running || Bitwarden.error !== "") ? Design.error : Design.onSurfaceVariant
             }
@@ -397,7 +397,7 @@ BarPopup {
         Layout.fillWidth: true
         big: true
         icon: Theme.iSearch
-        placeholder: "Buscar en la bóveda…"
+        placeholder: Bitwarden.items.length > 0 ? `Buscar en ${Bitwarden.items.length} ${Bitwarden.items.length === 1 ? "entrada" : "entradas"}…` : "Buscar en la bóveda…"
         onTextChanged: Bitwarden.query = text
         onKeyPressed: e => {
             const ctrl = e.modifiers & Qt.ControlModifier;
@@ -598,7 +598,7 @@ BarPopup {
                     text: Bitwarden.generated
                     color: Design.onSurface
                     font.family: Design.monoFont
-                    font.pixelSize: 18
+                    font.pixelSize: 15
                     elide: Text.ElideRight
                 }
                 IconBtn {
@@ -615,7 +615,7 @@ BarPopup {
         Segmented {
             id: kind
             Layout.fillWidth: true
-            options: ["Aleatoria", "Sin símbolos", "Solo números", "Palabras"]
+            options: ["Aleatoria", "Sin símbolos", "Números", "Palabras"]
             onCurrentChanged: {
                 genLength.value = current === 3 ? 5 : current === 2 ? 6 : 20;
                 win.regenerate();

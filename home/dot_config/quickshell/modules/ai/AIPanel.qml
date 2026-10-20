@@ -114,11 +114,12 @@ SidePanel {
         Layout.leftMargin: 4
         spacing: 6
 
-        OpenCodeLogo {
+        Icon {
             Layout.leftMargin: 2
             Layout.rightMargin: 2
-            size: 18
+            text: Theme.iOpenCode
             color: AI.busy ? Theme.primary : Theme.text
+            font.pixelSize: 18
         }
         Label {
             Layout.fillWidth: true
@@ -660,11 +661,12 @@ SidePanel {
             width: parent.width - 40
             spacing: 8
 
-            OpenCodeLogo {
+            Icon {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.bottomMargin: 6
-                size: 40
+                text: Theme.iOpenCode
                 color: Theme.subtext
+                font.pixelSize: 40
             }
             Label {
                 Layout.alignment: Qt.AlignHCenter

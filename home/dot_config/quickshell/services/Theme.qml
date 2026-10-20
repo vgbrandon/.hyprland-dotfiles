@@ -137,6 +137,16 @@ Singleton {
     readonly property string font: "Adwaita Sans"
     readonly property string monoFont: "JetBrainsMono Nerd Font Mono"
     readonly property string iconFont: "JetBrainsMono Nerd Font Propo"
+    // Fuente de iconos propia (Prisma Icons), para los que no trae la Nerd Font, como el
+    // logo de Bitwarden. Se genera con scripts/build-icons.py desde assets/icons/*.svg;
+    // Icon la usa cuando la otra no tiene el carácter.
+    FontLoader {
+        id: prismaIcons
+        source: Quickshell.shellPath("assets/fonts/PrismaIcons.otf")
+    }
+    readonly property string prismaIconFont: prismaIcons.name
+    readonly property string iBitwarden: String.fromCodePoint(0x100000)
+    readonly property string iOpenCode: String.fromCodePoint(0x100001)
     readonly property int fontSize: 11
 
     // Iconos (Nerd Font, Material Design)
