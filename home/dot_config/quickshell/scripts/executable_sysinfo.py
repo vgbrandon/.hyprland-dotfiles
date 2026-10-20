@@ -15,6 +15,7 @@ import sys
 import time
 
 INTERVAL = 2.0
+FIRST = 0.3  # segundos hasta la primera muestra
 TICKS = os.sysconf("SC_CLK_TCK")
 PAGE = os.sysconf("SC_PAGE_SIZE")
 
@@ -134,9 +135,14 @@ def main():
 
     previous = proc_times()
     last = time.monotonic()
+    prev_net = net_bytes()
+    # La primera muestra, enseguida (para que el panel no se quede "Cargando…" al
+    # abrirse); luego, cada INTERVAL
+    wait = FIRST
 
     while True:
-        time.sleep(INTERVAL)
+        time.sleep(wait)
+        wait = INTERVAL
         now = time.monotonic()
         elapsed = now - last
         last = now
@@ -165,15 +171,19 @@ def main():
                 "hotspot": read_int(f"{gpu_hwmon}/temp2_input") / 1000 if gpu_hwmon and os.path.exists(f"{gpu_hwmon}/temp2_input") else None,
             })
 
+        # Red: bytes/s en este intervalo
         rx, tx = net_bytes()
+        down = max(0, rx - prev_net[0]) / elapsed
+        up = max(0, tx - prev_net[1]) / elapsed
+        prev_net = (rx, tx)
         print(json.dumps({
             "cpuTemp": read_int(f"{cpu_hwmon}/temp1_input") / 1000 if cpu_hwmon else None,
             "cpuFreq": sum(freqs) / len(freqs) / 1e6 if freqs else None,
             "cpus": cpus,
             "gpu": gpu if card else None,
             "disks": disks(),
-            "netRx": rx,
-            "netTx": tx,
+            "netDown": down,
+            "netUp": up,
             "uptime": float(read("/proc/uptime", "0").split()[0]),
             "procs": [{"name": n, "cpu": round(c, 1), "mem": m} for n, (c, m) in top],
         }), flush=True)

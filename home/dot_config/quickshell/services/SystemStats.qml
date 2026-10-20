@@ -66,10 +66,9 @@ Singleton {
     property bool detailed: false
     // Última línea del script: cpuTemp, cpuFreq, cpus, gpu, disks, uptime, procs…
     property var info: null
-    // Velocidad de la red en bytes/s
+    // Velocidad de la red en bytes/s (la calcula el script)
     property real netDown: 0
     property real netUp: 0
-    property var lastNet: null
 
     // Datos fijos
     property string cpuModel: ""
@@ -83,18 +82,12 @@ Singleton {
             onRead: line => {
                 try {
                     const d = JSON.parse(line);
-                    const now = Date.now();
-                    if (root.lastNet) {
-                        const dt = (now - root.lastNet.t) / 1000;
-                        root.netDown = Math.max(0, (d.netRx - root.lastNet.rx) / dt);
-                        root.netUp = Math.max(0, (d.netTx - root.lastNet.tx) / dt);
-                    }
-                    root.lastNet = { t: now, rx: d.netRx, tx: d.netTx };
+                    root.netDown = d.netDown;
+                    root.netUp = d.netUp;
                     root.info = d;
                 } catch (e) {}
             }
         }
-        onRunningChanged: if (!running) root.lastNet = null
     }
 
     FileView {
