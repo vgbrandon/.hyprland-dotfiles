@@ -7,6 +7,11 @@ Junta lo funcional de **Material You**, el acabado de **macOS** y el material de
 **Windows 11**. Los colores salen siempre de **matugen** (del fondo de pantalla), así
 que todo cambia con el fondo.
 
+![Guía de estilo de Prisma: color, materiales, tipografía, forma, botones, controles y listas](img/prisma-guia.png)
+
+La guía de estilo en vivo se abre con `quickshell ipc call styleguide toggle` (o «Guía de
+estilo» en el lanzador).
+
 Las rutas son relativas a `~/.config/quickshell/` (en este repo,
 `home/dot_config/quickshell/`); las del greeter, a `~/.config/quickshell-greeter/`.
 
