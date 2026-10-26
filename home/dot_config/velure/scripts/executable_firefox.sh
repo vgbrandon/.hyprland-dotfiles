@@ -1,9 +1,13 @@
 #!/bin/sh
-# Copia el userChrome.css generado por paleta a los perfiles de Firefox en uso
-# y activa la opción que permite usarlo (user.js). Los cambios de userChrome.css
-# se ven al reiniciar Firefox. Con el autoconfig de Velure (velure.cfg) los colores
-# se cargan en vivo y aquí solo queda la marca.
+# Lleva los colores de la paleta a los perfiles de Firefox en uso y activa la opción
+# que permite usarlos (user.js):
+# - Marco: copia el userChrome.css generado. Con el autoconfig de Velure (velure.cfg)
+#   los colores se cargan en vivo y aquí solo queda la marca.
+# - Páginas internas (nueva pestaña, ajustes…): el bloque de firefox-userContent.css al
+#   principio de userContent.css, entre marcas (lo demás del archivo se respeta; el de
+#   la translucidez, que pone translucent.sh al final, gana). Se ve al reiniciar Firefox.
 css="$HOME/.cache/velure/firefox-userChrome.css"
+pages="$HOME/.cache/velure/firefox-userContent.css"
 [ -f "$css" ] || exit 0
 pref='user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);'
 
@@ -26,6 +30,15 @@ for base in "$HOME/.config/mozilla/firefox" "$HOME/.mozilla/firefox"; do
             printf '/*\n * velure: los colores los carga en vivo /usr/lib/firefox/velure.cfg\n */\n' > "$target"
         else
             cp "$css" "$target"
+        fi
+        content="$dir/chrome/userContent.css"
+        touch "$content"
+        sed -i '/^\/\* velure-colors:start \*\//,/^\/\* velure-colors:end \*\//d' "$content"
+        if [ -f "$pages" ]; then
+            { echo '/* velure-colors:start */'
+              cat "$pages"
+              echo '/* velure-colors:end */'
+              cat "$content"; } > "$content.tmp" && mv "$content.tmp" "$content"
         fi
         grep -qF "$pref" "$dir/user.js" 2>/dev/null || echo "$pref" >> "$dir/user.js"
     done

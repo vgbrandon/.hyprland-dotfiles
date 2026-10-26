@@ -50,7 +50,14 @@ input_path = '~/.config/velure/templates/icons-color'
 output_path = '~/.local/share/icons/Velure/.color'
 post_hook = 'python3 ~/.config/velure/scripts/icons.py && sh ~/.config/velure/scripts/gtk-reload.sh icons'
 
-# Firefox: userChrome.css con los colores de la paleta (ver scripts/firefox.sh)
+# Firefox: las páginas internas (nueva pestaña, ajustes…) con los colores de la paleta;
+# firefox.sh lo pone en userContent.css del perfil (antes que el marco, para que el
+# gancho de abajo ya lo encuentre)
+[templates.firefox-content]
+input_path = '~/.config/velure/templates/firefox-userContent.css'
+output_path = '~/.cache/velure/firefox-userContent.css'
+
+# Firefox: el marco (userChrome.css) con los colores de la paleta (ver scripts/firefox.sh)
 [templates.firefox]
 input_path = '~/.config/velure/templates/firefox-userChrome.css'
 output_path = '~/.cache/velure/firefox-userChrome.css'

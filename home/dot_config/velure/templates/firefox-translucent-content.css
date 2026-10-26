@@ -8,7 +8,7 @@
 @-moz-document url("about:newtab"), url("about:home"), url("about:privatebrowsing") {
   /* Una sola capa con color (si no, se suman y queda casi opaca) */
   :root {
-    background: {{colors.surface_dim.default.hex}}e0 !important;
+    background: {{colors.p_background.default.hex}}e0 !important;
     --newtab-background-color: transparent !important;
   }
   body, .outer-wrapper {

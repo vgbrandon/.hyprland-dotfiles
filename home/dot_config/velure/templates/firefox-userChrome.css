@@ -1,32 +1,130 @@
 /*
  * velure: generado desde el fondo de pantalla. No editar a mano.
- * Colores del marco de Firefox. Con el autoconfig de Velure (velure.cfg en
- * /usr/lib/firefox) se cargan en vivo desde ~/.cache/velure, sin reiniciar; sin él,
- * scripts/firefox.sh los copia al perfil como userChrome.css. Solo actúan sin tema
- * (:not([lwtheme])): Pywalfox ya no hace falta (y su tema deja la ventana opaca).
+ * Colores del marco de Firefox (pestañas, barras, menús, barra lateral) con los papeles
+ * de Velure, como la barra y los paneles de Quickshell. Con el autoconfig de Velure
+ * (velure.cfg en /usr/lib/firefox) se cargan en vivo desde ~/.cache/velure, sin
+ * reiniciar; sin él, scripts/firefox.sh los copia al perfil como userChrome.css.
+ * Hecho para Firefox 158 con el diseño Nova (browser.nova.enabled): pisa sus tokens
+ * (--toolbar-background-color, --tab-background-color-selected, --panel-*…) en :root.
+ * Solo sin tema instalado (:not([lwtheme])).
  */
 :root:not([lwtheme]) {
-    --toolbox-bgcolor: {{colors.surface.default.hex}} !important;
-    --toolbox-bgcolor-inactive: {{colors.surface.default.hex}} !important;
-    --toolbox-non-lwt-bgcolor: {{colors.surface.default.hex}} !important;
-    --toolbox-textcolor: {{colors.on_surface.default.hex}} !important;
-    --toolbox-non-lwt-textcolor: {{colors.on_surface.default.hex}} !important;
-    --toolbar-bgcolor: {{colors.surface_container_low.default.hex}} !important;
-    --toolbar-color: {{colors.on_surface.default.hex}} !important;
-    --toolbar-field-background-color: {{colors.surface_container_high.default.hex}} !important;
-    --toolbar-field-color: {{colors.on_surface.default.hex}} !important;
-    --toolbar-field-focus-background-color: {{colors.surface_container_highest.default.hex}} !important;
-    --toolbar-field-focus-color: {{colors.on_surface.default.hex}} !important;
-    --tab-selected-bgcolor: {{colors.surface_container_low.default.hex}} !important;
-    --tab-selected-textcolor: {{colors.on_surface.default.hex}} !important;
-    --arrowpanel-background: {{colors.surface_container.default.hex}} !important;
-    --arrowpanel-color: {{colors.on_surface.default.hex}} !important;
-    --sidebar-background-color: {{colors.surface_container_low.default.hex}} !important;
-    --sidebar-text-color: {{colors.on_surface.default.hex}} !important;
-    --focus-outline-color: {{colors.primary.default.hex}} !important;
+  color-scheme: dark !important;
+
+  /* Base: los tokens del sistema de diseño, que heredan casi todos los demás */
+  --background-color-canvas: {{colors.p_background.default.hex}} !important;
+  --background-color-box: {{colors.p_surface1.default.hex}} !important;
+  --text-color: {{colors.p_text.default.hex}} !important;
+  --text-color-deemphasized: {{colors.p_subtext.default.hex}} !important;
+  --border-color: {{colors.p_outlineVariant.default.hex}} !important;
+  --border-color-deemphasized: {{colors.p_outlineVariant.default.hex}} !important;
+  --border-color-interactive: {{colors.p_outline.default.hex}} !important;
+  --icon-color: {{colors.p_text.default.hex}} !important;
+  --link-color: {{colors.p_accent.default.hex}} !important;
+  --link-color-hover: {{colors.p_hi.default.hex}} !important;
+  --link-color-active: {{colors.p_hi.default.hex}} !important;
+
+  /* El acento (lo principal), sin el violeta de Nova */
+  --color-accent-primary: {{colors.p_accent.default.hex}} !important;
+  --color-accent-primary-hover: color-mix(in srgb, {{colors.p_accent.default.hex}} 88%, white) !important;
+  --color-accent-primary-active: color-mix(in srgb, {{colors.p_accent.default.hex}} 76%, white) !important;
+  --color-accent-primary-selected: {{colors.p_accent.default.hex}} !important;
+  --text-color-accent-primary-selected: {{colors.p_onAccent.default.hex}} !important;
+  --focus-outline-color: {{colors.p_accent.default.hex}} !important;
+  --tab-icon-fill-loading: {{colors.p_accent.default.hex}} !important;
+  --toolbarbutton-icon-fill-attention: {{colors.p_accent.default.hex}} !important;
+
+  /* Botones: los normales un escalón por encima, el principal en el acento */
+  --button-background-color: {{colors.p_surface2.default.hex}} !important;
+  --button-background-color-hover: {{colors.p_surface3.default.hex}} !important;
+  --button-background-color-active: {{colors.p_outlineVariant.default.hex}} !important;
+  --button-text-color: {{colors.p_text.default.hex}} !important;
+  --button-text-color-hover: {{colors.p_text.default.hex}} !important;
+  --button-background-color-primary: {{colors.p_accent.default.hex}} !important;
+  --button-background-color-primary-hover: color-mix(in srgb, {{colors.p_accent.default.hex}} 88%, white) !important;
+  --button-background-color-primary-active: color-mix(in srgb, {{colors.p_accent.default.hex}} 76%, white) !important;
+  --button-text-color-primary: {{colors.p_onAccent.default.hex}} !important;
+  --button-border-color: transparent !important;
+
+  /* Marco: el mismo fondo que la barra de Quickshell, sin cambio entre ventana activa e
+     inactiva */
+  --toolbox-background-color: {{colors.p_background.default.hex}} !important;
+  --toolbox-background-color-inactive: {{colors.p_background.default.hex}} !important;
+  --toolbox-text-color: {{colors.p_text.default.hex}} !important;
+  --toolbox-text-color-inactive: {{colors.p_subtext.default.hex}} !important;
+  --toolbar-background-color: {{colors.p_background.default.hex}} !important;
+  --toolbar-text-color: {{colors.p_text.default.hex}} !important;
+  --tabpanel-background-color: {{colors.p_background.default.hex}} !important;
+  --chrome-content-separator-color: {{colors.p_outlineVariant.default.hex}} !important;
+  --tabs-navbar-separator-color: transparent !important;
+
+  /* Botones de las barras: capa de estado sobre el fondo, como en Quickshell */
+  --toolbarbutton-icon-fill: {{colors.p_text.default.hex}} !important;
+  --toolbarbutton-background-color-hover: color-mix(in srgb, {{colors.p_text.default.hex}} 8%, transparent) !important;
+  --toolbarbutton-background-color-active: color-mix(in srgb, {{colors.p_text.default.hex}} 12%, transparent) !important;
+
+  /* Pestañas: la activa un escalón por encima, sin el borde violeta y naranja de Nova */
+  --tab-background-color: transparent !important;
+  --tab-background-color-hover: color-mix(in srgb, {{colors.p_text.default.hex}} 8%, transparent) !important;
+  --tab-background-color-selected: {{colors.p_surface1.default.hex}} !important;
+  --tab-text-color: {{colors.p_subtext.default.hex}} !important;
+  --tab-text-color-hover: {{colors.p_text.default.hex}} !important;
+  --tab-text-color-selected: {{colors.p_text.default.hex}} !important;
+  --tab-border-color-selected: transparent !important;
+  --tab-border-color-selected-leading: transparent !important;
+  --tab-border-color-selected-trailing: transparent !important;
+  --tab-box-shadow-selected: none !important;
+
+  /* Campo de dirección: hundido como los campos de Quickshell; al enfocarlo, solo el
+     borde en el acento (sin halo) */
+  --toolbar-field-background-color: {{colors.p_surface1.default.hex}} !important;
+  --toolbar-field-background-color-focus: {{colors.p_surface1.default.hex}} !important;
+  --toolbar-field-text-color: {{colors.p_text.default.hex}} !important;
+  --toolbar-field-text-color-focus: {{colors.p_text.default.hex}} !important;
+  --toolbar-field-border-color: transparent !important;
+  /* Como el Field de Quickshell: el acento al 60 % */
+  --toolbar-field-border-color-focus: color-mix(in srgb, {{colors.p_accent.default.hex}} 60%, transparent) !important;
+  --urlbar-box-background-color: {{colors.p_surface2.default.hex}} !important;
+  --urlbar-box-background-color-hover: {{colors.p_surface3.default.hex}} !important;
+  --urlbarview-background-color-hover: color-mix(in srgb, {{colors.p_text.default.hex}} 8%, transparent) !important;
+  --urlbarview-background-color-selected: {{colors.p_container.default.hex}} !important;
+  --urlbarview-text-color-selected: {{colors.p_onContainer.default.hex}} !important;
+  --urlbarview-text-color-secondary: {{colors.p_subtext.default.hex}} !important;
+  --urlbarview-separator-color: {{colors.p_outlineVariant.default.hex}} !important;
+
+  /* Menús y paneles: como los paneles de Quickshell */
+  --panel-background-color: {{colors.p_surface1.default.hex}} !important;
+  --panel-text-color: {{colors.p_text.default.hex}} !important;
+  --panel-border-color: {{colors.p_outlineVariant.default.hex}} !important;
+  --panel-separator-color: {{colors.p_outlineVariant.default.hex}} !important;
+  --background-color-list-item-hover: color-mix(in srgb, {{colors.p_text.default.hex}} 8%, transparent) !important;
+  --text-color-list-item-hover: {{colors.p_text.default.hex}} !important;
+
+  /* Barra lateral */
+  --sidebar-background-color: {{colors.p_background.default.hex}} !important;
+  --sidebar-text-color: {{colors.p_text.default.hex}} !important;
+  --sidebar-border-color: {{colors.p_outlineVariant.default.hex}} !important;
+}
+
+/* Los menús redefinen sus colores en su propio elemento (popup.css): ahí también */
+:root:not([lwtheme]) :is(menupopup, panel) {
+  --panel-background-color: {{colors.p_surface1.default.hex}} !important;
+  --panel-text-color: {{colors.p_text.default.hex}} !important;
+  --panel-border-color: {{colors.p_outlineVariant.default.hex}} !important;
 }
 
 :root:not([lwtheme]) #navigator-toolbox {
-    background-color: {{colors.surface.default.hex}} !important;
-    color: {{colors.on_surface.default.hex}} !important;
+  background-color: {{colors.p_background.default.hex}} !important;
+  color: {{colors.p_text.default.hex}} !important;
+}
+
+/* Campo de dirección enfocado: solo su borde en el acento (--toolbar-field-border-color-focus),
+   de 1 px como los campos de Quickshell (Nova lo dobla al enfocarlo), sin el anillo de
+   foco de encima */
+:root:not([lwtheme]) #urlbar {
+  --urlbar-input-container-border-width-open: var(--urlbar-input-container-border-width) !important;
+  --urlbar-background-outline-focused: none !important;
+  /* Con el panel de sugerencias abierto, Nova lo rodea de un brillo violeta
+     (--chrome-box-shadow); aquí una sombra negra suave, como la de los paneles de Velure */
+  --chrome-box-shadow: rgba(0, 0, 0, 0.35) !important;
 }

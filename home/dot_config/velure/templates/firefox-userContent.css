@@ -1,0 +1,57 @@
+/*
+ * velure: generado desde el fondo de pantalla. No editar a mano.
+ * Páginas internas de Firefox (nueva pestaña, inicio, navegación privada, ajustes,
+ * extensiones…) con los papeles de Velure. scripts/firefox.sh lo pone al principio del
+ * userContent.css del perfil, entre marcas; se ve al reiniciar Firefox (las páginas no
+ * admiten estilos en vivo). Hecho para Firefox 158 con el diseño Nova.
+ */
+@-moz-document url-prefix("about:") {
+  :root {
+    color-scheme: dark !important;
+
+    /* Base: los tokens del sistema de diseño */
+    --background-color-canvas: {{colors.p_background.default.hex}} !important;
+    --background-color-box: {{colors.p_surface1.default.hex}} !important;
+    --card-background-color: {{colors.p_surface1.default.hex}} !important;
+    --text-color: {{colors.p_text.default.hex}} !important;
+    --text-color-deemphasized: {{colors.p_subtext.default.hex}} !important;
+    --border-color: {{colors.p_outlineVariant.default.hex}} !important;
+    --border-color-deemphasized: {{colors.p_outlineVariant.default.hex}} !important;
+    --border-color-interactive: {{colors.p_outline.default.hex}} !important;
+    --icon-color: {{colors.p_subtext.default.hex}} !important;
+    --link-color: {{colors.p_accent.default.hex}} !important;
+    --link-color-hover: {{colors.p_hi.default.hex}} !important;
+    --link-color-active: {{colors.p_hi.default.hex}} !important;
+
+    /* El acento, sin el violeta de Nova */
+    --color-accent-primary: {{colors.p_accent.default.hex}} !important;
+    --color-accent-primary-hover: color-mix(in srgb, {{colors.p_accent.default.hex}} 88%, white) !important;
+    --color-accent-primary-active: color-mix(in srgb, {{colors.p_accent.default.hex}} 76%, white) !important;
+    --focus-outline-color: {{colors.p_accent.default.hex}} !important;
+
+    /* Botones */
+    --button-background-color: {{colors.p_surface2.default.hex}} !important;
+    --button-background-color-hover: {{colors.p_surface3.default.hex}} !important;
+    --button-background-color-active: {{colors.p_outlineVariant.default.hex}} !important;
+    --button-text-color: {{colors.p_text.default.hex}} !important;
+    --button-background-color-primary: {{colors.p_accent.default.hex}} !important;
+    --button-background-color-primary-hover: color-mix(in srgb, {{colors.p_accent.default.hex}} 88%, white) !important;
+    --button-background-color-primary-active: color-mix(in srgb, {{colors.p_accent.default.hex}} 76%, white) !important;
+    --button-text-color-primary: {{colors.p_onAccent.default.hex}} !important;
+
+    /* Nueva pestaña e inicio */
+    --newtab-background-color: {{colors.p_background.default.hex}} !important;
+    --newtab-background-color-secondary: {{colors.p_surface1.default.hex}} !important;
+    --newtab-background-card: {{colors.p_surface1.default.hex}} !important;
+    --newtab-text-primary-color: {{colors.p_text.default.hex}} !important;
+    --newtab-text-secondary-color: {{colors.p_subtext.default.hex}} !important;
+    --newtab-text-topic-label-color: {{colors.p_accent.default.hex}} !important;
+    --newtab-primary-action-background: {{colors.p_accent.default.hex}} !important;
+    --newtab-primary-element-text-color: {{colors.p_onAccent.default.hex}} !important;
+    --newtab-weather-background-color: {{colors.p_surface1.default.hex}} !important;
+    --newtab-button-static-background: {{colors.p_surface2.default.hex}} !important;
+    --newtab-button-static-hover-background: {{colors.p_surface3.default.hex}} !important;
+    --newtab-button-static-active-background: {{colors.p_outlineVariant.default.hex}} !important;
+    --newtab-wordmark-color: {{colors.p_text.default.hex}} !important;
+  }
+}
