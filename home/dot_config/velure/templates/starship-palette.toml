@@ -1,9 +1,16 @@
 # Generado por paleta desde el fondo de pantalla. No editar a mano.
+# Los papeles de Velure, como en la shell y en kitty: el acento y sus dos vecinos para lo
+# que destaca, y los estados del tema para lo que tiene significado (ok, aviso, error).
 [palettes.velure]
-primary = "{{colors.primary.default.hex}}"
-accent = "{{colors.tertiary.default.hex}}"
-accent_alt = "{{colors.magenta.default.hex}}"
-ok = "{{colors.green.default.hex}}"
-warn = "{{colors.orange.default.hex}}"
-err = "{{colors.red.default.hex}}"
-muted = "{{colors.outline.default.hex}}"
+# Carpeta actual, rama de git, lenguajes: el acento
+primary = "{{colors.p_accent.default.hex}}"
+# Estado de git y otros detalles: el acento 3
+accent = "{{colors.p_accent3.default.hex}}"
+# El acento 2
+accent_alt = "{{colors.p_accent2.default.hex}}"
+# Estados del tema
+ok = "{{colors.p_success.default.hex}}"
+warn = "{{colors.p_warning.default.hex}}"
+err = "{{colors.p_error.default.hex}}"
+# Lo secundario (duración, tareas en segundo plano)
+muted = "{{colors.p_outline.default.hex}}"
