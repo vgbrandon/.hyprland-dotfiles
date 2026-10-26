@@ -1,4 +1,10 @@
 {
-  "bitwarden": "100000",
-  "opencode": "100001"
+  "bitwarden": {
+    "code": "100000",
+    "px": 16
+  },
+  "opencode": {
+    "code": "100001",
+    "px": 16
+  }
 }

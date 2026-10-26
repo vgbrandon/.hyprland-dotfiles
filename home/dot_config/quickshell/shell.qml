@@ -6,6 +6,7 @@ import qs.modules.clipboard
 import qs.modules.colorpicker
 import qs.modules.config
 import qs.modules.displays
+import qs.modules.iconeditor
 import qs.modules.kblayout
 import qs.modules.keyboard
 import qs.modules.launcher
@@ -79,6 +80,7 @@ ShellRoot {
     KeyboardWindow {}
     LayoutMapWindow {}
     StyleGuideWindow {}
+    IconEditor {}
     // Selector de fondos: carrusel o cuadrícula (Ajustes → Selector de fondos)
     WallpaperCarousel {}
     WallpaperGrid {}

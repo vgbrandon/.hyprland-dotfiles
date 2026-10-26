@@ -142,7 +142,7 @@ Singleton {
     // Icon la usa cuando la otra no tiene el carácter.
     FontLoader {
         id: velureIcons
-        source: Quickshell.shellPath("assets/fonts/VelureIcons.otf")
+        source: Quickshell.shellPath("assets/fonts/VelureIcons.ttf")
     }
     readonly property string velureIconFont: velureIcons.name
     readonly property string iBitwarden: String.fromCodePoint(0x100000)

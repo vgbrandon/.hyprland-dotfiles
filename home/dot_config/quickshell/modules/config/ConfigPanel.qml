@@ -184,6 +184,14 @@ SidePanel {
             }
         }
         NavRow {
+            icon: Theme.iImage
+            text: "Ajustar iconos"
+            onClicked: {
+                Config.close();
+                IconOffsets.editorOpen = true;
+            }
+        }
+        NavRow {
             icon: Theme.iKeyboard
             text: "Teclado"
             onClicked: {
