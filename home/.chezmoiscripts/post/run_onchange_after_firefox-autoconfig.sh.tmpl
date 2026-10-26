@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Instala el autoconfig de Velure en Firefox (/usr/lib/firefox): carga los colores de
+# Velure y la translucidez en el marco de Firefox en vivo, sin reiniciar
+# (ver ~/.config/velure/firefox/velure.cfg). Se vuelve a ejecutar cuando cambia:
+# velure.cfg: {{ include "dot_config/velure/firefox/velure.cfg" | sha256sum }}
+# velure-autoconfig.js: {{ include "dot_config/velure/firefox/velure-autoconfig.js" | sha256sum }}
+dir=/usr/lib/firefox
+[ -d "$dir" ] || exit 0
+echo "Firefox: instalando el autoconfig de Velure en $dir (pide sudo)"
+sudo install -m 644 "$HOME/.config/velure/firefox/velure.cfg" "$dir/velure.cfg"
+sudo install -m 644 "$HOME/.config/velure/firefox/velure-autoconfig.js" "$dir/defaults/pref/velure-autoconfig.js"
+# Los de antes del cambio de nombre (Prisma)
+sudo rm -f "$dir/prisma.cfg" "$dir/defaults/pref/prisma-autoconfig.js"
+# El userChrome.css del perfil, sin los colores fijos (ahora van en vivo)
+sh "$HOME/.config/velure/scripts/firefox.sh"
+echo "Firefox: reinícialo una vez para cargar el autoconfig"

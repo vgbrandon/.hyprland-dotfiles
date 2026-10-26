@@ -1,0 +1,17 @@
+/*
+ * velure: generado desde el fondo de pantalla. No editar a mano.
+ * Nueva pestaña e inicio translúcidos con "Barra y paneles translúcidos" de
+ * Quickshell: translucent.sh lo pone al final de userContent.css del perfil (entre
+ * marcas; con @import no se aplica). Se ve al reiniciar Firefox: las páginas no
+ * admiten estilos en vivo. Las demás pintan su propio fondo.
+ */
+@-moz-document url("about:newtab"), url("about:home"), url("about:privatebrowsing") {
+  /* Una sola capa con color (si no, se suman y queda casi opaca) */
+  :root {
+    background: {{colors.surface_dim.default.hex}}e0 !important;
+    --newtab-background-color: transparent !important;
+  }
+  body, .outer-wrapper {
+    background: transparent !important;
+  }
+}

@@ -42,11 +42,22 @@ Singleton {
         settingsFile.writeAdapter();
     }
 
-    // Barra y paneles translúcidos (Hyprland desenfoca lo que hay detrás)
+    // Barra y paneles translúcidos (Hyprland desenfoca lo que hay detrás). También el
+    // fondo de las apps que lo permiten (kitty y Zed), con translucent.sh de Velure
     readonly property bool translucent: settings.translucent
     function setTranslucent(on) {
         settings.translucent = on;
         settingsFile.writeAdapter();
+    }
+    // Al cambiar (también si se edita el archivo a mano) y al iniciar (ver
+    // onSettingsLoadedChanged)
+    onTranslucentChanged: if (settingsLoaded) applyTranslucentApps()
+    function applyTranslucentApps() {
+        translucentApps.command = ["sh", Quickshell.env("HOME") + "/.config/velure/scripts/translucent.sh", translucent ? "on" : "off"];
+        translucentApps.running = true;
+    }
+    Process {
+        id: translucentApps
     }
 
     // Selector de fondos: "carousel" (el elegido al centro, flechas) o "grid" (todos a
@@ -125,7 +136,10 @@ Singleton {
     property bool introReady: false
     readonly property int sessionStartDelay: 2500
     onIntroReadyChanged: if (introReady && settingsLoaded) introAnim.start()
-    onSettingsLoadedChanged: if (introReady && settingsLoaded) introAnim.start()
+    onSettingsLoadedChanged: {
+        if (introReady && settingsLoaded) introAnim.start();
+        if (settingsLoaded) applyTranslucentApps();
+    }
 
     Process {
         command: ["sh", "-c", "ps -o etimes= -p \"$(pidof Hyprland | cut -d' ' -f1)\""]

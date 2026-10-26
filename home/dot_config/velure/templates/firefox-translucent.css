@@ -1,0 +1,38 @@
+/*
+ * velure: generado desde el fondo de pantalla. No editar a mano.
+ * Marco de Firefox translúcido con "Barra y paneles translúcidos" de Quickshell:
+ * translucent.sh lo copia a ~/.local/state/velure/firefox-translucent.css (vacío si
+ * está apagado) y velure.cfg (autoconfig) lo carga en vivo. Los colores van puestos en cada parte (y no en las variables del
+ * tema) para ganarle a Pywalfox. El mismo tono y la misma opacidad (88 %) que la barra.
+ */
+:root, #main-window {
+  background-color: transparent !important;
+  /* Sin el fondo nativo de GTK: con la ventana activa lo pinta opaco */
+  appearance: none !important;
+}
+/* Con #main-window delante gana a la regla del arranque de userChrome.css */
+#main-window #navigator-toolbox {
+  background: {{colors.surface_dim.default.hex}}e0 !important;
+  border-bottom: 1px solid {{colors.on_surface.default.hex}}1a !important;
+}
+#main-window #titlebar, #main-window #TabsToolbar, #main-window #nav-bar,
+#main-window #PersonalToolbar, #main-window #toolbar-menubar {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+/* body: con la ventana activa o inactiva pinta los colores del sistema (opacos) debajo
+   de todo */
+body, #browser, #appcontent, #tabbrowser-tabbox, #tabbrowser-tabpanels, tabpanels,
+.browserSidebarContainer, .browserContainer, .browserStack, browser {
+  background: transparent !important;
+}
+#main-window #sidebar-box, #main-window #sidebar-main {
+  background: {{colors.surface_dim.default.hex}}e0 !important;
+}
+/* La pestaña activa, un tono más clara (como la selección de Velure) */
+.tab-background[selected] {
+  background: {{colors.surface_container_low.default.hex}} !important;
+}
+#urlbar-background {
+  background: {{colors.surface_container_high.default.hex}}cc !important;
+}

@@ -1,8 +1,9 @@
 /*
- * matugen: generado desde el fondo de pantalla. No editar a mano.
- * Colores para el arranque de Firefox, antes de que la extensión Pywalfox
- * aplique su tema. Solo actúa mientras no hay tema (:not([lwtheme])), así que
- * en cuanto Pywalfox aplica el suyo (mismos colores) deja de usarse.
+ * velure: generado desde el fondo de pantalla. No editar a mano.
+ * Colores del marco de Firefox. Con el autoconfig de Velure (velure.cfg en
+ * /usr/lib/firefox) se cargan en vivo desde ~/.cache/velure, sin reiniciar; sin él,
+ * scripts/firefox.sh los copia al perfil como userChrome.css. Solo actúan sin tema
+ * (:not([lwtheme])): Pywalfox ya no hace falta (y su tema deja la ventana opaca).
  */
 :root:not([lwtheme]) {
     --toolbox-bgcolor: {{colors.surface.default.hex}} !important;

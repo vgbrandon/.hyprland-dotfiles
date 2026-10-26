@@ -16,6 +16,8 @@ magenta = { color = "#c678dd", blend = true }
 [templates.zed]
 input_path = '~/.config/velure/templates/zed.json'
 output_path = '~/.config/zed/themes/velure.json'
+# Fondo translúcido si está activado en Quickshell (ver scripts/translucent.sh)
+post_hook = 'sh ~/.config/velure/scripts/translucent.sh'
 
 # kitty: los colores se cargan con "globinclude velure.conf" en kitty.conf.
 # SIGUSR1 hace que las ventanas de kitty abiertas recarguen la config al instante.
@@ -59,19 +61,22 @@ input_path = '~/.config/velure/templates/icons-color'
 output_path = '~/.local/share/icons/Velure/.color'
 post_hook = 'python3 ~/.config/velure/scripts/icons.py && sh ~/.config/velure/scripts/gtk-reload.sh icons'
 
-# Firefox (extensión Pywalfox): lee los colores en formato de pywal desde
-# ~/.cache/wal/colors.json; "pywalfox update" le avisa a Firefox al instante.
-[templates.pywalfox]
-input_path = '~/.config/velure/templates/pywalfox-colors.json'
-output_path = '~/.cache/wal/colors.json'
-post_hook = 'command -v pywalfox >/dev/null && pywalfox update || true'
-
-# Firefox al arrancar: userChrome.css con los mismos colores, para que no se vea
-# el tema por defecto antes de que cargue Pywalfox (ver scripts/firefox.sh)
+# Firefox: userChrome.css con los colores de la paleta (ver scripts/firefox.sh)
 [templates.firefox]
 input_path = '~/.config/velure/templates/firefox-userChrome.css'
 output_path = '~/.cache/velure/firefox-userChrome.css'
 post_hook = 'sh ~/.config/velure/scripts/firefox.sh'
+
+# Firefox translúcido (marco y nueva pestaña) si está activado en Quickshell:
+# translucent.sh copia estos dos al perfil (ver scripts/translucent.sh)
+[templates.firefox-translucent]
+input_path = '~/.config/velure/templates/firefox-translucent.css'
+output_path = '~/.cache/velure/firefox-translucent.css'
+
+[templates.firefox-translucent-content]
+input_path = '~/.config/velure/templates/firefox-translucent-content.css'
+output_path = '~/.cache/velure/firefox-translucent-content.css'
+post_hook = 'sh ~/.config/velure/scripts/translucent.sh'
 
 # tidal-hifi: tema "velure" (seleccionado en su config como user:velure.css).
 # Tidal lo aplica al cargar la página: si está abierto se recarga (Ctrl+R).

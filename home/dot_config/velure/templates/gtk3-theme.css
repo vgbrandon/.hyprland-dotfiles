@@ -17,3 +17,7 @@
 .thunar widget.view:active {
   background-color: #ffffff;
 }
+
+/* Fondo translúcido con "Barra y paneles translúcidos" de Quickshell: lo escribe
+   scripts/translucent.sh (vacío si está apagado). Al final, para ganar a lo de arriba. */
+@import url("translucent.css");
