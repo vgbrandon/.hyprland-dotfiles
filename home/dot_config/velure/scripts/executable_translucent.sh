@@ -4,12 +4,12 @@
 # parte de las apps de "Barra y paneles translúcidos" de Quickshell (Ajustes →
 # Apariencia).
 #   translucent.sh on|off   lo guarda y lo aplica (lo llama Quickshell)
-#   translucent.sh          vuelve a aplicar lo guardado (lo llama matugen al
+#   translucent.sh          vuelve a aplicar lo guardado (lo llama paleta al
 #                           regenerar los temas de Zed y Firefox)
 state="${XDG_STATE_HOME:-$HOME/.local/state}/velure/translucent"
 # Opacidad del fondo de las apps: la misma que la barra de Quickshell (Mica, 88 %)
 opacity=0.88
-# La misma en hexadecimal, para los CSS de Firefox (matugen los genera con "e0")
+# La misma en hexadecimal, para los CSS de Firefox (paleta los genera con "e0")
 alpha=$(awk "BEGIN { printf \"%02x\", $opacity * 255 + 0.5 }")
 
 case "$1" in
@@ -62,7 +62,7 @@ CSS
 fi
 
 # Firefox: el marco (pestañas, barras y barra lateral) y la nueva pestaña, con los CSS
-# que genera matugen con la paleta (templates/firefox-translucent*.css).
+# que genera paleta con la paleta (templates/firefox-translucent*.css).
 # - Marco: se copia a ~/.local/state/velure/firefox-translucent.css (vacío si está
 #   apagado) y el autoconfig de Velure (velure.cfg) lo carga en vivo.
 # - Nueva pestaña: al final de userContent.css entre marcas (ahí @import no se aplica);
@@ -139,7 +139,7 @@ for i, theme in enumerate(data.get("themes", [])):
         except (OSError, ValueError):
             pass
     if mode == "on" and not blurred:
-        # Los colores opacos (recién generados por matugen) se guardan para volver
+        # Los colores opacos (recién generados por paleta) se guardan para volver
         orig = {k: st[k] for k in ["background"] + layers if k in st}
         os.makedirs(os.path.dirname(saved), exist_ok=True)
         with open(saved, "w") as f:

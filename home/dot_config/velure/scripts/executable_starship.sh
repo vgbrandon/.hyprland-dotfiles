@@ -1,7 +1,7 @@
 #!/bin/sh
 # Starship no permite "include": se une tu starship.toml con la paleta que genera
-# matugen en starship-velure.toml (fish usa ese archivo si existe).
-# Con --notify (lo usa matugen) además avisa a las terminales fish abiertas para
+# velure en starship-velure.toml (fish usa ese archivo si existe).
+# Con --notify (lo usa paleta) además avisa a las terminales fish abiertas para
 # que repinten el prompt con los colores nuevos.
 dir="$HOME/.config/starship"
 [ -f "$dir/palette-velure.toml" ] || exit 0

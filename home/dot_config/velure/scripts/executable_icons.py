@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Tema de iconos "Velure": hereda Adwaita y recolorea las carpetas con el tono
 del color principal del fondo (mantiene la luz y el sombreado de cada parte).
-Lo ejecuta matugen al cambiar el fondo; el color lo deja la plantilla en .color."""
+Lo ejecuta paleta al cambiar el fondo; el color lo deja la plantilla en .color."""
 import colorsys, glob, os, re
 
 src = "/usr/share/icons/Adwaita/scalable"
@@ -36,7 +36,7 @@ for path in icons:
 
 open(f"{dst}/index.theme", "w").write("""[Icon Theme]
 Name=Velure
-Comment=Adwaita con carpetas del color del fondo (generado por matugen)
+Comment=Adwaita con carpetas del color del fondo (generado por paleta)
 Inherits=Adwaita,hicolor
 Directories=scalable/places,scalable/mimetypes
 

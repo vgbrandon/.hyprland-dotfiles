@@ -8,8 +8,8 @@ import qs.services
 //   wave     onda rellena                 line    líneas que ondulan, con eco
 //   circle   barras alrededor de un aro   ring    aro que ondula
 //   blob     burbuja que late con los graves
-// Color: "theme" (el principal del tema), "gradient" (degradado iridiscente con los
-// colores del fondo) o "white". Los datos llegan de services/Visualizer.qml.
+// Color: "theme" (el principal del tema), "gradient" (el degradado de la paleta: del acento a
+// su vecino análogo, Design.gradient) o "white". Los datos llegan de services/Visualizer.qml.
 //   VisualizerView { anchors.fill: parent; style: "ring"; colorMode: "gradient" }
 Item {
     id: root
@@ -54,9 +54,11 @@ Item {
 
     // Color en la posición t (0–1) del dibujo
     // (Qt.tint convierte el texto "#rrggbb" del tema en un color con sus componentes)
-    readonly property var palette: ["cyan", "primary", "magenta", "tertiary"].map(k => Qt.tint(Design.c(k, "#c3c0ff"), "transparent"))
+    // El degradado de la paleta (del acento a su vecino análogo)
+    readonly property var palette: Design.gradient.map(c => Qt.tint(c, "transparent"))
     function colorAt(t) {
-        if (colorMode === "white") return "#ffffff";
+        // Un color (no el texto "#ffffff"): el lienzo usa sus componentes .r .g .b
+        if (colorMode === "white") return Qt.color("#ffffff");
         if (colorMode !== "gradient") return Design.accent;
         const p = palette, x = Math.max(0, Math.min(1, t)) * (p.length - 1);
         const i = Math.min(p.length - 2, Math.floor(x));

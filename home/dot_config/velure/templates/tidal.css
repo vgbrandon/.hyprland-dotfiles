@@ -1,7 +1,7 @@
 /*
- * Tema "matugen" para tidal-hifi: generado desde el fondo de pantalla, no editar a mano.
- * Basado en el tema Catppuccin que trae tidal-hifi, con su paleta cambiada por la de matugen.
- * Tidal aplica el tema al cargar la página; matugen lo recarga con Ctrl+R (scripts/tidal.sh).
+ * Tema "velure" para tidal-hifi: generado desde el fondo de pantalla, no editar a mano.
+ * Basado en el tema Catppuccin que trae tidal-hifi, con su paleta cambiada por la de paleta.
+ * Tidal aplica el tema al cargar la página; paleta lo recarga con Ctrl+R (scripts/tidal.sh).
  */
 html {
   --sidebar-background: {{colors.surface_container_lowest.default.hex}};

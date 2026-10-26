@@ -7,7 +7,8 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    // Paleta Material You generada por matugen a partir del fondo de pantalla.
+    // Paleta generada por paleta (~/.local/bin/paleta) a partir del fondo de pantalla: nombres
+    // planos (los de Material y los papeles p_* que usa Design).
     // Mientras no haya paleta se usan los grises originales.
     property var scheme: ({})
     property string wallpaper: ""
@@ -31,11 +32,11 @@ Singleton {
     property color text: pick("on_surface", "#e6e1e5")
     property color subtext: pick("on_surface_variant", "#9e9aa3")
     property color dot: scheme.outline_variant ? Qt.lighter(scheme.outline_variant, 1.25) : "#5a5860"
-    property color error: pick("error", "#ffb4ab")
-    // Aviso (amarillo armonizado con el fondo, de los custom_colors de matugen)
-    property color warning: pick("yellow", "#e5c07b")
-    // Azul armonizado con el fondo (custom_colors de matugen)
-    property color blue: pick("blue", "#61afef")
+    // Estados: los de la paleta (Design: sobrios, acercados al tono del fondo), no los
+    // amarillo y azul vivos de los colores de terminal
+    property color error: Design.error
+    property color warning: Design.warning
+    property color blue: Design.info
 
     Behavior on panelBg { ColorAnimation { duration: 600 } }
     Behavior on surface { ColorAnimation { duration: 600 } }
@@ -49,34 +50,48 @@ Singleton {
     Behavior on warning { ColorAnimation { duration: 600 } }
     Behavior on blue { ColorAnimation { duration: 600 } }
 
-    // Genera la paleta para un fondo nuevo (lo llama Wallpaper). matugen también
-    // genera las plantillas de ~/.config/velure/config.toml (tema de Zed)
+    // Genera la paleta para un fondo nuevo (lo llama Wallpaper) con la paleta propia,
+    // ~/.local/bin/paleta (de ~/generador-de-paleta/rust): saca los colores de la imagen,
+    // los reparte en papeles y rellena las plantillas de ~/.config/velure/config.toml
+    // (Zed, kitty, GTK, Firefox…) con sus ganchos.
+    readonly property string paleta: Quickshell.env("HOME") + "/.local/bin/paleta"
+    // Vuelve a generar y aplicar la paleta del fondo actual:
+    //   quickshell ipc call palette apply
+    function applyPalette() {
+        const path = wallpaper;
+        wallpaper = "";
+        setWallpaper(path);
+    }
+    IpcHandler {
+        target: "palette"
+        function apply(): void { root.applyPalette(); }
+    }
     function setWallpaper(path) {
         if (path === "" || path === wallpaper) return;
         wallpaper = path;
-        matugenProc.command = ["matugen", "image", path, "-c", Quickshell.env("HOME") + "/.config/velure/config.toml", "--json", "hex", "--prefer", "saturation", "-m", "dark", "-q"];
-        matugenProc.running = true;
+        paletaProc.command = [paleta, "aplicar", path];
+        paletaProc.running = true;
     }
 
     Process {
-        id: matugenProc
+        id: paletaProc
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
-                    const colors = JSON.parse(this.text).colors;
-                    const s = {};
-                    for (const k in colors) s[k] = colors[k].dark.color;
+                    const s = JSON.parse(this.text).scheme;
+                    if (!s) return;
                     root.scheme = s;
                     cache.setText(JSON.stringify({ wallpaper: root.wallpaper, scheme: s }));
                     root.shareWithGreeter();
                 } catch (e) {
-                    console.warn("matugen:", e);
+                    console.warn("paleta:", e);
                 }
             }
         }
+        onExited: code => { if (code !== 0) console.warn("paleta: terminó con", code); }
     }
 
-    // Última paleta guardada: se aplica al iniciar sin esperar a matugen
+    // Última paleta guardada: se aplica al iniciar sin esperar a paleta
     FileView {
         id: cache
         path: Quickshell.statePath("theme.json")
@@ -267,5 +282,6 @@ Singleton {
     readonly property string iDockLeft: String.fromCodePoint(0xF10AA)
     readonly property string iDockRight: String.fromCodePoint(0xF10AB)
 
-    readonly property color warm: "#ffb870"
+    // Cálido (luz nocturna): el aviso de la paleta
+    readonly property color warm: Design.warning
 }

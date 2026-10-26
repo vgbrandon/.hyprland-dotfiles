@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copia el userChrome.css generado por matugen a los perfiles de Firefox en uso
+# Copia el userChrome.css generado por paleta a los perfiles de Firefox en uso
 # y activa la opción que permite usarlo (user.js). Los cambios de userChrome.css
 # se ven al reiniciar Firefox. Con el autoconfig de Velure (velure.cfg) los colores
 # se cargan en vivo y aquí solo queda la marca.

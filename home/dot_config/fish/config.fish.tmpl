@@ -35,7 +35,7 @@ if status is-interactive
 
     # Esto siempre debe ir al final
     if type -q starship
-        # Colores del fondo de pantalla (matugen); si no hay, el starship.toml normal
+        # Colores del fondo de pantalla (Velure); si no hay, el starship.toml normal
         sh "$HOME/.config/velure/scripts/starship.sh" 2>/dev/null
         if test -f "$HOME/.config/starship/starship-velure.toml"
             set -gx STARSHIP_CONFIG "$HOME/.config/starship/starship-velure.toml"
@@ -44,7 +44,7 @@ if status is-interactive
         end
         starship init fish | source
 
-        # Repinta el prompt cuando matugen cambia los colores (avisa con SIGUSR1
+        # Repinta el prompt cuando paleta cambia los colores (avisa con SIGUSR1
         # solo a las terminales registradas aquí)
         function __velure_repaint --on-signal SIGUSR1
             commandline -f repaint

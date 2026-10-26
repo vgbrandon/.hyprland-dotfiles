@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// Tema de la pantalla de inicio. Los colores (matugen), el fondo y el usuario los
+// Tema de la pantalla de inicio. Los colores (Velure), el fondo y el usuario los
 // deja la sesión normal en /var/lib/qs-greeter (el usuario "greeter" no puede leer
 // la carpeta personal). Si no están, usa grises y negro.
 Singleton {
