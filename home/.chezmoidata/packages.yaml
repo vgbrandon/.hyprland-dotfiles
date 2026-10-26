@@ -49,7 +49,6 @@ packages:
     - xdg-desktop-portal # servicio base de portales XDG
     - xdg-desktop-portal-hyprland # backend portal para Hyprland
     - xdg-desktop-portal-gtk # fallback GTK para FileChooser/OpenURI
-    - polkit-gnome # autenticación gráfica de permisos
     - quickshell # framework de widgets para Wayland
     - sound-theme-freedesktop # sonidos del aviso del pomodoro de Quickshell (pw-play)
     - greetd # gestor de inicio de sesión (la pantalla de inicio es Quickshell, ver quickshell-greeter)
@@ -73,7 +72,8 @@ packages:
     - dunst # notificaciones: las muestra Quickshell (si dunst arranca antes, se queda con ellas)
     - wofi # lanzador: lo hace Quickshell (Super + L)
     - dolphin # gestor de archivos de KDE: se usa Thunar
-    - polkit-kde-agent # agente de permisos de KDE: se usa polkit-gnome (lo arranca hyprland.lua)
+    - polkit-kde-agent # agente de permisos de KDE: el agente es Quickshell (services/Polkit.qml)
+    - polkit-gnome # agente de permisos de GNOME: el agente es Quickshell (services/Polkit.qml)
 
   aur:
     - python-pywalfox # app nativa para la extensión de navegador Pywalfox

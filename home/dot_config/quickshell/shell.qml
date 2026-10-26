@@ -13,6 +13,7 @@ import qs.modules.lock
 import qs.modules.notes
 import qs.modules.notifications
 import qs.modules.osd
+import qs.modules.polkit
 import qs.modules.power
 import qs.modules.profile
 import qs.modules.screenshot
@@ -69,6 +70,7 @@ ShellRoot {
     LauncherWindow {}
     ClipboardWindow {}
     PowerMenuWindow {}
+    PolkitWindow {}
     ProfileWindow {}
     ShortcutsWindow {}
     NotesWindow {}
