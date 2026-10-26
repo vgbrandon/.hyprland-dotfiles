@@ -2,7 +2,8 @@ import QtQuick
 import QtQuick.Effects
 import qs.services
 
-// Deslizador: pista fina con la parte llena en acento y bola con sombra
+// Deslizador: la parte llena en relleno de acento y bola blanca con sombra, que crece
+// al arrastrarla
 //   Slide { value: 0.4; onMoved: v => … }
 Item {
     id: root
@@ -17,26 +18,27 @@ Item {
         id: track
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
-        height: 4
-        radius: 2
-        color: Design.surface3
+        height: 3
+        radius: 1.5
+        color: Design.alpha("#ffffff", 0.14)
 
         Rectangle {
             width: knob.x + knob.width / 2
             height: parent.height
-            radius: 2
+            radius: 1.5
             color: Design.accent
+            AccentFill { glow: true }
         }
     }
     Rectangle {
         id: knob
-        width: area.pressed ? 18 : 16
+        width: area.pressed ? 16 : 13
         height: width
         radius: width / 2
         anchors.verticalCenter: parent.verticalCenter
         x: Math.round(root.value * (root.width - width))
-        color: Design.onSurface
-        Behavior on width { NumberAnimation { duration: Design.fast } }
+        color: "#ffffff"
+        Behavior on width { NumberAnimation { duration: Design.fast; easing.type: Design.spring } }
         layer.enabled: true
         layer.effect: MultiEffect {
             shadowEnabled: true

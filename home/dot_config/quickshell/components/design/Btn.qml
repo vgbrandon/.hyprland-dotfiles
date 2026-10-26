@@ -3,8 +3,9 @@ import QtQuick.Layouts
 import qs.components.base
 import qs.services
 
-// Botón con texto (e icono opcional). kind: "filled" (acento, lo principal), "tonal"
-// (contenedor tonal), "outline" (borde) o "text" (sin fondo).
+// Botón con texto (e icono opcional). kind: "filled" (relleno de acento, lo
+// principal), "tonal" (vidrio elevado), "outline" (borde) o "text" (sin fondo).
+// Al pulsarlo se hunde un poco.
 //   Btn { kind: "tonal"; text: "Guardar"; icon: Theme.iCheck }
 Rectangle {
     id: root
@@ -15,16 +16,23 @@ Rectangle {
     property bool small: false
     signal clicked()
 
-    readonly property color fg: kind === "filled" ? Design.onAccent : kind === "tonal" ? Design.onTonal
+    readonly property color fg: kind === "filled" ? Design.onAccent : kind === "tonal" ? Design.onSurface
         : kind === "outline" ? Design.onSurface : Design.accent
 
     implicitWidth: row.implicitWidth + (small ? 20 : 28)
     implicitHeight: small ? 28 : 34
     radius: Design.radiusSm
-    color: kind === "filled" ? Design.accent : kind === "tonal" ? Design.tonal : "transparent"
-    border.color: kind === "outline" ? Design.outlineVariant : "transparent"
-    border.width: kind === "outline" ? 1 : 0
+    color: kind === "tonal" ? Design.raised : "transparent"
+    border.color: kind === "outline" ? Design.alpha("#ffffff", 0.2) : kind === "tonal" ? Design.border : "transparent"
+    border.width: kind === "outline" || kind === "tonal" ? 1 : 0
     opacity: enabled ? 1 : 0.38
+    scale: mouse.pressed ? 0.96 : 1
+    Behavior on scale { NumberAnimation { duration: Design.fast } }
+
+    AccentFill {
+        visible: root.kind === "filled"
+        glow: root.enabled
+    }
 
     // Capa de estado: pasar el ratón / pulsar
     Rectangle {

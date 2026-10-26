@@ -32,8 +32,8 @@ Rectangle {
     implicitWidth: 240
     implicitHeight: big ? 44 : 34
     radius: big ? Design.radiusMd : Design.radiusSm
-    color: Design.surface0
-    border.color: input.activeFocus ? Design.alpha(Design.accent, 0.6) : Design.outlineVariant
+    color: Design.sunken
+    border.color: input.activeFocus ? Design.alpha(Design.accent, 0.75) : Design.border
     border.width: 1
     Behavior on border.color { ColorAnimation { duration: Design.fast } }
 

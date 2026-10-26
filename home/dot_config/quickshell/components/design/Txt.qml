@@ -10,6 +10,7 @@ Text {
     font.family: Design.font
     font.pixelSize: textStyle.size
     font.weight: textStyle.weight
+    font.letterSpacing: textStyle.spacing ?? 0
     verticalAlignment: Text.AlignVCenter
     elide: Text.ElideRight
 }

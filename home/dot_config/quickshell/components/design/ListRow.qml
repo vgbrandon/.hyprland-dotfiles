@@ -4,7 +4,7 @@ import qs.components.base
 import qs.services
 
 // Fila de una lista: icono, título, subtítulo y lo que se ponga a la derecha.
-// selected = contenedor tonal.
+// selected = selección de acento.
 //   ListRow { icon: Theme.iWifi; title: "Casa"; subtitle: "Conectado"; selected: true }
 Rectangle {
     id: root
@@ -19,7 +19,7 @@ Rectangle {
     Layout.fillWidth: true
     implicitHeight: subtitle !== "" ? 48 : 38
     radius: Design.radiusSm
-    color: selected ? Design.tonal : "transparent"
+    color: selected ? Design.selection : "transparent"
     Behavior on color { ColorAnimation { duration: Design.normal } }
 
     Rectangle {
@@ -45,7 +45,7 @@ Rectangle {
         Icon {
             visible: root.icon !== ""
             text: root.icon
-            color: root.selected ? Design.onTonal : Design.onSurfaceVariant
+            color: root.selected ? Design.accent : Design.onSurfaceVariant
             font.pixelSize: 18
         }
         ColumnLayout {
@@ -55,14 +55,14 @@ Rectangle {
             Txt {
                 Layout.fillWidth: true
                 text: root.title
-                color: root.selected ? Design.onTonal : Design.onSurface
+                color: Design.onSurface
             }
             Txt {
                 Layout.fillWidth: true
                 visible: root.subtitle !== ""
                 text: root.subtitle
                 textStyle: Design.caption
-                color: root.selected ? Design.alpha(Design.onTonal, 0.75) : Design.onSurfaceVariant
+                color: Design.onSurfaceVariant
             }
         }
         RowLayout {

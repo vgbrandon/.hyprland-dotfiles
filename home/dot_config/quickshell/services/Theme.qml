@@ -25,8 +25,9 @@ Singleton {
     property color panelBg: pick("surface", "#121214")
     property color surface: pick("surface_container", "#1f1e22")
     property color surfaceHigh: pick("surface_container_highest", "#2b2a30")
-    property color primary: pick("primary", "#d6d4dc")
-    property color primaryFg: pick("on_primary", "#1c1b1f")
+    // El acento del diseño (Design.accent)
+    property color primary: Design.accent
+    property color primaryFg: Design.onAccent
     property color text: pick("on_surface", "#e6e1e5")
     property color subtext: pick("on_surface_variant", "#9e9aa3")
     property color dot: scheme.outline_variant ? Qt.lighter(scheme.outline_variant, 1.25) : "#5a5860"

@@ -2,7 +2,8 @@ import QtQuick
 import QtQuick.Effects
 import qs.services
 
-// Control segmentado: la opción elegida es una pastilla elevada que se desliza
+// Control segmentado: hundido, con la opción elegida en vidrio elevado que se desliza
+// con un poco de muelle
 // follow = cambia solo al pulsar; con false solo avisa (current lo decide quien lo usa)
 //   Segmented { options: ["Día", "Semana", "Mes"]; current: 0 }
 Rectangle {
@@ -18,7 +19,9 @@ Rectangle {
     implicitWidth: 240
     implicitHeight: 32
     radius: Design.radiusSm
-    color: Design.surface2
+    color: Design.sunken
+    border.color: Design.border
+    border.width: 1
 
     Rectangle {
         x: 2 + root.current * root.segWidth
@@ -26,10 +29,8 @@ Rectangle {
         width: root.segWidth
         height: root.height - 4
         radius: Design.radiusSm - 2
-        color: Design.surface3
-        border.color: Design.border
-        border.width: 1
-        Behavior on x { NumberAnimation { duration: Design.normal; easing.type: Design.easing } }
+        color: Design.alpha("#ffffff", 0.14)
+        Behavior on x { NumberAnimation { duration: Design.springDuration; easing.type: Design.spring; easing.overshoot: Design.overshoot } }
         layer.enabled: true
         layer.effect: MultiEffect {
             shadowEnabled: true
@@ -38,6 +39,8 @@ Rectangle {
             shadowBlur: 0.3
             shadowVerticalOffset: 1
         }
+
+        GlassEdge { inset: parent.radius }
     }
     Row {
         x: 2

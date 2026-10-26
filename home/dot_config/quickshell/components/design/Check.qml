@@ -16,17 +16,21 @@ RowLayout {
     Rectangle {
         implicitWidth: 18
         implicitHeight: 18
-        radius: Design.radiusXs
-        color: root.checked ? Design.accent : "transparent"
-        border.color: root.checked ? Design.accent : Design.outline
-        border.width: root.checked ? 0 : 1.5
-        Behavior on color { ColorAnimation { duration: Design.fast } }
+        radius: Design.radiusSm
+        color: Design.sunken
+        border.color: Design.alpha("#ffffff", 0.2)
+        border.width: root.checked ? 0 : 1
+
+        AccentFill {
+            visible: root.checked
+            secondary: true
+        }
 
         Icon {
             anchors.centerIn: parent
             visible: root.checked
             text: Theme.iCheck
-            color: Design.onAccent
+            color: Design.onHi
             font.pixelSize: 14
         }
     }

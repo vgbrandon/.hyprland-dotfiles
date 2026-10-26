@@ -3,8 +3,8 @@ import QtQuick.Layouts
 import qs.components.base
 import qs.services
 
-// Mosaico de ajuste rápido (centro de control): icono en un círculo, nombre y estado.
-// Encendido = contenedor de acento.
+// Mosaico de ajuste rápido (centro de control): icono en un cuadrado redondeado, nombre
+// y estado. Encendido = selección de acento y el icono en relleno de acento.
 //   Tile { icon: Theme.iWifi; title: "Wi-Fi"; subtitle: "Casa"; checked: true }
 Rectangle {
     id: root
@@ -17,8 +17,8 @@ Rectangle {
     Layout.fillWidth: true
     implicitHeight: 56
     radius: Design.radiusMd
-    color: checked ? Design.accentContainer : Design.surface2
-    border.color: Design.border
+    color: checked ? Design.selection : Design.alpha("#ffffff", 0.045)
+    border.color: checked ? Design.selectionBorder : Design.border
     border.width: 1
     Behavior on color { ColorAnimation { duration: Design.normal } }
 
@@ -37,14 +37,19 @@ Rectangle {
         Rectangle {
             implicitWidth: 34
             implicitHeight: 34
-            radius: 17
-            color: root.checked ? Design.accent : Design.surface3
-            Behavior on color { ColorAnimation { duration: Design.normal } }
+            radius: Design.radiusSm
+            color: Design.alpha("#ffffff", 0.1)
+
+            AccentFill {
+                opacity: root.checked ? 1 : 0
+                secondary: true
+                Behavior on opacity { NumberAnimation { duration: Design.normal } }
+            }
 
             Icon {
                 anchors.centerIn: parent
                 text: root.icon
-                color: root.checked ? Design.onAccent : Design.onSurfaceVariant
+                color: root.checked ? Design.onHi : Design.onSurface
                 font.pixelSize: 17
             }
         }
@@ -56,13 +61,13 @@ Rectangle {
                 Layout.fillWidth: true
                 text: root.title
                 textStyle: Design.label
-                color: root.checked ? Design.onAccentContainer : Design.onSurface
+                font.weight: Font.DemiBold
             }
             Txt {
                 Layout.fillWidth: true
                 text: root.subtitle
                 textStyle: Design.caption
-                color: root.checked ? Design.alpha(Design.onAccentContainer, 0.75) : Design.onSurfaceVariant
+                color: Design.onSurfaceVariant
             }
         }
     }

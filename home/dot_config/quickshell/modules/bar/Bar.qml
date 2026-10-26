@@ -26,7 +26,7 @@ import qs.services
 // lado, con los elementos sueltos sobre ella. Arriba, abajo o en un lateral (Ajustes →
 // Barra); en los laterales va en columna y sin lo que no cabe (títulos, CPU y RAM).
 //   Inicio: lanzador, escritorios y ventana activa
-//   Centro: lo que suena y la hora (clic = calendario)
+//   Centro: la hora siempre al medio (clic = calendario) y lo que suena antes
 //   Final: CPU y RAM, herramientas, bandeja, estado del sistema, volumen y energía
 PanelWindow {
     id: bar
@@ -96,8 +96,7 @@ PanelWindow {
                 BarShow { id: showWorkspaces; key: "workspaces" }
                 screen: bar.screen
                 vertical: bar.vertical
-                shown: bar.compact ? 6 : 8
-                cell: bar.compact ? 24 : 28
+                activeLength: bar.compact ? 22 : 26
                 thickness: bar.compact ? 24 : 26
             }
             // Título de la ventana activa (no cabe en monitores estrechos ni en los laterales)
@@ -112,13 +111,17 @@ PanelWindow {
             }
         }
 
-        // --- Centro (centrado, sin pisar los extremos) ---
+        // --- Centro: el reloj siempre en el centro exacto de la barra y lo que suena
+        // antes que él; solo se aparta si los extremos llegaran a pisarlo ---
         GridLayout {
             id: center
+            // Dónde cae el centro del reloj dentro del grupo (sin reloj, el del grupo)
+            readonly property real pivotX: clockBox.visible ? clockBox.x + clockBox.width / 2 : width / 2
+            readonly property real pivotY: clockBox.visible ? clockBox.y + clockBox.height / 2 : height / 2
             x: bar.vertical ? Math.round((parent.width - width) / 2)
-                : Math.round(Math.max(left.x + left.width + 16, Math.min((parent.width - width) / 2, right.x - width - 16)))
+                : Math.round(Math.max(left.x + left.width + 16, Math.min(parent.width / 2 - pivotX, right.x - width - 16)))
             y: !bar.vertical ? Math.round((parent.height - height) / 2)
-                : Math.round(Math.max(left.y + left.height + 16, Math.min((parent.height - height) / 2, right.y - height - 16)))
+                : Math.round(Math.max(left.y + left.height + 16, Math.min(parent.height / 2 - pivotY, right.y - height - 16)))
             columns: bar.vertical ? 1 : -1
             rowSpacing: 8
             columnSpacing: 14
@@ -186,8 +189,8 @@ PanelWindow {
                 BarShow { id: showClock; key: "clock" }
                 Layout.alignment: Qt.AlignCenter
                 implicitWidth: bar.vertical ? bar.btn : clockText.implicitWidth + 20
-                implicitHeight: bar.vertical ? clockText.implicitHeight + 10 : 26
-                radius: Design.radiusSm - 2
+                implicitHeight: bar.vertical ? clockText.implicitHeight + 10 : bar.btn
+                radius: Design.radiusSm
                 color: clockMouse.containsMouse ? Design.hoverLayer : "transparent"
 
                 SystemClock {
@@ -241,8 +244,8 @@ PanelWindow {
                 visible: !bar.vertical && showResources.on
                 BarShow { id: showResources; key: "resources" }
                 implicitWidth: resRow.implicitWidth + 16
-                implicitHeight: 26
-                radius: Design.radiusSm - 2
+                implicitHeight: bar.btn
+                radius: Design.radiusSm
                 color: resMouse.containsMouse ? Design.hoverLayer : "transparent"
 
                 RowLayout {

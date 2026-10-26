@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Effects
+import qs.components.design
 import qs.services
 
 // Barra fina que se llena según "value" (0..1). Si es interactiva lleva la bola en
@@ -13,12 +14,12 @@ Item {
     property bool interactive: true
     signal moved(real fraction)
 
-    implicitHeight: 4
+    implicitHeight: 3
 
     Rectangle {
         anchors.fill: parent
         radius: height / 2
-        color: Design.surface3
+        color: Design.alpha("#ffffff", 0.14)
     }
     Rectangle {
         width: parent.width * Math.max(0, Math.min(1, root.value))
@@ -26,17 +27,20 @@ Item {
         radius: height / 2
         color: root.color
         Behavior on width { NumberAnimation { duration: 150 } }
+        // Con el color del acento, en relleno de acento
+        AccentFill { visible: root.color === Design.accent }
     }
 
     // Bola (solo si se puede mover)
     Rectangle {
         visible: root.interactive
-        width: 16
-        height: 16
-        radius: 8
+        width: knobMouse.pressed ? 16 : 13
+        height: width
+        radius: width / 2
         anchors.verticalCenter: parent.verticalCenter
         x: Math.round(Math.max(0, Math.min(1, root.value)) * (parent.width - width))
-        color: Design.onSurface
+        color: "#ffffff"
+        Behavior on width { NumberAnimation { duration: Design.fast; easing.type: Design.spring } }
         Behavior on x { NumberAnimation { duration: 150 } }
         layer.enabled: true
         layer.effect: MultiEffect {
@@ -49,6 +53,7 @@ Item {
     }
 
     MouseArea {
+        id: knobMouse
         visible: root.interactive
         anchors.fill: parent
         // Más fácil de atinar que los 4 px de la barra

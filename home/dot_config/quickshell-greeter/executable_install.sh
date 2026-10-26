@@ -20,7 +20,8 @@ sudo install -d -m 755 /etc/greetd/quickshell
 # Misma estructura que la sesión: services/ (Theme, Config y Auth propios del greeter,
 # y Design e IconOffsets, los tokens del diseño y el ajuste de los iconos de la sesión),
 # components/base (Icon, Label y Avatar)
-# y components/design (IconBtn, GlassEdge y Surface) de la sesión normal
+# y components/design (IconBtn, GlassEdge, Surface y AccentFill, que usa IconBtn) de la
+# sesión normal
 sudo install -d -m 755 /etc/greetd/quickshell/services /etc/greetd/quickshell/components/base /etc/greetd/quickshell/components/design
 sudo install -m 644 "$greeter"/{shell,GreeterContent}.qml /etc/greetd/quickshell/
 sudo install -m 644 "$greeter"/services/{Auth,Theme,Config}.qml /etc/greetd/quickshell/services/
@@ -28,7 +29,7 @@ sudo install -m 644 "$shell"/services/{Design,IconOffsets}.qml /etc/greetd/quick
 # Ajustes de posición de los iconos (los usa Icon)
 sudo install -m 644 "$shell"/icon-offsets.json /etc/greetd/quickshell/
 sudo install -m 644 "$shell"/components/base/{Icon,Label,Avatar}.qml /etc/greetd/quickshell/components/base/
-sudo install -m 644 "$shell"/components/design/{IconBtn,GlassEdge,Surface}.qml /etc/greetd/quickshell/components/design/
+sudo install -m 644 "$shell"/components/design/{IconBtn,GlassEdge,Surface,AccentFill}.qml /etc/greetd/quickshell/components/design/
 
 # Hyprland del greeter (con los mismos monitores) y configuración de greetd
 sudo install -m 755 "$greeter"/start-greeter.sh /etc/greetd/start-greeter.sh

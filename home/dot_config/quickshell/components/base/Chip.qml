@@ -1,7 +1,7 @@
 import QtQuick
 import qs.services
 
-// Opción; la elegida (selected) va en contenedor tonal (diseño Velure).
+// Opción; la elegida (selected) va en la selección de acento (diseño Velure).
 // Con icono y sin texto queda casi cuadrada.
 Rectangle {
     id: chip
@@ -9,15 +9,15 @@ Rectangle {
     property string text
     property string icon
     property bool selected: false
-    property color textColor: selected ? Design.onTonal : Design.onSurface
-    property color iconColor: textColor
+    property color textColor: Design.onSurface
+    property color iconColor: selected ? Design.accent : textColor
     signal clicked()
 
     implicitWidth: row.implicitWidth + (text !== "" ? 24 : 16)
     implicitHeight: 30
     radius: Design.radiusSm
-    color: selected ? Design.tonal : Design.surface2
-    border.color: selected ? "transparent" : Design.border
+    color: selected ? Design.selection : Design.raised
+    border.color: selected ? Design.selectionBorder : Design.border
     border.width: 1
     Behavior on color { ColorAnimation { duration: Design.normal } }
 
