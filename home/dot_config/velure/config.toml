@@ -15,6 +15,13 @@ input_path = '~/.config/velure/templates/kitty.conf'
 output_path = '~/.config/kitty/velure.conf'
 post_hook = 'pkill -USR1 -x kitty || true'
 
+# fish: los colores del resaltado (lo que se escribe, el completado) en color real, sin
+# ANSI. config.fish lo carga; el aviso de starship.sh (abajo) hace que las terminales
+# abiertas lo vuelvan a cargar, por eso va antes.
+[templates.fish]
+input_path = '~/.config/velure/templates/fish-colors.fish'
+output_path = '~/.config/fish/velure-colors.fish'
+
 # starship: la paleta se une con starship.toml (ver scripts/starship.sh).
 # Starship lee la config en cada prompt, así que el cambio se ve al instante.
 [templates.starship]
