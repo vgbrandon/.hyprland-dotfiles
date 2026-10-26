@@ -1,14 +1,18 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Widgets
 import qs.components.base
 import qs.components.design
+import qs.modules.palettes
 import qs.services
 
-// Guía de estilo del diseño Velure: todos los tokens y los
-// componentes de ejemplo juntos, sobre el fondo de pantalla, para decidir el diseño
-// antes de aplicarlo. Arriba, una barra de ejemplo. Los ejemplos se pueden usar
-// (pasar el ratón, pulsar, encender…). Tokens en services/Design.qml.
+// Guía de estilo del diseño Velure, como un recorrido (igual que la guía de paletas, con
+// sus mismas piezas): lo que saca el generador del fondo, los papeles del tema con su
+// token de Design, y con ellos los materiales, la letra, la forma, los componentes y los
+// paneles de la shell. Los materiales y los paneles de vidrio se ven sobre una franja
+// con el fondo de pantalla. Los ejemplos se pueden usar (pasar el ratón, pulsar,
+// encender…). Tokens en services/Design.qml.
 //   quickshell ipc call styleguide toggle
 FloatingWindow {
     id: win
@@ -18,119 +22,17 @@ FloatingWindow {
     title: "Guía de estilo"
     implicitWidth: 1280
     implicitHeight: 880
-    color: Design.background
+    color: "#0c0c0e"
 
-    // Fondo de pantalla: lo que "desenfocan" los materiales
-    Image {
-        id: wall
-        anchors.fill: parent
-        source: Theme.wallpaper !== "" ? "file://" + Theme.wallpaper : ""
-        fillMode: Image.PreserveAspectCrop
-        asynchronous: true
-        sourceSize.width: 1920
+    PaletteData {
+        id: pdata
+        active: win.visible
     }
-
-    // --- Barra de ejemplo (Mica, pegada al borde) ---
-    Surface {
-        id: bar
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 36
-        material: "mica"
-        backdrop: wall
-        radius: 0
-        bordered: false
-        z: 2
-
-        Rectangle {
-            anchors.bottom: parent.bottom
-            width: parent.width
-            height: 1
-            color: Design.border
-        }
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.leftMargin: 10
-            anchors.rightMargin: 10
-            spacing: 4
-
-            IconBtn { icon: Theme.iLogo; size: 28; iconSize: 16 }
-
-            // Escritorios: el activo en contenedor tonal; con ventanas, punto
-            Row {
-                Layout.leftMargin: 6
-                spacing: 2
-                Repeater {
-                    model: [{ n: 1, w: true }, { n: 2, w: true }, { n: 3, w: false }, { n: 4, w: true }, { n: 5, w: false }]
-
-                    Rectangle {
-                        id: ws
-                        required property var modelData
-                        required property int index
-                        readonly property bool active: index === win.activeWs
-                        width: active ? 40 : 28
-                        height: 24
-                        radius: Design.radiusSm - 2
-                        color: active ? Design.tonal : wsMouse.containsMouse ? Design.hoverLayer : "transparent"
-                        Behavior on width { NumberAnimation { duration: Design.normal; easing.type: Design.easing } }
-                        Behavior on color { ColorAnimation { duration: Design.normal } }
-
-                        Txt {
-                            anchors.centerIn: parent
-                            text: ws.modelData.n
-                            textStyle: Design.label
-                            color: ws.active ? Design.onTonal : ws.modelData.w ? Design.onSurface : Design.muted
-                            font.features: { "tnum": 1 }
-                        }
-                        MouseArea {
-                            id: wsMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: win.activeWs = ws.index
-                        }
-                    }
-                }
-            }
-
-            Txt {
-                Layout.leftMargin: 12
-                Layout.maximumWidth: 260
-                text: "Guía de estilo — Velure"
-                textStyle: Design.label
-                color: Design.onSurfaceVariant
-            }
-
-            Item { Layout.fillWidth: true }
-
-            Txt {
-                text: "20:31  ·  jueves 16 oct"
-                textStyle: Design.label
-                font.features: { "tnum": 1 }
-            }
-
-            Item { Layout.fillWidth: true }
-
-            IconBtn { icon: Theme.iKeyboard; size: 28; iconSize: 16 }
-            IconBtn { icon: Theme.iWifi4; size: 28; iconSize: 16 }
-            IconBtn { icon: Theme.iBt; size: 28; iconSize: 16 }
-            IconBtn { icon: Theme.iVolume; size: 28; iconSize: 16; checked: true }
-            IconBtn { icon: Theme.iBellBadge; size: 28; iconSize: 16 }
-            IconBtn { icon: Theme.iSettings; size: 28; iconSize: 16 }
-            IconBtn { icon: Theme.iPower; size: 28; iconSize: 16 }
-        }
-    }
-    property int activeWs: 1
 
     Flickable {
         id: flick
-        anchors.top: bar.bottom
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        contentHeight: page.implicitHeight + 64
+        anchors.fill: parent
+        contentHeight: page.implicitHeight + 48
         boundsBehavior: Flickable.StopAtBounds
         clip: true
 
@@ -139,79 +41,87 @@ FloatingWindow {
             function onGuideScroll(y) {
                 flick.contentY = Math.max(0, Math.min(y, flick.contentHeight - flick.height));
             }
+            function onGuideCapture(path) {
+                flick.grabToImage(r => r.saveToFile(path));
+            }
         }
 
         ColumnLayout {
             id: page
             x: 32
-            y: 32
+            y: 28
             width: flick.width - 64
-            spacing: 24
+            spacing: 18
 
             // --- Cabecera ---
-            ColumnLayout {
-                spacing: 4
-                Txt {
-                    text: "Velure"
-                    textStyle: Design.display
-                    style: Text.Raised
-                    styleColor: Design.alpha("#000000", 0.25)
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 12
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 4
+                    GuideText { text: "Velure"; size: 30; weight: Font.Light; color: "#f2f2f2" }
+                    GuideText {
+                        Layout.fillWidth: true
+                        wrapMode: Text.Wrap
+                        text: "La guía de estilo: cómo el color de tu fondo se convierte en el diseño. Lo que saca el generador, el papel que le da el tema y, con él, los materiales, la letra, la forma, los componentes y los paneles."
+                        color: "#9a9aa2"
+                    }
                 }
-                Txt {
-                    text: "Colores tonales de Material You (de matugen) · Mica y vidrio esmerilado · detalles finos de macOS"
-                    textStyle: Design.body
-                    color: Design.onSurfaceVariant
+                Rectangle {
+                    Layout.alignment: Qt.AlignTop
+                    implicitWidth: refreshLabel.implicitWidth + 28
+                    implicitHeight: 34
+                    radius: 6
+                    color: refreshMouse.containsMouse ? "#2a2a30" : "#1e1e22"
+                    border.color: "#33333a"
+                    GuideText { id: refreshLabel; anchors.centerIn: parent; text: pdata.running ? "Generando…" : "Volver a generar"; size: 12 }
+                    MouseArea { id: refreshMouse; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: pdata.refresh() }
                 }
             }
 
-            // --- Color ---
-            Section {
-                heading: "Color"
-                note: "Salen de matugen. Las superficies llevan el tono del fondo; lo activo usa contenedores tonales y el acento sólido queda para lo principal."
+            GuideText {
+                visible: !pdata.d
+                text: pdata.running ? "Generando…" : "Sin datos: ¿está instalado ~/.local/bin/paleta?"
+                color: "#9a9aa2"
+            }
 
-                SwatchRow {
-                    label: "Superficies"
-                    swatches: [
-                        { name: "background", bg: Design.background, fg: Design.onSurface },
-                        { name: "surface0", bg: Design.surface0, fg: Design.onSurface },
-                        { name: "surface1", bg: Design.surface1, fg: Design.onSurface },
-                        { name: "surface2", bg: Design.surface2, fg: Design.onSurface },
-                        { name: "surface3", bg: Design.surface3, fg: Design.onSurface }
-                    ]
-                }
-                SwatchRow {
-                    label: "Acento y tonales"
-                    swatches: [
-                        { name: "accent", bg: Design.accent, fg: Design.onAccent },
-                        { name: "accentContainer", bg: Design.accentContainer, fg: Design.onAccentContainer },
-                        { name: "tonal", bg: Design.tonal, fg: Design.onTonal },
-                        { name: "outline", bg: Design.outline, fg: Design.background },
-                        { name: "outlineVariant", bg: Design.outlineVariant, fg: Design.onSurface }
-                    ]
-                }
-                SwatchRow {
-                    label: "Texto y estados"
-                    swatches: [
-                        { name: "onSurface", bg: Design.onSurface, fg: Design.background },
-                        { name: "onSurfaceVariant", bg: Design.onSurfaceVariant, fg: Design.background },
-                        { name: "error", bg: Design.error, fg: Design.onError },
-                        { name: "success", bg: Design.success, fg: Design.background },
-                        { name: "warning", bg: Design.warning, fg: Design.background }
-                    ]
-                }
+            // ============ 1 · Del generador ============
+            GeneratorStep {
+                number: "1"
+                data: pdata
+            }
+
+            GuideArrow {
+                visible: !!pdata.d
+                text: "Se reparte en papeles: un solo tono (el «base») con sus vecinos análogos y la regla 60-30-10, con la luminosidad fijada para que todo se lea"
+            }
+
+            // ============ 2 · El tema ============
+            ThemeStep {
+                number: "2"
+                data: pdata
+                tokens: true
+            }
+
+            GuideArrow {
+                text: "Cada papel es un token de Design (services/Design.qml), lo único que usa la shell para el color. Con ellos se definen los materiales, la letra y la forma"
             }
 
             // --- Materiales ---
-            Section {
-                heading: "Materiales"
-                note: "Mica para la barra y los fondos grandes (sobria, se lee con cualquier cosa detrás). Vidrio esmerilado para lo que flota. Sólido para el contenido."
+            GuideStep {
+                number: "3"
+                title: "Materiales"
+                subtitle: "Transparencia de Windows 11, casi opaca: Mica para la barra y los fondos grandes y acrílico para lo que flota, con canto especular arriba. Sólido para el contenido."
 
+                Stage {
+                    id: matStage
                 RowLayout {
                     spacing: 20
                     Repeater {
                         model: [
                             { m: "mica", t: "Mica", d: "Barra · fondos grandes" },
-                            { m: "glass", t: "Vidrio", d: "Paneles · menús · avisos" },
+                            { m: "glass", t: "Acrílico", d: "Paneles · menús · avisos" },
                             { m: "solid", t: "Sólido", d: "Tarjetas · contenido" }
                         ]
                         Surface {
@@ -220,7 +130,7 @@ FloatingWindow {
                             Layout.fillWidth: true
                             implicitHeight: 150
                             material: modelData.m
-                            backdrop: wall
+                            backdrop: matStage.wall
                             scrollY: flick.contentY
                             elevation: modelData.m === "glass" ? 2 : modelData.m === "solid" ? 1 : 0
 
@@ -235,18 +145,20 @@ FloatingWindow {
                         }
                     }
                 }
+                }
             }
 
             // --- Tipografía ---
-            Section {
-                heading: "Tipografía"
-                note: "Adwaita Sans (basada en Inter), con una escala fija. Los números usan cifras tabulares para que no bailen al cambiar."
+            GuideStep {
+                number: "4"
+                title: "Tipografía"
+                subtitle: "Adwaita Sans (basada en Inter), con una escala fija: títulos ligeros y grandes, texto en blanco roto y lo secundario en gris suave. Los números usan cifras tabulares para que no bailen al cambiar."
 
                 Repeater {
                     model: [
-                        { s: Design.display, n: "Display · 34 · ligera", t: "Buenos días" },
-                        { s: Design.title, n: "Título · 22 · media", t: "Ajustes rápidos" },
-                        { s: Design.headline, n: "Encabezado · 16 · seminegrita", t: "Wi-Fi y Bluetooth" },
+                        { s: Design.display, n: "Display · 38 · ligera", t: "Buenos días" },
+                        { s: Design.title, n: "Título · 24 · ligera", t: "Ajustes rápidos" },
+                        { s: Design.headline, n: "Encabezado · 15 · media", t: "Wi-Fi y Bluetooth" },
                         { s: Design.body, n: "Cuerpo · 13 · normal", t: "El texto normal de listas, paneles y notificaciones." },
                         { s: Design.label, n: "Etiqueta · 12 · media", t: "Botones, pestañas y la barra" },
                         { s: Design.caption, n: "Leyenda · 11 · normal", t: "Subtítulos, horas y detalles secundarios" }
@@ -284,14 +196,15 @@ FloatingWindow {
             }
 
             // --- Forma, espacio y elevación ---
-            Section {
-                heading: "Forma, espacio y elevación"
-                note: "Radios moderados (8 en elementos, 12 en paneles), espacios en múltiplos de 4 y sombras amplias y suaves solo en lo que flota."
+            GuideStep {
+                number: "5"
+                title: "Forma, espacio y elevación"
+                subtitle: "Esquinas contenidas (6 en elementos, 10 en paneles), espacios en múltiplos de 4 y sombras amplias y suaves solo en lo que flota."
 
                 RowLayout {
                     spacing: 16
                     Repeater {
-                        model: [{ r: Design.radiusXs, n: "4" }, { r: Design.radiusSm, n: "8" }, { r: Design.radiusMd, n: "12" }, { r: Design.radiusLg, n: "16" }]
+                        model: [{ r: Design.radiusXs, n: Design.radiusXs }, { r: Design.radiusSm, n: Design.radiusSm }, { r: Design.radiusMd, n: Design.radiusMd }, { r: Design.radiusLg, n: Design.radiusLg }]
                         ColumnLayout {
                             required property var modelData
                             spacing: 6
@@ -353,10 +266,15 @@ FloatingWindow {
                 }
             }
 
+            GuideArrow {
+                text: "Con los tokens se construyen los componentes de components/design: los mismos en toda la shell"
+            }
+
             // --- Botones ---
-            Section {
-                heading: "Botones"
-                note: "Relleno de acento para la acción principal, tonal para las demás, con borde o solo texto para lo secundario. Al pasar el ratón y al pulsar, una capa de estado."
+            GuideStep {
+                number: "6"
+                title: "Botones"
+                subtitle: "El acento liso, sin resplandor, para la acción principal, vidrio elevado para las demás, con borde o solo texto para lo secundario. Al pasar el ratón, una capa de estado; al pulsar, se hunden un poco."
 
                 RowLayout {
                     spacing: 10
@@ -386,9 +304,10 @@ FloatingWindow {
             }
 
             // --- Controles ---
-            Section {
-                heading: "Controles"
-                note: "Interruptores y deslizadores finos con la bola en relieve; el segmentado eleva la opción elegida; los campos se hunden y, al enfocarse, el borde pasa a acento."
+            GuideStep {
+                number: "7"
+                title: "Controles"
+                subtitle: "Interruptores y deslizadores finos, lo lleno en el acento; todo se desliza suave, sin rebotes; los campos se hunden y, al enfocarse, el borde pasa a acento (sin halo)."
 
                 GridLayout {
                     columns: 2
@@ -475,18 +394,30 @@ FloatingWindow {
                 }
             }
 
+            GuideArrow {
+                text: "Juntos forman los paneles de la shell (Velure)"
+            }
+
             // --- Ejemplos completos ---
+            GuideStep {
+                number: "8"
+                title: "Aplicado a la shell"
+                subtitle: "Los componentes juntos en paneles de vidrio sobre tu fondo de pantalla: una lista, los ajustes rápidos, una notificación y el aviso de volumen."
+
+                Stage {
+                    id: exStage
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 24
 
                 // Lista
-                Section {
+                GlassCard {
+                    backdrop: exStage.wall
+                    scrollY: flick.contentY
                     Layout.alignment: Qt.AlignTop
                     Layout.preferredWidth: 340
-                    Layout.fillWidth: false
                     heading: "Listas y selección"
-                    note: "Lo seleccionado, en contenedor tonal."
+                    note: "Lo seleccionado, en un velo blanco discreto."
 
                     ColumnLayout {
                         Layout.fillWidth: true
@@ -512,7 +443,7 @@ FloatingWindow {
                     Surface {
                         anchors.fill: parent
                         material: "glass"
-                        backdrop: wall
+                        backdrop: exStage.wall
                         scrollY: flick.contentY
                         elevation: 3
                     }
@@ -575,7 +506,7 @@ FloatingWindow {
                         Surface {
                             anchors.fill: parent
                             material: "glass"
-                            backdrop: wall
+                            backdrop: exStage.wall
                             scrollY: flick.contentY
                             elevation: 2
                         }
@@ -627,7 +558,7 @@ FloatingWindow {
                         Surface {
                             anchors.fill: parent
                             material: "glass"
-                            backdrop: wall
+                            backdrop: exStage.wall
                             scrollY: flick.contentY
                             radius: Design.radiusMd
                             elevation: 2
@@ -650,90 +581,6 @@ FloatingWindow {
                     }
                 }
             }
-        }
-    }
-
-    // Una sección de la guía: tarjeta de vidrio con título, nota y el contenido
-    component Section: Item {
-        id: section
-        property string heading
-        property string note
-        default property alias body: bodyCol.data
-
-        Layout.fillWidth: true
-        implicitWidth: sectionCol.implicitWidth + 44
-        implicitHeight: sectionCol.implicitHeight + 44
-
-        Surface {
-            anchors.fill: parent
-            material: "glass"
-            backdrop: wall
-            scrollY: flick.contentY
-            elevation: 1
-        }
-        ColumnLayout {
-            id: sectionCol
-            anchors.fill: parent
-            anchors.margins: 22
-            spacing: 16
-
-            ColumnLayout {
-                spacing: 2
-                Txt { text: section.heading; textStyle: Design.title }
-                Txt {
-                    Layout.fillWidth: true
-                    text: section.note
-                    wrapMode: Text.Wrap
-                    color: Design.onSurfaceVariant
-                }
-            }
-            ColumnLayout {
-                id: bodyCol
-                Layout.fillWidth: true
-                spacing: 12
-            }
-        }
-    }
-
-    // Fila de muestras de color: { name, bg, fg }
-    component SwatchRow: RowLayout {
-        id: swatchRow
-        property string label
-        property var swatches: []
-        spacing: 10
-
-        Txt {
-            Layout.preferredWidth: 130
-            text: swatchRow.label
-            textStyle: Design.caption
-            color: Design.onSurfaceVariant
-        }
-        Repeater {
-            model: swatchRow.swatches
-            Rectangle {
-                required property var modelData
-                Layout.fillWidth: true
-                implicitHeight: 64
-                radius: Design.radiusSm
-                color: modelData.bg
-                border.color: Design.border
-
-                Txt {
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.margins: 10
-                    text: "Aa"
-                    textStyle: Design.headline
-                    color: parent.modelData.fg
-                }
-                Txt {
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
-                    anchors.margins: 10
-                    text: parent.modelData.name
-                    textStyle: Design.caption
-                    color: parent.modelData.fg
-                    opacity: 0.85
                 }
             }
         }

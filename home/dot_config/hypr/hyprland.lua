@@ -437,3 +437,11 @@ hl.window_rule({
 	center = true,
 })
 
+-- Guía de paletas (quickshell ipc call paletas toggle)
+hl.window_rule({
+	match = { class = "^org.quickshell$", title = "^Paletas$" },
+	float = true,
+	size = { 1280, 880 },
+	center = true,
+})
+
