@@ -22,3 +22,5 @@ image/x-portable-graymap=swayimg.desktop
 image/x-portable-pixmap=swayimg.desktop
 image/x-targa=swayimg.desktop
 image/x-tga=swayimg.desktop
+application/vnd.appimage=abrir-appimage.desktop
+application/x-iso9660-appimage=abrir-appimage.desktop

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Abre un AppImage desde el gestor de archivos (doble clic en Thunar): le da permiso de
+# ejecución si no lo tiene y lo lanza desde su carpeta, separado del gestor.
+set -u
+
+archivo=${1:-}
+if [[ -z $archivo || ! -f $archivo ]]; then
+	notify-send -a AppImage "No se pudo abrir" "No existe: ${archivo:-(sin archivo)}"
+	exit 1
+fi
+
+if [[ ! -x $archivo ]] && ! chmod u+x -- "$archivo"; then
+	notify-send -a AppImage "No se pudo abrir" "Sin permiso para hacer ejecutable: $(basename -- "$archivo")"
+	exit 1
+fi
+
+cd -- "$(dirname -- "$archivo")" || exit 1
+exec setsid -f -- "$archivo" >/dev/null 2>&1
