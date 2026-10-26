@@ -1,7 +1,7 @@
 import QtQuick
 import qs.services
 
-// Opción; la elegida (selected) va en contenedor tonal (diseño Prisma).
+// Opción; la elegida (selected) va en contenedor tonal (diseño Velure).
 // Con icono y sin texto queda casi cuadrada.
 Rectangle {
     id: chip

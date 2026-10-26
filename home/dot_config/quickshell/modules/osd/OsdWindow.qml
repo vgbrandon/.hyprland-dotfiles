@@ -55,7 +55,7 @@ PanelWindow {
             Behavior on y { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
         }
 
-        // Vidrio con sombra suave (diseño Prisma)
+        // Vidrio con sombra suave (diseño Velure)
         Rectangle {
             anchors.fill: parent
             radius: Design.radiusMd

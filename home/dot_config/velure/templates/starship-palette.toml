@@ -1,5 +1,5 @@
 # Generado por matugen desde el fondo de pantalla. No editar a mano.
-[palettes.matugen]
+[palettes.velure]
 primary = "{{colors.primary.default.hex}}"
 accent = "{{colors.tertiary.default.hex}}"
 accent_alt = "{{colors.magenta.default.hex}}"

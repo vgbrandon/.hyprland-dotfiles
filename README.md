@@ -4,7 +4,7 @@ Configuración modular para Arch Linux + Hyprland, gestionada con [chezmoi](http
 
 ![Escritorio: barra, reloj y visualizador de audio sobre el fondo](docs/img/escritorio.png)
 
-La interfaz (barra, paneles, lanzador, bloqueo…) es una shell propia en Quickshell con su sistema de diseño, [Prisma](docs/prisma.md).
+La interfaz (barra, paneles, lanzador, bloqueo…) es una shell propia en Quickshell con su sistema de diseño, [Velure](docs/velure.md).
 
 ---
 
@@ -85,7 +85,7 @@ El repo tiene dos partes claramente separadas:
 ├── .chezmoiroot        → le dice a chezmoi que la raíz real es "home/"
 ├── install.sh          → bootstrap: instala chezmoi y aplica el repo
 ├── assets/             → binarios que NO son dotfiles
-├── docs/               → documentación adicional (prisma.md: el diseño de la shell; img/: capturas)
+├── docs/               → documentación adicional (velure.md: el diseño de la shell; img/: capturas)
 ├── scripts/            → scripts sueltos de mantenimiento, fuera de chezmoi
 │
 └── home/               → todo lo que chezmoi gestiona vive aquí

@@ -1,7 +1,7 @@
 import QtQuick
 import qs.services
 
-// Botón de texto con icono opcional (diseño Prisma, como Btn).
+// Botón de texto con icono opcional (diseño Velure, como Btn).
 // accent = relleno de acento (lo principal); normal = tonal; flat = sin fondo hasta
 // pasar el ratón; small = más bajo (cabeceras y pies).
 Rectangle {

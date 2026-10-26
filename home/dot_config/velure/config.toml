@@ -14,68 +14,68 @@ blue = { color = "#61afef", blend = true }
 magenta = { color = "#c678dd", blend = true }
 
 [templates.zed]
-input_path = '~/.config/matugen/templates/zed.json'
-output_path = '~/.config/zed/themes/matugen.json'
+input_path = '~/.config/velure/templates/zed.json'
+output_path = '~/.config/zed/themes/velure.json'
 
-# kitty: los colores se cargan con "globinclude matugen.conf" en kitty.conf.
+# kitty: los colores se cargan con "globinclude velure.conf" en kitty.conf.
 # SIGUSR1 hace que las ventanas de kitty abiertas recarguen la config al instante.
 [templates.kitty]
-input_path = '~/.config/matugen/templates/kitty.conf'
-output_path = '~/.config/kitty/matugen.conf'
+input_path = '~/.config/velure/templates/kitty.conf'
+output_path = '~/.config/kitty/velure.conf'
 post_hook = 'pkill -USR1 -x kitty || true'
 
 # starship: la paleta se une con starship.toml (ver scripts/starship.sh).
 # Starship lee la config en cada prompt, así que el cambio se ve al instante.
 [templates.starship]
-input_path = '~/.config/matugen/templates/starship-palette.toml'
-output_path = '~/.config/starship/palette-matugen.toml'
-post_hook = 'sh ~/.config/matugen/scripts/starship.sh --notify'
+input_path = '~/.config/velure/templates/starship-palette.toml'
+output_path = '~/.config/starship/palette-velure.toml'
+post_hook = 'sh ~/.config/velure/scripts/starship.sh --notify'
 
 # eza (ls): tema de colores; los iconos toman el color de cada tipo de archivo
 [templates.eza]
-input_path = '~/.config/matugen/templates/eza-theme.yml'
+input_path = '~/.config/velure/templates/eza-theme.yml'
 output_path = '~/.config/eza/theme.yml'
 
-# GTK3: tema propio "Matugen" (adw-gtk3-dark + colores). gtk-reload.sh hace que las
+# GTK3: tema propio "Velure" (adw-gtk3-dark + colores). gtk-reload.sh hace que las
 # apps GTK3 abiertas lo recarguen (saltando a su copia gemela, sin pasar por otro tema).
 [templates.gtk3]
-input_path = '~/.config/matugen/templates/gtk3-theme.css'
-output_path = '~/.local/share/themes/Matugen/gtk-3.0/gtk.css'
+input_path = '~/.config/velure/templates/gtk3-theme.css'
+output_path = '~/.local/share/themes/Velure/gtk-3.0/gtk.css'
 
 [templates.gtk3-colors]
-input_path = '~/.config/matugen/templates/gtk.css'
-output_path = '~/.local/share/themes/Matugen/gtk-3.0/colors.css'
-post_hook = 'sh ~/.config/matugen/scripts/gtk-reload.sh gtk'
+input_path = '~/.config/velure/templates/gtk.css'
+output_path = '~/.local/share/themes/Velure/gtk-3.0/colors.css'
+post_hook = 'sh ~/.config/velure/scripts/gtk-reload.sh gtk'
 
 # GTK4/libadwaita: lee ~/.config/gtk-4.0/gtk.css al abrir cada app
 [templates.gtk4]
-input_path = '~/.config/matugen/templates/gtk.css'
+input_path = '~/.config/velure/templates/gtk.css'
 output_path = '~/.config/gtk-4.0/gtk.css'
 
-# Iconos: tema "Matugen" (Adwaita con carpetas del color del fondo). gtk-reload.sh
+# Iconos: tema "Velure" (Adwaita con carpetas del color del fondo). gtk-reload.sh
 # hace que las apps GTK abiertas los recarguen, igual que el tema GTK3.
 [templates.icons]
-input_path = '~/.config/matugen/templates/icons-color'
-output_path = '~/.local/share/icons/Matugen/.color'
-post_hook = 'python3 ~/.config/matugen/scripts/icons.py && sh ~/.config/matugen/scripts/gtk-reload.sh icons'
+input_path = '~/.config/velure/templates/icons-color'
+output_path = '~/.local/share/icons/Velure/.color'
+post_hook = 'python3 ~/.config/velure/scripts/icons.py && sh ~/.config/velure/scripts/gtk-reload.sh icons'
 
 # Firefox (extensión Pywalfox): lee los colores en formato de pywal desde
 # ~/.cache/wal/colors.json; "pywalfox update" le avisa a Firefox al instante.
 [templates.pywalfox]
-input_path = '~/.config/matugen/templates/pywalfox-colors.json'
+input_path = '~/.config/velure/templates/pywalfox-colors.json'
 output_path = '~/.cache/wal/colors.json'
 post_hook = 'command -v pywalfox >/dev/null && pywalfox update || true'
 
 # Firefox al arrancar: userChrome.css con los mismos colores, para que no se vea
 # el tema por defecto antes de que cargue Pywalfox (ver scripts/firefox.sh)
 [templates.firefox]
-input_path = '~/.config/matugen/templates/firefox-userChrome.css'
-output_path = '~/.cache/matugen/firefox-userChrome.css'
-post_hook = 'sh ~/.config/matugen/scripts/firefox.sh'
+input_path = '~/.config/velure/templates/firefox-userChrome.css'
+output_path = '~/.cache/velure/firefox-userChrome.css'
+post_hook = 'sh ~/.config/velure/scripts/firefox.sh'
 
-# tidal-hifi: tema "matugen" (seleccionado en su config como user:matugen.css).
+# tidal-hifi: tema "velure" (seleccionado en su config como user:velure.css).
 # Tidal lo aplica al cargar la página: si está abierto se recarga (Ctrl+R).
 [templates.tidal]
-input_path = '~/.config/matugen/templates/tidal.css'
-output_path = '~/.config/tidal-hifi/themes/matugen.css'
-post_hook = 'sh ~/.config/matugen/scripts/tidal.sh'
+input_path = '~/.config/velure/templates/tidal.css'
+output_path = '~/.config/tidal-hifi/themes/velure.css'
+post_hook = 'sh ~/.config/velure/scripts/tidal.sh'

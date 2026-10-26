@@ -7,7 +7,7 @@ import qs.components.containers
 import qs.components.design
 import qs.services
 
-// Lanzador como paleta de comandos (diseño Prisma): buscador y una lista con las
+// Lanzador como paleta de comandos (diseño Velure): buscador y una lista con las
 // aplicaciones y las acciones de la shell, cada acción con su atajo a la derecha. La
 // lógica está en services/Launcher.qml.
 //   Flechas, Tab o Ctrl + j/k (n/p) = moverse; Enter = abrir o hacer; Esc = cerrar

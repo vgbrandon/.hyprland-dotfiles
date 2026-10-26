@@ -4,11 +4,11 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// Diseño Prisma. Colores tonales de Material You
+// Diseño Velure. Colores tonales de Material You
 // (de matugen), materiales Mica (barra) y vidrio esmerilado (paneles) y detalles finos
 // de macOS: bordes de 1 px con brillo arriba, sombras suaves, tipografía nítida.
 // Lo usan la guía de estilo (modules/styleguide), los componentes de components/design
-// y toda la shell (la barra, los paneles…). Documentado en docs/prisma.md de los dotfiles.
+// y toda la shell (la barra, los paneles…). Documentado en docs/velure.md de los dotfiles.
 //   quickshell ipc call styleguide toggle
 Singleton {
     id: root

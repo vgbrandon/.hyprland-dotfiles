@@ -22,7 +22,7 @@ import qs.modules.system
 import qs.modules.updates
 import qs.services
 
-// Barra (diseño Prisma, ver docs/prisma.md): de Mica, pegada a un borde de lado a
+// Barra (diseño Velure, ver docs/velure.md): de Mica, pegada a un borde de lado a
 // lado, con los elementos sueltos sobre ella. Arriba, abajo o en un lateral (Ajustes →
 // Barra); en los laterales va en columna y sin lo que no cabe (títulos, CPU y RAM).
 //   Inicio: lanzador, escritorios y ventana activa

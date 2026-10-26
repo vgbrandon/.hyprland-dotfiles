@@ -7,8 +7,8 @@ import qs.components.design
 import qs.services
 
 // Contenido de la pantalla de inicio de sesión en un monitor. Mismo diseño que la
-// pantalla de bloqueo (LockContent.qml de la sesión normal, diseño Prisma
-// de docs/prisma.md): reloj grande a la izquierda, tarjeta de vidrio con usuario y
+// pantalla de bloqueo (LockContent.qml de la sesión normal, diseño Velure
+// de docs/velure.md): reloj grande a la izquierda, tarjeta de vidrio con usuario y
 // contraseña a la derecha y una mini barra abajo (sesión y energía). En los demás
 // monitores, solo el reloj.
 Item {

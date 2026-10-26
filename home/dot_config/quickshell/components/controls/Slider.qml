@@ -3,7 +3,7 @@ import QtQuick.Effects
 import qs.services
 
 // Barra fina que se llena según "value" (0..1). Si es interactiva lleva la bola en
-// relieve (diseño Prisma) y un clic o un arrastre emite moved(fracción); si
+// relieve (diseño Velure) y un clic o un arrastre emite moved(fracción); si
 // no, solo muestra el valor (uso de disco, subidas…).
 Item {
     id: root

@@ -49,11 +49,11 @@ Singleton {
     Behavior on blue { ColorAnimation { duration: 600 } }
 
     // Genera la paleta para un fondo nuevo (lo llama Wallpaper). matugen también
-    // genera las plantillas de ~/.config/matugen/config.toml (tema de Zed)
+    // genera las plantillas de ~/.config/velure/config.toml (tema de Zed)
     function setWallpaper(path) {
         if (path === "" || path === wallpaper) return;
         wallpaper = path;
-        matugenProc.command = ["matugen", "image", path, "--json", "hex", "--prefer", "saturation", "-m", "dark", "-q"];
+        matugenProc.command = ["matugen", "image", path, "-c", Quickshell.env("HOME") + "/.config/velure/config.toml", "--json", "hex", "--prefer", "saturation", "-m", "dark", "-q"];
         matugenProc.running = true;
     }
 
@@ -137,14 +137,14 @@ Singleton {
     readonly property string font: "Adwaita Sans"
     readonly property string monoFont: "JetBrainsMono Nerd Font Mono"
     readonly property string iconFont: "JetBrainsMono Nerd Font Propo"
-    // Fuente de iconos propia (Prisma Icons), para los que no trae la Nerd Font, como el
+    // Fuente de iconos propia (Velure Icons), para los que no trae la Nerd Font, como el
     // logo de Bitwarden. Se genera con scripts/build-icons.py desde assets/icons/*.svg;
     // Icon la usa cuando la otra no tiene el carácter.
     FontLoader {
-        id: prismaIcons
-        source: Quickshell.shellPath("assets/fonts/PrismaIcons.otf")
+        id: velureIcons
+        source: Quickshell.shellPath("assets/fonts/VelureIcons.otf")
     }
-    readonly property string prismaIconFont: prismaIcons.name
+    readonly property string velureIconFont: velureIcons.name
     readonly property string iBitwarden: String.fromCodePoint(0x100000)
     readonly property string iOpenCode: String.fromCodePoint(0x100001)
     readonly property int fontSize: 11

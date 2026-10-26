@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Tema de iconos "Matugen": hereda Adwaita y recolorea las carpetas con el tono
+"""Tema de iconos "Velure": hereda Adwaita y recolorea las carpetas con el tono
 del color principal del fondo (mantiene la luz y el sombreado de cada parte).
 Lo ejecuta matugen al cambiar el fondo; el color lo deja la plantilla en .color."""
 import colorsys, glob, os, re
 
 src = "/usr/share/icons/Adwaita/scalable"
-dst = os.path.expanduser("~/.local/share/icons/Matugen")
+dst = os.path.expanduser("~/.local/share/icons/Velure")
 icons = [f"{src}/places/folder{s}.svg" for s in ["", "-documents", "-download", "-drag-accept",
          "-music", "-pictures", "-publicshare", "-remote", "-templates", "-videos"]]
 icons += [f"{src}/places/user-home.svg", f"{src}/places/user-desktop.svg",
@@ -35,7 +35,7 @@ for path in icons:
     open(out, "w").write(svg)
 
 open(f"{dst}/index.theme", "w").write("""[Icon Theme]
-Name=Matugen
+Name=Velure
 Comment=Adwaita con carpetas del color del fondo (generado por matugen)
 Inherits=Adwaita,hicolor
 Directories=scalable/places,scalable/mimetypes

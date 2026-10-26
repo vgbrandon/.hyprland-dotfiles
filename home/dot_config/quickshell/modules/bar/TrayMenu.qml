@@ -7,7 +7,7 @@ import qs.components.containers
 import qs.components.design
 import qs.services
 
-// Menú de una app de la bandeja (clic derecho), con el diseño Prisma en lugar del menú
+// Menú de una app de la bandeja (clic derecho), con el diseño Velure en lugar del menú
 // nativo de Qt. Los submenús se abren en el mismo panel, con una fila para volver.
 //   TrayMenu { id: menu; anchorItem: icono; menu: item.menu }   →   menu.toggle()
 BarPopup {

@@ -5,7 +5,7 @@ import qs.components.base
 import qs.components.design
 import qs.services
 
-// Guía de estilo del diseño Prisma: todos los tokens y los
+// Guía de estilo del diseño Velure: todos los tokens y los
 // componentes de ejemplo juntos, sobre el fondo de pantalla, para decidir el diseño
 // antes de aplicarlo. Arriba, una barra de ejemplo. Los ejemplos se pueden usar
 // (pasar el ratón, pulsar, encender…). Tokens en services/Design.qml.
@@ -98,7 +98,7 @@ FloatingWindow {
             Txt {
                 Layout.leftMargin: 12
                 Layout.maximumWidth: 260
-                text: "Guía de estilo — Prisma"
+                text: "Guía de estilo — Velure"
                 textStyle: Design.label
                 color: Design.onSurfaceVariant
             }
@@ -152,7 +152,7 @@ FloatingWindow {
             ColumnLayout {
                 spacing: 4
                 Txt {
-                    text: "Prisma"
+                    text: "Velure"
                     textStyle: Design.display
                     style: Text.Raised
                     styleColor: Design.alpha("#000000", 0.25)

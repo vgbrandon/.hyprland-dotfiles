@@ -6,8 +6,8 @@ import qs.components.containers
 import qs.components.design
 import qs.services
 
-// Panel del pomodoro (clic en el temporizador de la barra), con el diseño Prisma
-// (docs/prisma.md de los dotfiles): fase, anillo con el tiempo, rondas del ciclo, controles,
+// Panel del pomodoro (clic en el temporizador de la barra), con el diseño Velure
+// (docs/velure.md de los dotfiles): fase, anillo con el tiempo, rondas del ciclo, controles,
 // duraciones y opciones. El estado está en Pomodoro.
 BarPopup {
     id: panel

@@ -81,7 +81,7 @@ PanelWindow {
                 }
             }
             clip: true
-            // Vidrio casi opaco: estas capas no las desenfoca Hyprland (docs/prisma.md)
+            // Vidrio casi opaco: estas capas no las desenfoca Hyprland (docs/velure.md)
             radius: Design.radiusMd
             color: Design.alpha(win.cardColor, Design.glassOpacity < 1 ? 0.94 : 1)
             border.color: Design.border

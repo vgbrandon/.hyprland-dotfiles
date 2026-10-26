@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Genera la fuente de iconos propia de la shell (Prisma Icons).
+"""Genera la fuente de iconos propia de la shell (Velure Icons).
 
 Los iconos que no trae la fuente de iconos (Material Design Icons de la Nerd Font),
 como el logo de Bitwarden, se dibujan como letras de una fuente propia: así se ven
@@ -7,13 +7,13 @@ igual de nítidos que el resto (el sistema los ajusta a los píxeles como el tex
 
 Entrada: assets/icons/<nombre>.svg (trazados en una caja de 24×24) y
 assets/icons/iconos.json ({ "nombre": "código en hex" }, en el área privada U+100000…,
-que la Nerd Font no usa). Salida: assets/fonts/PrismaIcons.otf.
+que la Nerd Font no usa). Salida: assets/fonts/VelureIcons.otf.
 Cada icono se escala para tener el mismo tamaño y la misma altura que los de la Nerd
 Font (su lado más largo mide unos 900 en una fuente de 1000, centrado en y = 360).
 
 Uso (necesita fonttools; sin instalarlo en el sistema):
-  python -m venv ~/.cache/prisma-icons-venv && ~/.cache/prisma-icons-venv/bin/pip install fonttools
-  ~/.cache/prisma-icons-venv/bin/python scripts/build-icons.py
+  python -m venv ~/.cache/velure-icons-venv && ~/.cache/velure-icons-venv/bin/pip install fonttools
+  ~/.cache/velure-icons-venv/bin/python scripts/build-icons.py
 Después, reiniciar Quickshell. En QML: Theme.i<Nombre>, p. ej. Theme.iBitwarden.
 """
 import json
@@ -29,13 +29,13 @@ from fontTools.svgLib.path import SVGPath
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ICONS = os.path.join(ROOT, "assets", "icons")
-OUT = os.path.join(ROOT, "assets", "fonts", "PrismaIcons.otf")
+OUT = os.path.join(ROOT, "assets", "fonts", "VelureIcons.otf")
 
 UPEM = 1000
 ASCENT, DESCENT = 1020, -300   # como la Nerd Font, para que la línea mida lo mismo
 HEIGHT = 900                   # alto de un icono
 CENTER_Y = 360                 # centro vertical de los iconos de la Nerd Font
-FAMILY = "Prisma Icons"
+FAMILY = "Velure Icons"
 
 
 def draw_icon(path):

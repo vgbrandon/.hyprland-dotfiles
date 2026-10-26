@@ -11,7 +11,7 @@ import qs.components.buttons
 import qs.components.design
 
 // Contenido de la pantalla de bloqueo de un monitor (lo usa LockSurface), con el
-// diseño Prisma (docs/prisma.md): reloj grande a la izquierda, tarjeta de vidrio
+// diseño Velure (docs/velure.md): reloj grande a la izquierda, tarjeta de vidrio
 // con la contraseña a la derecha y una mini barra abajo (reproductor y energía). En
 // los demás monitores, solo el reloj. La de inicio de sesión (quickshell-greeter) es igual.
 Item {

@@ -1,10 +1,10 @@
 {
   "$schema": "https://zed.dev/schema/themes/v0.2.0.json",
-  "name": "Matugen",
+  "name": "Velure",
   "author": "matugen (generado desde el fondo de pantalla)",
   "themes": [
     {
-      "name": "Matugen",
+      "name": "Velure",
       "appearance": "dark",
       "style": {
         "background": "{{colors.surface_container_low.default.hex}}",

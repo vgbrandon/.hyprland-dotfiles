@@ -1,4 +1,4 @@
-# Prisma
+# Velure
 
 El sistema de diseño de la shell. Se llama así porque, como un prisma, es vidrio que
 toma sus colores de la luz que recibe: aquí, del fondo de pantalla.
@@ -7,7 +7,7 @@ Junta lo funcional de **Material You**, el acabado de **macOS** y el material de
 **Windows 11**. Los colores salen siempre de **matugen** (del fondo de pantalla), así
 que todo cambia con el fondo.
 
-![Guía de estilo de Prisma: color, materiales, tipografía, forma, botones, controles y listas](img/prisma-guia.png)
+![Guía de estilo de Velure: color, materiales, tipografía, forma, botones, controles y listas](img/velure-guia.png)
 
 La guía de estilo en vivo se abre con `quickshell ipc call styleguide toggle` (o «Guía de
 estilo» en el lanzador).
@@ -78,7 +78,7 @@ nueva con material transparente necesita su namespace en esa regla.
 
 Fuente `Adwaita Sans` (basada en Inter); `JetBrainsMono Nerd Font` para lo monoespaciado.
 Los iconos siguen siendo los de Nerd Font (`Theme.i*`). Los que no trae (como el logo de
-Bitwarden) están en una fuente propia, **Prisma Icons** (`assets/fonts/PrismaIcons.otf`),
+Bitwarden) están en una fuente propia, **Velure Icons** (`assets/fonts/VelureIcons.otf`),
 para que se vean igual de nítidos: se dibujan como letras, no como imágenes. Para añadir
 uno: su SVG en `assets/icons/<nombre>.svg` (caja de 24×24), su código en
 `assets/icons/iconos.json` (área privada `U+100000…`), `scripts/build-icons.py` (ver su
@@ -205,12 +205,12 @@ lo mismo con su estructura de `/etc/greetd/quickshell`.
 
 | Parte | Diseño |
 | --- | --- |
-| Barra | Prisma, en cualquier borde (Ajustes → Barra). En los laterales va en columna, sin títulos ni CPU/RAM, y en monitores bajos en modo compacto. La barra clásica de píldoras se retiró |
-| Paneles de la barra, ajustes, notificaciones, IA, lanzador, portapapeles, energía, atajos, pantallas, teclado, perfil, fondos | Prisma |
-| Notificaciones emergentes y aviso de volumen/brillo | Prisma |
-| Selector de fondos | Prisma, en dos formas a elegir en Ajustes → Selector de fondos: **carrusel** (el señalado grande en el centro y los vecinos más pequeños; `WallpaperCarousel.qml`) o **cuadrícula** a pantalla completa con buscador (`WallpaperGrid.qml`). Comparten `WallpaperThumb.qml` y `PickerLayer.qml` (la capa que oscurece el escritorio) |
-| Lanzador | Prisma, como paleta de comandos (`modules/launcher/LauncherWindow.qml`): apps y acciones de la shell en una lista agrupada; las acciones muestran su atajo de `hyprland.lua` (por la descripción del bind). Las acciones están en `services/Launcher.qml` (`actions`) |
-| Sonido | Prisma (`modules/audio/`): panel junto al volumen de la barra con salida, entrada y apps; lógica en `services/Audio.qml` |
-| Notas | Prisma (`modules/notes/NotesWindow.qml`): lista con buscador y editor de texto simple; las notas son .txt en `~/Notas` (`services/Notes.qml`) |
-| Reloj del escritorio | Prisma, apilado como el de la pantalla de bloqueo (`modules/wallpaper/DesktopClock.qml`) |
-| Pantalla de bloqueo y de inicio de sesión | Prisma (ver su sección) |
+| Barra | Velure, en cualquier borde (Ajustes → Barra). En los laterales va en columna, sin títulos ni CPU/RAM, y en monitores bajos en modo compacto. La barra clásica de píldoras se retiró |
+| Paneles de la barra, ajustes, notificaciones, IA, lanzador, portapapeles, energía, atajos, pantallas, teclado, perfil, fondos | Velure |
+| Notificaciones emergentes y aviso de volumen/brillo | Velure |
+| Selector de fondos | Velure, en dos formas a elegir en Ajustes → Selector de fondos: **carrusel** (el señalado grande en el centro y los vecinos más pequeños; `WallpaperCarousel.qml`) o **cuadrícula** a pantalla completa con buscador (`WallpaperGrid.qml`). Comparten `WallpaperThumb.qml` y `PickerLayer.qml` (la capa que oscurece el escritorio) |
+| Lanzador | Velure, como paleta de comandos (`modules/launcher/LauncherWindow.qml`): apps y acciones de la shell en una lista agrupada; las acciones muestran su atajo de `hyprland.lua` (por la descripción del bind). Las acciones están en `services/Launcher.qml` (`actions`) |
+| Sonido | Velure (`modules/audio/`): panel junto al volumen de la barra con salida, entrada y apps; lógica en `services/Audio.qml` |
+| Notas | Velure (`modules/notes/NotesWindow.qml`): lista con buscador y editor de texto simple; las notas son .txt en `~/Notas` (`services/Notes.qml`) |
+| Reloj del escritorio | Velure, apilado como el de la pantalla de bloqueo (`modules/wallpaper/DesktopClock.qml`) |
+| Pantalla de bloqueo y de inicio de sesión | Velure (ver su sección) |

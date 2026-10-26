@@ -5,7 +5,7 @@ import qs.components.design
 import qs.services
 
 // Reloj grande en el escritorio (va dentro de la capa del fondo, debajo de las
-// ventanas), con el diseño Prisma y a juego con la pantalla de bloqueo: horas sobre
+// ventanas), con el diseño Velure y a juego con la pantalla de bloqueo: horas sobre
 // minutos (en acento), juntos, y la fecha completa debajo, alineado a la derecha.
 Item {
     id: root

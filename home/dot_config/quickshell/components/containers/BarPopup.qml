@@ -181,7 +181,7 @@ PopupWindow {
             radius: Design.radiusMd
             color: "transparent"
 
-            // Vidrio (docs/prisma.md): tinte translúcido, borde de 1 px y brillo en el canto
+            // Vidrio (docs/velure.md): tinte translúcido, borde de 1 px y brillo en el canto
             Rectangle {
                 id: background
                 anchors.fill: parent

@@ -6,7 +6,7 @@ import qs.components.containers
 import qs.components.design
 import qs.services
 
-// Panel de Bitwarden (Super + B o el logo de la barra), diseño Prisma. Según el estado:
+// Panel de Bitwarden (Super + B o el logo de la barra), diseño Velure. Según el estado:
 // falta rbw, primera vez (correo), bóveda cerrada, pregunta de rbw (contraseña maestra,
 // 2FA…), la bóveda con buscador o el generador. La lógica está en services/Bitwarden.qml;
 // el panel sigue a Bitwarden.open (lo abre el IPC o una pregunta de rbw).

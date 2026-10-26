@@ -83,7 +83,7 @@ PanelWindow {
             }
         }
 
-        // Vidrio (docs/prisma.md)
+        // Vidrio (docs/velure.md)
         color: Design.alpha(Design.glassTint, Design.glassOpacity)
         border.color: Design.border
         border.width: 1

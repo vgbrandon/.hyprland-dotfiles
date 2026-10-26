@@ -39,7 +39,7 @@ Rectangle {
     }
 
     implicitHeight: content.implicitHeight + 24
-    // Superficie sólida con el canto del vidrio (diseño Prisma)
+    // Superficie sólida con el canto del vidrio (diseño Velure)
     radius: Design.radiusMd
     color: Design.surface1
     border.color: entry.urgency === NotificationUrgency.Critical ? Design.error : Design.border

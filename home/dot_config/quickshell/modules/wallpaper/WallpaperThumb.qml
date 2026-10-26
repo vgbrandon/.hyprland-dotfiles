@@ -4,7 +4,7 @@ import qs.components.base
 import qs.components.design
 import qs.services
 
-// Miniatura de un fondo (diseño Prisma): esquinas redondeadas; el fondo actual con
+// Miniatura de un fondo (diseño Velure): esquinas redondeadas; el fondo actual con
 // borde de acento y una marca; con el ratón encima (o seleccionada con el teclado),
 // un aro claro. Con full (cuando se ve grande) carga la imagen original a buena
 // resolución encima de la miniatura de la caché. La usan el carrusel y la cuadrícula.

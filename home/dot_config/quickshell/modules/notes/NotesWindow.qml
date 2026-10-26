@@ -6,7 +6,7 @@ import qs.components.containers
 import qs.components.design
 import qs.services
 
-// Notas simples (Super + N), con el diseño Prisma: a la izquierda la lista con buscador
+// Notas simples (Super + N), con el diseño Velure: a la izquierda la lista con buscador
 // y "nueva"; a la derecha la nota: título (renombra el archivo), el texto y borrar. Se
 // guarda sola. Las notas son .txt en ~/Notas (services/Notes.qml).
 //   quickshell ipc call notes toggle | create

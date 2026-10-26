@@ -9,7 +9,7 @@ import qs.components.controls
 import qs.components.design
 import qs.services
 
-// Panel de sonido (clic en el volumen de la barra), con el diseño Prisma: volumen y
+// Panel de sonido (clic en el volumen de la barra), con el diseño Velure: volumen y
 // dispositivo de salida, volumen y dispositivo de entrada, y el volumen de cada app que
 // suena. Lógica en services/Audio.qml.
 BarPopup {

@@ -2,7 +2,7 @@
 # Copia el userChrome.css generado por matugen a los perfiles de Firefox en uso
 # y activa la opción que permite usarlo (user.js). Los cambios de userChrome.css
 # se ven al reiniciar Firefox; en vivo los colores los aplica Pywalfox.
-css="$HOME/.cache/matugen/firefox-userChrome.css"
+css="$HOME/.cache/velure/firefox-userChrome.css"
 [ -f "$css" ] || exit 0
 pref='user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);'
 
