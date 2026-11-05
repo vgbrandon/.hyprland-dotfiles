@@ -66,7 +66,7 @@ Item {
         anchors.margins: -4
         visible: t.selected && !t.clean
         color: "transparent"
-        radius: 4
+        radius: Design.corner(4)
         border.width: 1
         border.color: Design.accent
     }

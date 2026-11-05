@@ -138,7 +138,7 @@ OverlayWindow {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: nameInput.contentWidth + 16
                     height: 2
-                    radius: 1
+                    radius: Design.corner(1)
                     color: Theme.primary
                     visible: nameInput.activeFocus
                 }

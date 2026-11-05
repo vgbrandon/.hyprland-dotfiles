@@ -131,7 +131,7 @@ OverlayWindow {
 
                     width: win.box + 8
                     height: win.box + 8
-                    radius: Design.radiusSm + 2
+                    radius: Design.corner(Design.radiusSm + 2)
                     color: "transparent"
                     border.width: chosen ? 2 : 0
                     border.color: Design.accent

@@ -81,7 +81,7 @@ PanelWindow {
         Rectangle {
             anchors.fill: parent
             color: Design.alpha(Design.micaTint, Design.micaOpacity)
-            // Flotante: canto alrededor y esquinas redondeadas
+            // Flotante: canto alrededor y esquinas (rectas si así está en Ajustes)
             radius: Config.barFloating ? Design.radiusLg : 0
             Behavior on radius {
                 NumberAnimation { duration: Design.normal }

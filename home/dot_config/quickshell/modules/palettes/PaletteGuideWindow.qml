@@ -100,7 +100,7 @@ FloatingWindow {
                     Layout.alignment: Qt.AlignTop
                     implicitWidth: refreshLabel.implicitWidth + 28
                     implicitHeight: 34
-                    radius: 6
+                    radius: Design.corner(6)
                     color: refreshMouse.containsMouse ? "#2a2a30" : "#1e1e22"
                     border.color: "#33333a"
                     GuideText { id: refreshLabel; anchors.centerIn: parent; text: pdata.running ? "Generando…" : "Volver a generar"; color: "#e6e6e6"; size: 12 }
@@ -146,7 +146,7 @@ FloatingWindow {
                 Rectangle {
                     Layout.fillWidth: true
                     implicitHeight: shellCol.implicitHeight
-                    radius: 12
+                    radius: Design.corner(12)
                     color: Design.background
                     border.color: Design.border
                     clip: true

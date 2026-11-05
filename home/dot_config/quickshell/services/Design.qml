@@ -152,10 +152,16 @@ Singleton {
     readonly property var caption: ({ size: 11, weight: Font.Normal })
 
     // --- Forma: esquinas contenidas, lo de dentro más pequeño que lo de fuera ---
-    readonly property int radiusXs: 3
-    readonly property int radiusSm: 6
-    readonly property int radiusMd: 10
-    readonly property int radiusLg: 12
+    // Con Ajustes → Esquinas redondeadas apagado, todos valen 0
+    readonly property int radiusXs: corner(3)
+    readonly property int radiusSm: corner(6)
+    readonly property int radiusMd: corner(10)
+    readonly property int radiusLg: corner(12)
+    // Para los radios que no son un token (r). No pasan por aquí los círculos puros,
+    // los interruptores, los deslizadores, las barras de progreso ni los escritorios
+    function corner(r) {
+        return Config.rounded ? r : 0;
+    }
 
     // Ancho de los paneles que se abren desde la barra (todos iguales; los menús, no)
     readonly property int popupWidth: 360

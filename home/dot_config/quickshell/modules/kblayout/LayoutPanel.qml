@@ -189,7 +189,7 @@ BarPopup {
 
         implicitWidth: Math.max(32, codeLabel.implicitWidth + 12)
         implicitHeight: 22
-        radius: 6
+        radius: Design.corner(6)
         color: active ? Theme.primary : Theme.surfaceHigh
 
         Text {

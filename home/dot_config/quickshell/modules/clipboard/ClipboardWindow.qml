@@ -126,7 +126,7 @@ OverlayWindow {
                     visible: row.modelData.image
                     Layout.preferredWidth: 136
                     Layout.preferredHeight: 76
-                    radius: 8
+                    radius: Design.corner(8)
                     color: Theme.surfaceHigh
                     clip: true
 

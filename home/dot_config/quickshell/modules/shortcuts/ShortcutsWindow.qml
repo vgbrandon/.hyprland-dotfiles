@@ -153,7 +153,7 @@ OverlayWindow {
                                                 required property string modelData
                                                 implicitWidth: keyLabel.implicitWidth + 12
                                                 implicitHeight: 22
-                                                radius: 6
+                                                radius: Design.corner(6)
                                                 color: Theme.surfaceHigh
 
                                                 Text {

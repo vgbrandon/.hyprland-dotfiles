@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 
 // Estado del panel de ajustes rápidos (entra desde la derecha).
@@ -29,6 +30,29 @@ Singleton {
     function setBarFloating(on) {
         settings.barFloating = on;
         settingsFile.writeAdapter();
+    }
+    // Esquinas redondeadas o rectas en toda la shell (Design.corner y los tokens de
+    // radio) y en las ventanas de Hyprland. Ver Design.corner para lo que no cambia
+    readonly property bool rounded: settings.rounded
+    function setRounded(on) {
+        settings.rounded = on;
+        settingsFile.writeAdapter();
+    }
+    onRoundedChanged: if (settingsLoaded) applyRounding()
+    function applyRounding() {
+        roundingProc.command = ["hyprctl", "eval", `hl.config(${hyprLua("decoration:rounding", rounded ? Theme.windowRadius : 0)})`];
+        roundingProc.running = true;
+    }
+    Process {
+        id: roundingProc
+    }
+    // Hyprland vuelve a lo de hyprland.lua al recargar su configuración
+    Connections {
+        target: Hyprland
+        function onRawEvent(event) {
+            if (event.name !== "configreloaded") return;
+            if (!root.rounded) root.applyRounding();
+        }
     }
     // 0 = barra visible, 1 = escondida fuera de su borde. Empieza escondida:
     // al iniciar la sesión entra deslizándose (introAnim)
@@ -218,6 +242,7 @@ Singleton {
         if (settingsLoaded) {
             applyTranslucentApps();
             applyHypr();
+            if (!rounded) applyRounding();
         }
     }
 
@@ -335,6 +360,8 @@ Singleton {
             property string barPosition: "top"
             // Barra separada del borde en vez de apegada
             property bool barFloating: false
+            // Esquinas redondeadas en la shell y las ventanas (false = rectas)
+            property bool rounded: true
             // Selector de fondos: "carousel" o "grid"
             property string wallpaperPicker: "carousel"
             // Monitor principal elegido en el módulo de pantallas ("" = automático)

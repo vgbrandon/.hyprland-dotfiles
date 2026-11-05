@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import qs.services
 
 // Un grupo de papeles del tema: [clave, nombre] o [clave, nombre, token de Design]
 ColumnLayout {
@@ -21,7 +22,7 @@ ColumnLayout {
                 Rectangle {
                     width: 64
                     height: 40
-                    radius: 8
+                    radius: Design.corner(8)
                     color: group.source ? group.source[parent.modelData[0]] : "#000"
                     border.color: "#2a2a30"
                 }

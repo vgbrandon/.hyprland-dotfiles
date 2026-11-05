@@ -166,7 +166,7 @@ ColumnLayout {
                 required property int index
                 width: 9
                 height: 9
-                radius: 2
+                radius: Design.corner(2)
                 color: root.levelColor(index)
             }
         }
@@ -307,7 +307,7 @@ ColumnLayout {
 
         Layout.fillWidth: true
         implicitHeight: 24
-        radius: 6
+        radius: Design.corner(6)
         color: linkMouse.containsMouse ? Theme.surfaceHigh : "transparent"
 
         RowLayout {

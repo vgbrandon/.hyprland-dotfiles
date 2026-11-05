@@ -113,7 +113,7 @@ Singleton {
     function shareWithGreeter() {
         if (wallpaper === "") return;
         const data = JSON.stringify({ wallpaper: true, user: Quickshell.env("USER"), name: Profile.name,
-            avatar: Profile.hasAvatar, radius: radius, primary: Displays.primary, scheme: scheme,
+            avatar: Profile.hasAvatar, radius: radius, rounded: Config.rounded, primary: Displays.primary, scheme: scheme,
             translucent: Config.translucent, opacity: Config.translucentOpacity,
             blur: { size: Config.blurSize, passes: Config.blurPasses, brightness: Config.blurBrightness,
                 contrast: Config.blurContrast, vibrancy: Config.blurVibrancy } });
@@ -144,6 +144,7 @@ Singleton {
         function onBlurBrightnessChanged() { shareTimer.restart(); }
         function onBlurContrastChanged() { shareTimer.restart(); }
         function onBlurVibrancyChanged() { shareTimer.restart(); }
+        function onRoundedChanged() { shareTimer.restart(); }
     }
     Timer {
         id: shareTimer
@@ -153,9 +154,11 @@ Singleton {
 
     // Redondeo de los paneles: el mismo que las ventanas de Hyprland
     // (decoration:rounding), leído al iniciar. Los elementos de dentro usan uno menor.
-    property int radius: 10
+    // Con esquinas rectas Hyprland tiene 0: windowRadius guarda el valor al que volver
+    property int windowRadius: 10
+    readonly property int radius: Config.rounded ? windowRadius : 0
     // Elementos de dentro de los paneles: el radio del diseño nuevo (Design.radiusSm)
-    readonly property int radiusSmall: 8
+    readonly property int radiusSmall: Config.rounded ? 8 : 0
 
     Process {
         command: ["hyprctl", "getoption", "decoration:rounding", "-j"]
@@ -164,7 +167,7 @@ Singleton {
             onStreamFinished: {
                 try {
                     const value = JSON.parse(this.text).int;
-                    if (value >= 0) root.radius = value;
+                    if (value > 0) root.windowRadius = value;
                     root.shareWithGreeter();
                 } catch (e) {}
             }
@@ -225,6 +228,7 @@ Singleton {
     readonly property string iSleep: String.fromCodePoint(0xF04B2)
     readonly property string iRegion: String.fromCodePoint(0xF0489)
     readonly property string iWindow: String.fromCodePoint(0xF05AF)
+    readonly property string iCorners: String.fromCodePoint(0xF0607)
     readonly property string iMonitor: String.fromCodePoint(0xF0379)
     readonly property string iCamera: String.fromCodePoint(0xF0100)
     readonly property string iPicker: String.fromCodePoint(0xF020A)

@@ -73,7 +73,7 @@ GuideStep {
 
             Rectangle {
                 implicitHeight: term.implicitHeight
-                radius: 8
+                radius: Design.corner(8)
                 color: step.c("background")
                 border.color: step.c("outlineVariant")
                 clip: true
@@ -86,12 +86,12 @@ GuideStep {
                         Layout.margins: 6
                         spacing: 4
                         Rectangle {
-                            width: 70; height: 22; radius: 4
+                            width: 70; height: 22; radius: Design.corner(4)
                             color: step.c("container")
                             GuideText { anchors.centerIn: parent; text: "fish"; size: 11; color: step.c("onContainer") }
                         }
                         Rectangle {
-                            width: 70; height: 22; radius: 4
+                            width: 70; height: 22; radius: Design.corner(4)
                             color: step.c("surface1")
                             GuideText { anchors.centerIn: parent; text: "nvim"; size: 11; color: step.c("subtext") }
                         }
@@ -115,7 +115,7 @@ GuideStep {
                         Repeater {
                             model: ["surface3", "term_red", "term_green", "term_yellow", "term_blue", "term_magenta", "term_cyan", "subtext",
                                 "outline", "term_red_bright", "term_green_bright", "term_yellow_bright", "term_blue_bright", "term_magenta_bright", "term_cyan_bright", "text"]
-                            Rectangle { width: 26; height: 14; radius: 3; color: step.c(modelData) }
+                            Rectangle { width: 26; height: 14; radius: Design.corner(3); color: step.c(modelData) }
                         }
                     }
                 }
@@ -134,7 +134,7 @@ GuideStep {
 
             Rectangle {
                 implicitHeight: zed.implicitHeight
-                radius: 8
+                radius: Design.corner(8)
                 color: step.c("background")
                 border.color: step.c("outlineVariant")
                 clip: true
@@ -183,7 +183,7 @@ GuideStep {
 
             Rectangle {
                 implicitHeight: 196
-                radius: 8
+                radius: Design.corner(8)
                 color: step.c("background")
                 border.color: step.c("outlineVariant")
                 clip: true
@@ -198,7 +198,7 @@ GuideStep {
                     Repeater {
                         model: ["Inicio", "Imágenes", "Descargas", "Papelera"]
                         Rectangle {
-                            width: 116; height: 24; radius: 4
+                            width: 116; height: 24; radius: Design.corner(4)
                             color: index === 1 ? step.c("accent") : "transparent"
                             GuideText {
                                 x: 8; anchors.verticalCenter: parent.verticalCenter
@@ -239,7 +239,7 @@ GuideStep {
                 Rectangle {
                     x: parent.width - width - 12
                     y: parent.height - height - 12
-                    width: 110; height: 26; radius: 5
+                    width: 110; height: 26; radius: Design.corner(5)
                     color: step.c("error")
                     GuideText { anchors.centerIn: parent; text: "Vaciar papelera"; size: 11; color: step.c("onAccent") }
                 }
@@ -258,7 +258,7 @@ GuideStep {
 
             Rectangle {
                 implicitHeight: 196
-                radius: 8
+                radius: Design.corner(8)
                 color: step.c("background")
                 border.color: step.c("outlineVariant")
                 clip: true
@@ -267,12 +267,12 @@ GuideStep {
                     x: 8; y: 6
                     spacing: 4
                     Rectangle {
-                        width: 130; height: 26; radius: 6
+                        width: 130; height: 26; radius: Design.corner(6)
                         color: step.c("surface1")
                         GuideText { x: 10; anchors.verticalCenter: parent.verticalCenter; text: "Velure — GitHub"; size: 11; color: step.c("text") }
                     }
                     Rectangle {
-                        width: 130; height: 26; radius: 6
+                        width: 130; height: 26; radius: Design.corner(6)
                         color: "transparent"
                         GuideText { x: 10; anchors.verticalCenter: parent.verticalCenter; text: "Nueva pestaña"; size: 11; color: step.c("subtext") }
                     }
@@ -280,20 +280,20 @@ GuideStep {
                 // Barra de direcciones enfocada (borde 1 px al 60 % del acento) y sus sugerencias
                 Rectangle {
                     x: 8; y: 40
-                    width: parent.width - 16; height: 30; radius: 6
+                    width: parent.width - 16; height: 30; radius: Design.corner(6)
                     color: step.c("surface1")
                     border.color: Design.alpha(step.c("accent"), 0.6)
                     GuideText { x: 12; anchors.verticalCenter: parent.verticalCenter; text: "velure"; size: 12; color: step.c("text") }
                 }
                 Rectangle {
                     x: 8; y: 74
-                    width: parent.width - 16; height: 72; radius: 6
+                    width: parent.width - 16; height: 72; radius: Design.corner(6)
                     color: step.c("surface1")
                     Column {
                         x: 4; y: 4
                         spacing: 2
                         Rectangle {
-                            width: parent.parent.width - 8; height: 30; radius: 4
+                            width: parent.parent.width - 8; height: 30; radius: Design.corner(4)
                             color: step.c("container")
                             GuideText { x: 10; anchors.verticalCenter: parent.verticalCenter; text: "velure — Buscar"; size: 11; color: step.c("onContainer") }
                         }
@@ -309,12 +309,12 @@ GuideStep {
                     y: parent.height - height - 12
                     spacing: 6
                     Rectangle {
-                        width: 80; height: 26; radius: 5
+                        width: 80; height: 26; radius: Design.corner(5)
                         color: step.c("surface2")
                         GuideText { anchors.centerIn: parent; text: "Cancelar"; size: 11; color: step.c("text") }
                     }
                     Rectangle {
-                        width: 80; height: 26; radius: 5
+                        width: 80; height: 26; radius: Design.corner(5)
                         color: step.c("accent")
                         GuideText { anchors.centerIn: parent; text: "Guardar"; size: 11; color: step.c("onAccent") }
                     }
@@ -330,7 +330,7 @@ GuideStep {
 
             Rectangle {
                 implicitHeight: ff.implicitHeight + 24
-                radius: 8
+                radius: Design.corner(8)
                 color: step.c("background")
                 border.color: step.c("outlineVariant")
                 Code {
@@ -353,7 +353,7 @@ GuideStep {
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            radius: 10
+            radius: Design.corner(10)
             color: "#1a1a1e"
             border.color: "#26262c"
             ColumnLayout {
@@ -384,7 +384,7 @@ GuideStep {
     Rectangle {
         Layout.fillWidth: true
         implicitHeight: matrix.implicitHeight + 28
-        radius: 10
+        radius: Design.corner(10)
         color: "#1a1a1e"
         border.color: "#26262c"
 
@@ -427,7 +427,7 @@ GuideStep {
                                 Layout.preferredWidth: step.labelW
                                 spacing: 8
                                 Rectangle {
-                                    implicitWidth: 16; implicitHeight: 16; radius: 3
+                                    implicitWidth: 16; implicitHeight: 16; radius: Design.corner(3)
                                     color: step.c(rrow.modelData)
                                     border.color: "#1affffff"
                                 }

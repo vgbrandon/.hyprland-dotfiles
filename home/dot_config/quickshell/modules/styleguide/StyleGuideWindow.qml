@@ -75,7 +75,7 @@ FloatingWindow {
                     Layout.alignment: Qt.AlignTop
                     implicitWidth: refreshLabel.implicitWidth + 28
                     implicitHeight: 34
-                    radius: 6
+                    radius: Design.corner(6)
                     color: refreshMouse.containsMouse ? "#2a2a30" : "#1e1e22"
                     border.color: "#33333a"
                     GuideText { id: refreshLabel; anchors.centerIn: parent; text: pdata.running ? "Generando…" : "Volver a generar"; size: 12 }
@@ -235,7 +235,7 @@ FloatingWindow {
                                 Rectangle {
                                     implicitWidth: parent.modelData * 3
                                     implicitHeight: 6
-                                    radius: 3
+                                    radius: Design.corner(3)
                                     color: Design.accent
                                     opacity: 0.8
                                 }
@@ -607,7 +607,7 @@ FloatingWindow {
         property color fg: tonal ? Design.onTonal : Design.onAccent
         implicitWidth: Math.max(20, badgeText.implicitWidth + 12)
         implicitHeight: 20
-        radius: 10
+        radius: Design.corner(10)
         color: tonal ? Design.tonal : Design.accent
         Txt {
             id: badgeText

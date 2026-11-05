@@ -28,7 +28,7 @@ Rectangle {
         y: 2
         width: root.segWidth
         height: root.height - 4
-        radius: Design.radiusSm - 2
+        radius: Design.corner(Design.radiusSm - 2)
         color: Design.alpha("#ffffff", 0.14)
         Behavior on x { NumberAnimation { duration: Design.springDuration; easing.type: Design.spring; easing.overshoot: Design.overshoot } }
         layer.enabled: true

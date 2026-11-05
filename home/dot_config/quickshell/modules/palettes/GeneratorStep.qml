@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import qs.services
 
 // Paso «Del generador»: la imagen y lo que saca paleta de ella (10 colores con las
 // marcas de los que usa el tema, acentos, apagados, degradados y escalas)
@@ -23,7 +24,7 @@ GuideStep {
             Layout.alignment: Qt.AlignTop
             implicitWidth: 340
             implicitHeight: 192
-            radius: 10
+            radius: Design.corner(10)
             color: "#000000"
             clip: true
             Image {
@@ -54,7 +55,7 @@ GuideStep {
                         Rectangle {
                             width: 46
                             height: 46
-                            radius: 8
+                            radius: Design.corner(8)
                             color: parent.modelData
                             border.width: parent.mark !== "" ? 2 : 1
                             border.color: parent.mark !== "" ? "#ffffff" : "#2a2a30"

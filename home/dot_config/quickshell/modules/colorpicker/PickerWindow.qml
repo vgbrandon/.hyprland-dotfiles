@@ -183,7 +183,7 @@ PanelWindow {
             Rectangle {
                 implicitWidth: 20
                 implicitHeight: 20
-                radius: 6
+                radius: Design.corner(6)
                 color: ColorPicker.current
                 border.color: Theme.surfaceHigh
                 border.width: 1

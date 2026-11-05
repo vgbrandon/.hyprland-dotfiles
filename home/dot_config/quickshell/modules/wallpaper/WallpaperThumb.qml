@@ -20,7 +20,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: -4
-        radius: Design.radiusMd + 4
+        radius: Design.corner(Design.radiusMd + 4)
         color: "transparent"
         border.width: 2
         border.color: root.active ? Design.accent : root.highlighted ? Design.alpha(Design.onSurface, 0.6) : "transparent"

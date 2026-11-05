@@ -81,7 +81,7 @@ Item {
     // --- Carcasa ---
     Rectangle {
         anchors.fill: parent
-        radius: 14 * root.u
+        radius: Design.corner(14 * root.u)
         color: Design.surface2
         border.color: Design.border
         border.width: 1
@@ -89,7 +89,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             anchors.margins: root.pad * root.u * 0.6
-            radius: 10 * root.u
+            radius: Design.corner(10 * root.u)
             color: root.lit ? Design.alpha(root.multicolor ? Design.accent : root.ledColor, 0.08 * root.level) : "transparent"
         }
     }
@@ -110,7 +110,7 @@ Item {
             y: (root.pad + k[5]) * root.u
             width: k[6] * root.u
             height: k[7] * root.u
-            radius: 4 * root.u
+            radius: Design.corner(4 * root.u)
             color: picked ? Design.selection : Design.mix(Design.surface3, Qt.color(led), glow * 0.28)
             border.width: 1
             border.color: picked ? Design.accent : glow > 0.05 ? Design.alpha(led, 0.25 + glow * 0.6) : Design.border
@@ -160,7 +160,7 @@ Item {
         y: (root.pad + Layout.screen[1]) * root.u
         width: Layout.screen[2] * root.u
         height: Layout.screen[3] * root.u
-        radius: 3 * root.u
+        radius: Design.corner(3 * root.u)
         color: "#000000"
         border.color: Design.border
         clip: true

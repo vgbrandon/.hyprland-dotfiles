@@ -280,7 +280,7 @@ SidePanel {
                     readonly property bool current: modelData === AI.directory
                     Layout.fillWidth: true
                     implicitHeight: 30
-                    radius: 8
+                    radius: Design.corner(8)
                     color: folderMouse.containsMouse ? Theme.surfaceHigh : "transparent"
 
                     RowLayout {
@@ -788,7 +788,7 @@ SidePanel {
                 required property int index
                 width: suggestionList.width
                 height: 34
-                radius: 8
+                radius: Design.corner(8)
                 color: index === panel.suggestionIndex ? Theme.surfaceHigh : "transparent"
 
                 RowLayout {
@@ -897,7 +897,7 @@ SidePanel {
                 readonly property bool current: AI.model?.providerID === modelData.providerID && AI.model?.id === modelData.id
                 width: modelList.width
                 height: 34
-                radius: 8
+                radius: Design.corner(8)
                 color: modelMouse.containsMouse ? Theme.surfaceHigh : "transparent"
 
                 RowLayout {
@@ -970,7 +970,7 @@ SidePanel {
                         required property var modelData
                         implicitWidth: attachRow.implicitWidth + 12
                         implicitHeight: 40
-                        radius: 8
+                        radius: Design.corner(8)
                         color: Theme.surfaceHigh
 
                         RowLayout {
@@ -1198,7 +1198,7 @@ SidePanel {
 
         Layout.fillWidth: true
         implicitHeight: menuRowColumn.implicitHeight + 12
-        radius: 8
+        radius: Design.corner(8)
         opacity: enabled ? 1 : 0.45
         color: menuRowMouse.containsMouse && enabled ? Theme.surfaceHigh : "transparent"
 

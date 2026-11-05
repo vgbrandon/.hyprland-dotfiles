@@ -285,6 +285,13 @@ SidePanel {
                 Visualizer.pickerOpen = true;
             }
         }
+        // En toda la shell y las ventanas de Hyprland
+        SwitchRow {
+            icon: Theme.iCorners
+            text: "Esquinas redondeadas"
+            checked: Config.rounded
+            onToggled: Config.setRounded(!Config.rounded)
+        }
         SwitchRow {
             icon: Theme.iAnimation
             text: "Animaciones"

@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import qs.modules.palettes
+import qs.services
 
 // Una app en la guía de estilo: su nombre y plantilla, una vista previa pintada con los
 // colores de la paleta y los papeles que usa, cada uno con su uso.
@@ -15,7 +16,7 @@ Rectangle {
     Layout.fillWidth: true
     Layout.alignment: Qt.AlignTop
     implicitHeight: col.implicitHeight + 32
-    radius: 10
+    radius: Design.corner(10)
     color: "#1a1a1e"
     border.color: "#26262c"
 

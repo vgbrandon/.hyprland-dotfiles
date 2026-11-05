@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import qs.services
 
 // Un paso de las guías: número, título, subtítulo y contenido, en una tarjeta neutra
 Rectangle {
@@ -10,7 +11,7 @@ Rectangle {
     default property alias content: body.data
     Layout.fillWidth: true
     implicitHeight: col.implicitHeight + 40
-    radius: 14
+    radius: Design.corner(14)
     color: "#141417"
     border.color: "#24242a"
     ColumnLayout {

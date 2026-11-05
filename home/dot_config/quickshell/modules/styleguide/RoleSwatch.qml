@@ -13,7 +13,7 @@ Rectangle {
 
     implicitWidth: row.implicitWidth + 16
     implicitHeight: 38
-    radius: 6
+    radius: Design.corner(6)
     color: "#141417"
     border.color: "#24242a"
 
@@ -25,7 +25,7 @@ Rectangle {
         Rectangle {
             implicitWidth: 20
             implicitHeight: 20
-            radius: 4
+            radius: Design.corner(4)
             color: sw.value
             border.color: "#1affffff"
         }

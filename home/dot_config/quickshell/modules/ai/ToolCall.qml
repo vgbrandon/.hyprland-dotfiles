@@ -91,7 +91,7 @@ Rectangle {
             visible: root.expanded && root.part.output !== ""
             Layout.fillWidth: true
             implicitHeight: output.implicitHeight + 12
-            radius: 6
+            radius: Design.corner(6)
             color: Theme.panelBg
 
             TextEdit {

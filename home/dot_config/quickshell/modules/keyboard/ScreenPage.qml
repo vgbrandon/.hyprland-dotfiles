@@ -153,7 +153,7 @@ RowLayout {
                             anchors.margins: 4
                             implicitWidth: 28
                             implicitHeight: 16
-                            radius: 4
+                            radius: Design.corner(4)
                             color: Design.alpha("#000000", 0.6)
                             Txt { anchors.centerIn: parent; text: "GIF"; textStyle: Design.caption; color: "#ffffff" }
                         }

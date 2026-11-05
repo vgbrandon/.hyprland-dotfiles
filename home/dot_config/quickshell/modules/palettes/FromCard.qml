@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import qs.services
 
 // Del generador → al tema: el color de origen (o «calculado»), una flecha y el papel
 Rectangle {
@@ -11,7 +12,7 @@ Rectangle {
     // Opcional: el token de Design que lo usa
     property string token
     implicitHeight: 78
-    radius: 10
+    radius: Design.corner(10)
     color: "#1a1a1e"
     border.color: "#26262c"
     RowLayout {
@@ -23,7 +24,7 @@ Rectangle {
             Rectangle {
                 implicitWidth: 40
                 implicitHeight: 40
-                radius: 8
+                radius: Design.corner(8)
                 color: card.from ?? "transparent"
                 border.width: card.from ? 0 : 1
                 border.color: "#55555e"
@@ -35,7 +36,7 @@ Rectangle {
         Rectangle {
             implicitWidth: 52
             implicitHeight: 52
-            radius: 10
+            radius: Design.corner(10)
             color: card.to
         }
         ColumnLayout {

@@ -71,6 +71,7 @@ Singleton {
                     root.blurVibrancy = d.blur.vibrancy ?? root.blurVibrancy;
                 }
                 if (d.radius >= 0) root.radius = d.radius;
+                root.rounded = d.rounded !== false;
                 if (d.wallpaper) root.wallpaper = root.shared + "/wallpaper";
             } catch (e) {}
         }
@@ -78,7 +79,9 @@ Singleton {
 
     // Redondeo de los paneles (el de las ventanas de Hyprland, lo comparte la sesión)
     property int radius: 10
-    readonly property int radiusSmall: Math.max(4, radius - 4)
+    readonly property int radiusSmall: rounded ? Math.max(4, radius - 4) : 0
+    // Esquinas rectas o redondeadas, como en la sesión (ver Design.corner)
+    property bool rounded: true
 
     // Tamaños (los mismos que la barra)
     readonly property int pillHeight: 28

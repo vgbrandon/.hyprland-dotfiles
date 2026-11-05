@@ -135,7 +135,7 @@ PanelWindow {
         color: "transparent"
         border.color: Theme.primary
         border.width: 2
-        radius: 4
+        radius: Design.corner(4)
     }
     Rectangle {
         visible: !!win.rect && Screenshot.mode === "region"
@@ -143,7 +143,7 @@ PanelWindow {
         y: win.rect ? (win.rect.y + win.rect.height + 32 < win.height ? win.rect.y + win.rect.height + 6 : win.rect.y - height - 6) : 0
         width: sizeLabel.implicitWidth + 16
         height: 24
-        radius: 12
+        radius: Design.corner(12)
         color: Theme.surface
 
         Label {

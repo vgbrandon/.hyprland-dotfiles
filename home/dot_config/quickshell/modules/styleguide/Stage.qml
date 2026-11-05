@@ -12,7 +12,7 @@ ClippingRectangle {
     default property alias content: stageInner.data
     Layout.fillWidth: true
     implicitHeight: (stageInner.children.length > 0 ? stageInner.children[0].implicitHeight : 0) + 48
-    radius: 10
+    radius: Design.corner(10)
     color: "#000000"
 
     Image {

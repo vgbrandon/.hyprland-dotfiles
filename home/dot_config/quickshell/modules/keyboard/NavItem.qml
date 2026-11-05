@@ -27,7 +27,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         width: 3
         height: 18
-        radius: 1.5
+        radius: Design.corner(1.5)
         color: Design.accent
         AccentFill { glow: true }
     }
