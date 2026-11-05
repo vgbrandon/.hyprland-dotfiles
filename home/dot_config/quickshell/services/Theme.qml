@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 
 Singleton {
@@ -171,6 +172,28 @@ Singleton {
                     root.shareWithGreeter();
                 } catch (e) {}
             }
+        }
+    }
+
+    // Borde de la ventana con foco en Hyprland: el acento del tema. Se aplica al iniciar,
+    // al cambiar de paleta y cuando Hyprland vuelve a lo de hyprland.lua al recargar
+    readonly property string borderColor: {
+        const hex = v => Math.round(v * 255).toString(16).padStart(2, "0");
+        return hex(Design.accent.r) + hex(Design.accent.g) + hex(Design.accent.b);
+    }
+    onBorderColorChanged: applyBorder()
+    Component.onCompleted: applyBorder()
+    function applyBorder() {
+        borderProc.command = ["hyprctl", "eval", `hl.config({general = {col = {active_border = "rgba(${borderColor}ff)"}}})`];
+        borderProc.running = true;
+    }
+    Process {
+        id: borderProc
+    }
+    Connections {
+        target: Hyprland
+        function onRawEvent(event) {
+            if (event.name === "configreloaded") root.applyBorder();
         }
     }
 

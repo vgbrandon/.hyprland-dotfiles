@@ -82,11 +82,13 @@ hl.config({
 		gaps_in = 5,
 		gaps_out = 10,
 
-		border_size = 0,
+		-- Borde solo en la ventana con foco: las demás lo tienen transparente
+		border_size = 2,
 
 		col = {
-			active_border = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
-			inactive_border = "rgba(595959aa)",
+			-- Hasta que arranca Quickshell, que pone el acento del tema (Theme.applyBorder)
+			active_border = "rgba(ffffff66)",
+			inactive_border = "rgba(00000000)",
 		},
 
 		-- Set to true to enable resizing windows by clicking and dragging on borders and gaps

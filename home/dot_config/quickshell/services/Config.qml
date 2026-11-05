@@ -51,6 +51,7 @@ Singleton {
         target: Hyprland
         function onRawEvent(event) {
             if (event.name !== "configreloaded") return;
+            root.applyHypr();
             if (!root.rounded) root.applyRounding();
         }
     }
