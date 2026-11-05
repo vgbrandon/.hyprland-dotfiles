@@ -29,32 +29,33 @@ fi
 pkill -USR1 -x kitty 2>/dev/null
 
 # GTK3 (Thunar y las demás apps con el tema "Velure"): el tema importa
-# translucent.css. La ventana, transparente, y cada zona con su propio color del tema
-# translúcido (barras, barra lateral, lista), para que se vea como siempre pero con el
-# desenfoque detrás. gtk-reload.sh hace que las apps abiertas lo recarguen.
+# translucent.css. Una sola capa de color, la de la ventana (translúcida); todo lo de
+# dentro (barras, barra lateral, lista y sus contenedores) transparente. Con una capa
+# por zona se sumaban (el contenedor y la lista, 88 % sobre 88 %) y quedaba opaco; ahora
+# la ventana, la barra lateral y la lista tienen el mismo color del tema. gtk-reload.sh
+# hace que las apps abiertas lo recarguen.
 gtk="$HOME/.local/share/themes/Velure/gtk-3.0"
 if [ -d "$gtk" ]; then
     if [ "$mode" = on ]; then
         cat > "$gtk/translucent.css" <<CSS
 window.background, window.background:backdrop {
-  background-color: transparent;
-}
-menubar, toolbar, .toolbar, statusbar, headerbar,
-headerbar:backdrop {
   background-color: alpha(@window_bg_color, $opacity);
 }
-.sidebar, placessidebar, placessidebar list, .thunar .sidebar {
-  background-color: alpha(@sidebar_bg_color, $opacity);
-}
-.view, iconview, treeview.view, .thunar .standard-view {
-  background-color: alpha(@view_bg_color, $opacity);
-}
-scrolledwindow, viewport, notebook, notebook > stack:not(:only-child), paned {
+menubar, menubar:backdrop, .menubar, .menubar:backdrop, toolbar, toolbar:backdrop,
+.toolbar, .toolbar:backdrop, statusbar, statusbar:backdrop, headerbar,
+headerbar:backdrop, .location-bar, .location-bar:backdrop, .inline-toolbar,
+.inline-toolbar:backdrop, searchbar > revealer > box,
+searchbar > revealer > box:backdrop, .sidebar, .sidebar:backdrop, placessidebar,
+placessidebar:backdrop, placessidebar list, placessidebar list:backdrop,
+.thunar .sidebar, .thunar .sidebar:backdrop, .view, .view:backdrop, iconview,
+iconview:backdrop, treeview.view, treeview.view:backdrop, .thunar .standard-view,
+.thunar .standard-view:backdrop, scrolledwindow, scrolledwindow:backdrop, viewport,
+viewport:backdrop, notebook, notebook:backdrop, notebook > stack:not(:only-child),
+notebook > stack:not(:only-child):backdrop, paned, paned:backdrop, paned > separator,
+paned > separator:backdrop, treeview.view header button,
+treeview.view header button:backdrop, treeview.view header button:hover,
+treeview.view header button:hover:backdrop {
   background-color: transparent;
-}
-/* El separador de la barra lateral asoma bajo la lista (si no, queda un hueco) */
-paned > separator {
-  background-color: alpha(@window_bg_color, $opacity);
 }
 CSS
     else
@@ -111,9 +112,12 @@ for base in "$HOME/.config/mozilla/firefox" "$HOME/.mozilla/firefox"; do
     done
 done
 
-# Zed: el tema Velure con la ventana transparente y desenfocada, y cada zona
-# (editor, paneles, pestañas, barras) con su propio color translúcido, para que se vea
-# como siempre. Zed recarga el tema al cambiar el archivo.
+# Zed: el tema Velure con la ventana desenfocada y una sola capa de color, el fondo
+# translúcido. Las zonas del mismo color (editor, paneles, pestañas…) van transparentes:
+# con una capa por zona se sumaban (el editor sobre el panel sobre la superficie) y con
+# un archivo abierto quedaba opaco. Las de otro color (la pestaña activa) y las barras de
+# título y de estado (fuera del fondo) conservan el suyo, translúcido. Zed recarga el
+# tema al cambiar el archivo.
 python3 - "$mode" "$opacity" "$(dirname "$state")/zed-opaque.json" <<'PY'
 import json, os, sys
 mode, opacity, saved = sys.argv[1], float(sys.argv[2]), sys.argv[3]
@@ -127,7 +131,7 @@ layers = ["surface.background", "panel.background", "editor.background",
           "editor.gutter.background", "editor.subheader.background", "terminal.background",
           "title_bar.background", "title_bar.inactive_background", "toolbar.background",
           "tab_bar.background", "tab.active_background", "tab.inactive_background",
-          "status_bar.background", "scrollbar.track.background"]
+          "status_bar.background", "scrollbar.track.background", "elevated_surface.background"]
 changed = False
 for i, theme in enumerate(data.get("themes", [])):
     st = theme.setdefault("style", {})
@@ -147,10 +151,19 @@ for i, theme in enumerate(data.get("themes", [])):
         with open(saved, "w") as f:
             json.dump(orig, f)
         alpha = "%02x" % round(opacity * 255)
-        st["background"] = "#00000000"
+        base = orig.get("background", "#000000")[:7].lower()
+        st["background"] = base + alpha
+        # La barra de título y la de estado quedan fuera del fondo de la ventana (Zed
+        # solo lo pinta bajo el contenido): siempre con su color, si no salen sin tinte
+        own = {"title_bar.background", "title_bar.inactive_background", "status_bar.background"}
         for key in layers:
             if key in st:
-                st[key] = st[key][:7] + alpha
+                same = st[key][:7].lower() == base and key not in own
+                st[key] = "#00000000" if same else st[key][:7] + alpha
+        # Los menús flotantes (contextual, autocompletado, paletas) van dentro de la
+        # ventana: detrás no hay desenfoque y se leería el editor a través. Casi opacos
+        if "elevated_surface.background" in st:
+            st["elevated_surface.background"] = st["elevated_surface.background"][:7] + "f5"
         st["background.appearance"] = "blurred"
         changed = True
     elif mode == "off" and blurred:
