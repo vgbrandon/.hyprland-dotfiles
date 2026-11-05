@@ -21,6 +21,8 @@ Singleton {
     signal guideScroll(int y)
     // Guarda una captura de la guía: quickshell ipc call styleguide capture /tmp/guia.png
     signal guideCapture(string path)
+    // Y solo el paso de las apps, entero: quickshell ipc call styleguide captureApps /tmp/apps.png
+    signal guideCaptureApps(string path)
 
     function c(name, fallback) {
         return Theme.scheme[name] ?? fallback;
@@ -187,5 +189,6 @@ Singleton {
         function close(): void { root.guideOpen = false; }
         function scrollTo(y: int): void { root.guideScroll(y); }
         function capture(path: string): void { root.guideCapture(path); }
+        function captureApps(path: string): void { root.guideCaptureApps(path); }
     }
 }

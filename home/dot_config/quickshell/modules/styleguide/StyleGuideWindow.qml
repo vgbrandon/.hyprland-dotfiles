@@ -44,6 +44,9 @@ FloatingWindow {
             function onGuideCapture(path) {
                 flick.grabToImage(r => r.saveToFile(path));
             }
+            function onGuideCaptureApps(path) {
+                appsStep.grabToImage(r => r.saveToFile(path));
+            }
         }
 
         ColumnLayout {
@@ -582,6 +585,17 @@ FloatingWindow {
                 }
             }
                 }
+            }
+
+            GuideArrow {
+                text: "Los mismos papeles salen de la shell a las apps: paleta rellena sus plantillas con cada fondo nuevo"
+            }
+
+            // ============ 9 · Aplicado a las apps ============
+            AppsStep {
+                id: appsStep
+                number: "9"
+                active: win.visible
             }
         }
     }
