@@ -29,6 +29,11 @@ input_path = '~/.config/velure/templates/starship-palette.toml'
 output_path = '~/.config/starship/palette-velure.toml'
 post_hook = 'sh ~/.config/velure/scripts/starship.sh --notify'
 
+# fastfetch: su configuración, con los iconos en el acento (la plantilla es la que se edita)
+[templates.fastfetch]
+input_path = '~/.config/velure/templates/fastfetch.jsonc'
+output_path = '~/.config/fastfetch/config.jsonc'
+
 # eza (ls): tema de colores; los iconos toman el color de cada tipo de archivo
 [templates.eza]
 input_path = '~/.config/velure/templates/eza-theme.yml'

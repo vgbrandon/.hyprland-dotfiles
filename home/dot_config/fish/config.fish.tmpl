@@ -33,6 +33,15 @@ if status is-interactive
     # opencode
     fish_add_path -m "$HOME/.opencode/bin"
 
+    # fastfetch deja una línea en blanco tras el logo y Starship pone otra antes del prompt:
+    # en la terminal se sube el cursor una línea para que quede solo una
+    function fastfetch --wraps fastfetch --description "fastfetch sin la línea en blanco de más"
+        command fastfetch $argv
+        set -l estado $status
+        isatty stdout; and printf '\e[1A'
+        return $estado
+    end
+
     # Colores del resaltado de fish desde la paleta de Velure (color real, sin ANSI);
     # si no existe, el tema por defecto de fish
     test -f "$HOME/.config/fish/velure-colors.fish"; and source "$HOME/.config/fish/velure-colors.fish"
