@@ -8,7 +8,9 @@
 #                           regenerar los temas de Zed y Firefox)
 state="${XDG_STATE_HOME:-$HOME/.local/state}/velure/translucent"
 # Opacidad del fondo de las apps: la misma que la barra de Quickshell (Mica, 88 %)
-opacity=0.88
+# La opacidad la elige Ajustes (Quickshell la escribe ahí); por defecto, la de la barra (70 %)
+opacity=$(cat "${XDG_STATE_HOME:-$HOME/.local/state}/velure/opacity" 2>/dev/null)
+case "$opacity" in 0.[0-9]*|1|1.0*) ;; *) opacity=0.7 ;; esac
 # La misma en hexadecimal, para los CSS de Firefox (paleta los genera con "e0")
 alpha=$(awk "BEGIN { printf \"%02x\", $opacity * 255 + 0.5 }")
 

@@ -53,11 +53,76 @@ Singleton {
     // onSettingsLoadedChanged)
     onTranslucentChanged: if (settingsLoaded) applyTranslucentApps()
     function applyTranslucentApps() {
-        translucentApps.command = ["sh", Quickshell.env("HOME") + "/.config/velure/scripts/translucent.sh", translucent ? "on" : "off"];
+        // translucent.sh lee la opacidad de las apps de ~/.local/state/velure/opacity
+        translucentApps.command = ["sh", "-c", 'd="${XDG_STATE_HOME:-$HOME/.local/state}/velure"; mkdir -p "$d" && echo "$1" > "$d/opacity" && exec sh "$2" "$3"',
+            "sh", String(translucentOpacity), Quickshell.env("HOME") + "/.config/velure/scripts/translucent.sh", translucent ? "on" : "off"];
         translucentApps.running = true;
     }
     Process {
         id: translucentApps
+    }
+    // Cuánto tapa el color del tema con la translucidez: la barra y las apps con este
+    // valor; los paneles, un poco más (Design.micaOpacity y glassOpacity)
+    readonly property real translucentOpacity: settings.translucentOpacity
+    function setTranslucentOpacity(v) {
+        settings.translucentOpacity = Math.round(Math.max(0.3, Math.min(1, v)) * 100) / 100;
+        saveTimer.restart();
+        appsTimer.restart();
+    }
+    // Las apps (kitty, Zed, GTK, Firefox) se regeneran al soltar, no en cada paso
+    Timer {
+        id: appsTimer
+        interval: 500
+        onTriggered: if (root.translucent) root.applyTranslucentApps()
+    }
+
+    // --- Opciones de Hyprland cambiadas desde Ajustes (desenfoque…): se guardan aquí y
+    // se vuelven a aplicar al arrancar, sin tocar hyprland.lua ---
+    signal hyprApplied()
+    // "decoration:blur:size", 8 -> {decoration = {blur = {size = 8}}}
+    function hyprLua(option, value) {
+        let lua = typeof value === "boolean" ? (value ? "true" : "false") : String(value);
+        const keys = option.split(":");
+        for (let i = keys.length - 1; i >= 0; i--)
+            lua = `{${keys[i]} = ${lua}}`;
+        return lua;
+    }
+    function hyprSet(option, value) {
+        const h = Object.assign({}, settings.hypr ?? {});
+        h[option] = value;
+        settings.hypr = h;
+        saveTimer.restart();
+    }
+    function hyprForget(option) {
+        const h = Object.assign({}, settings.hypr ?? {});
+        delete h[option];
+        settings.hypr = h;
+        saveTimer.restart();
+    }
+    // Valores efectivos del desenfoque: los de Ajustes o, si no se cambiaron, los de
+    // hyprland.lua. Los usa también el vidrio que pinta Quickshell (Surface con backdrop:
+    // bloqueo, inicio de sesión), para que se vea como el de Hyprland
+    readonly property var blurDefaults: ({ "decoration:blur:size": 6, "decoration:blur:passes": 3,
+        "decoration:blur:brightness": 0.3, "decoration:blur:contrast": 0.3, "decoration:blur:vibrancy": 0 })
+    function hyprValue(option) {
+        return (settings.hypr ?? {})[option] ?? blurDefaults[option];
+    }
+    readonly property real blurSize: hyprValue("decoration:blur:size")
+    readonly property real blurPasses: hyprValue("decoration:blur:passes")
+    readonly property real blurBrightness: hyprValue("decoration:blur:brightness")
+    readonly property real blurContrast: hyprValue("decoration:blur:contrast")
+    readonly property real blurVibrancy: hyprValue("decoration:blur:vibrancy")
+    function applyHypr() {
+        const h = settings.hypr ?? {};
+        const keys = Object.keys(h);
+        if (keys.length === 0) return;
+        hyprApply.command = ["sh", "-c", 'for c in "$@"; do hyprctl eval "hl.config($c)" >/dev/null; done', "sh"]
+            .concat(keys.map(k => hyprLua(k, h[k])));
+        hyprApply.running = true;
+    }
+    Process {
+        id: hyprApply
+        onExited: root.hyprApplied()
     }
 
     // Selector de fondos: "carousel" (el elegido al centro, flechas) o "grid" (todos a
@@ -138,7 +203,10 @@ Singleton {
     onIntroReadyChanged: if (introReady && settingsLoaded) introAnim.start()
     onSettingsLoadedChanged: {
         if (introReady && settingsLoaded) introAnim.start();
-        if (settingsLoaded) applyTranslucentApps();
+        if (settingsLoaded) {
+            applyTranslucentApps();
+            applyHypr();
+        }
     }
 
     Process {
@@ -253,6 +321,10 @@ Singleton {
             property int nightLightTemp: 0
             // Barra y paneles translúcidos con desenfoque
             property bool translucent: false
+            // Opacidad del color del tema con la translucidez (barra y apps)
+            property real translucentOpacity: 0.7
+            // Opciones de Hyprland cambiadas desde Ajustes: { "decoration:blur:size": 8, … }
+            property var hypr: ({})
             // Estilo del visualizador de audio del escritorio ("off" = apagado)
             property string visualizerStyle: "bars"
             property string visualizerColor: "theme"

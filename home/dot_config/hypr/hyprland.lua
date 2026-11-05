@@ -115,11 +115,15 @@ hl.config({
 
 		blur = {
 			enabled = true,
-			-- Más fuerte que el de por defecto: cristal esmerilado en la barra y los
-			-- paneles translúcidos de Quickshell (y en las ventanas translúcidas)
+			-- Cristal oscuro y sobrio en la barra, los paneles y las ventanas translúcidas:
+			-- suave (3 pasadas), apagado (brillo y contraste bajos, sin viveza ni grano).
+			-- Se cambia en vivo desde Ajustes → Apariencia (Quickshell guarda lo cambiado)
 			size = 6,
-			passes = 2,
-			vibrancy = 0.1696,
+			passes = 3,
+			brightness = 0.3,
+			contrast = 0.3,
+			vibrancy = 0,
+			noise = 0,
 		},
 	},
 
@@ -390,10 +394,20 @@ hl.window_rule({
 -- totalmente transparente (las esquinas redondeadas)
 hl.layer_rule({
 	name = "blur-quickshell",
-	match = { namespace = "^quickshell:(bar|config-panel|notification-center|ai|osd)$" },
+	match = { namespace = "^quickshell:(bar|config-panel|notification-center|notifications|ai|osd)$" },
 	blur = true,
 	blur_popups = true,
 	ignore_alpha = 0.2,
+})
+
+-- Las ventanas grandes de Quickshell (lanzador, portapapeles, energía, atajos…): también
+-- desenfocadas, como los paneles. Oscurecen toda la pantalla al 35 %: ignore_alpha 0.5
+-- deja eso sin desenfocar y solo desenfoca la tarjeta de la ventana
+hl.layer_rule({
+	name = "blur-quickshell-overlays",
+	match = { namespace = "^quickshell:(launcher|clipboard|power|shortcuts|displays|keyboard|profile|notes|iconeditor|kblayout-map|polkit|visualizer)$" },
+	blur = true,
+	ignore_alpha = 0.5,
 })
 
 -- Hyprland-run windowrule

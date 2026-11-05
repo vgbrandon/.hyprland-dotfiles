@@ -113,7 +113,10 @@ Singleton {
     function shareWithGreeter() {
         if (wallpaper === "") return;
         const data = JSON.stringify({ wallpaper: true, user: Quickshell.env("USER"), name: Profile.name,
-            avatar: Profile.hasAvatar, radius: radius, primary: Displays.primary, scheme: scheme });
+            avatar: Profile.hasAvatar, radius: radius, primary: Displays.primary, scheme: scheme,
+            translucent: Config.translucent, opacity: Config.translucentOpacity,
+            blur: { size: Config.blurSize, passes: Config.blurPasses, brightness: Config.blurBrightness,
+                contrast: Config.blurContrast, vibrancy: Config.blurVibrancy } });
         // También la foto del perfil (o se borra si ya no hay)
         shareProc.command = ["sh", "-c", `d=/var/lib/qs-greeter
             [ -w "$d" ] || exit 0
@@ -124,6 +127,28 @@ Singleton {
     }
     Process {
         id: shareProc
+    }
+    // La translucidez de Ajustes también vale para la pantalla de inicio (sus tarjetas,
+    // como las del bloqueo): se vuelve a compartir al cambiarla, al soltar el deslizador
+    Connections {
+        target: Config
+        function onTranslucentChanged() {
+            shareTimer.restart();
+        }
+        function onTranslucentOpacityChanged() {
+            shareTimer.restart();
+        }
+        // Y el desenfoque (su vidrio lo imita)
+        function onBlurSizeChanged() { shareTimer.restart(); }
+        function onBlurPassesChanged() { shareTimer.restart(); }
+        function onBlurBrightnessChanged() { shareTimer.restart(); }
+        function onBlurContrastChanged() { shareTimer.restart(); }
+        function onBlurVibrancyChanged() { shareTimer.restart(); }
+    }
+    Timer {
+        id: shareTimer
+        interval: 800
+        onTriggered: root.shareWithGreeter()
     }
 
     // Redondeo de los paneles: el mismo que las ventanas de Hyprland

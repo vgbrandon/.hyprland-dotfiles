@@ -20,6 +20,15 @@ Singleton {
     property string avatar: ""
     // Monitor principal (lo elige el módulo de pantallas de la sesión)
     property string primaryMonitor: ""
+    // La translucidez de la sesión (Ajustes): las tarjetas, como las del bloqueo
+    property bool translucent: false
+    property real translucentOpacity: 0.7
+    // El desenfoque de la sesión (Ajustes): el vidrio de las tarjetas lo imita
+    property real blurSize: 6
+    property real blurPasses: 3
+    property real blurBrightness: 0.3
+    property real blurContrast: 0.3
+    property real blurVibrancy: 0
 
     function pick(name, fallback) {
         return scheme[name] ?? fallback;
@@ -52,6 +61,15 @@ Singleton {
                 root.name = d.name ?? "";
                 if (d.avatar) root.avatar = "file://" + root.shared + "/avatar";
                 root.primaryMonitor = d.primary ?? "";
+                root.translucent = !!d.translucent;
+                if (d.opacity > 0) root.translucentOpacity = d.opacity;
+                if (d.blur) {
+                    root.blurSize = d.blur.size ?? root.blurSize;
+                    root.blurPasses = d.blur.passes ?? root.blurPasses;
+                    root.blurBrightness = d.blur.brightness ?? root.blurBrightness;
+                    root.blurContrast = d.blur.contrast ?? root.blurContrast;
+                    root.blurVibrancy = d.blur.vibrancy ?? root.blurVibrancy;
+                }
                 if (d.radius >= 0) root.radius = d.radius;
                 if (d.wallpaper) root.wallpaper = root.shared + "/wallpaper";
             } catch (e) {}

@@ -83,7 +83,7 @@ PanelWindow {
             clip: true
             // Vidrio casi opaco: estas capas no las desenfoca Hyprland (docs/velure.md)
             radius: Design.radiusMd
-            color: Design.alpha(win.cardColor, Design.glassOpacity < 1 ? 0.94 : 1)
+            color: Design.alpha(win.cardColor, Design.glassOpacity)
             border.color: Design.border
             border.width: 1
 

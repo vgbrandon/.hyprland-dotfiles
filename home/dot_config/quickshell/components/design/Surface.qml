@@ -66,8 +66,11 @@ Item {
             source: blurSource
             blurEnabled: true
             blur: Design.blur
-            blurMax: 64
-            saturation: 0.2
+            // Los ajustes del desenfoque (Ajustes → Apariencia), como el de Hyprland
+            blurMax: Design.backdropBlurMax
+            brightness: Design.backdropBrightness
+            contrast: Design.backdropContrast
+            saturation: Design.backdropSaturation
         }
     }
     Rectangle {

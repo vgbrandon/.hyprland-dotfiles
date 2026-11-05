@@ -1,10 +1,13 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.services
 
 // Opción de configuración de Hyprland, leída y escrita en vivo.
 // Con el parser de Lua, "hyprctl keyword" no funciona: los cambios se
 // aplican con "hyprctl eval" (hl.config) y se leen con "hyprctl getoption -j".
+// Con persist, el valor se guarda en los ajustes de Quickshell (Config.hyprSet) y se
+// vuelve a aplicar al arrancar (Hyprland, al recargar, vuelve a los de hyprland.lua).
 Item {
     id: root
 
@@ -12,33 +15,48 @@ Item {
     visible: false
 
     required property string option // p. ej. "general:gaps_in"
-    // Para opciones numéricas: rango del slider y valor por defecto
-    property int max: 100
-    property int fallback: 0
+    // Para opciones numéricas: rango del deslizador y valor por defecto
+    property real min: 0
+    property real max: 100
+    property real fallback: 0
+    // Con decimales (p. ej. decoration:blur:brightness); si no, se redondea
+    property bool decimal: false
+    property bool persist: false
 
     property bool boolValue: false
     property int intValue: 0
+    property real realValue: 0
 
     function refresh() {
         readProc.running = true;
     }
 
     function set(value) {
-        if (typeof value === "number")
-            value = Math.max(0, Math.min(root.max, Math.round(value)));
+        if (typeof value === "number") {
+            value = Math.max(root.min, Math.min(root.max, value));
+            value = root.decimal ? Math.round(value * 10000) / 10000 : Math.round(value);
+        }
+        if (root.persist) Config.hyprSet(root.option, value);
 
         // Anida la ruta de la opción en una tabla de Lua:
         // "decoration:blur:enabled" -> hl.config({decoration = {blur = {enabled = ...}}})
-        const keys = root.option.split(":");
-        let lua = typeof value === "boolean" ? (value ? "true" : "false") : String(value);
-        for (let i = keys.length - 1; i >= 0; i--)
-            lua = `{${keys[i]} = ${lua}}`;
-
-        writeProc.command = ["hyprctl", "eval", `hl.config(${lua})`];
+        writeProc.command = ["hyprctl", "eval", `hl.config(${Config.hyprLua(root.option, value)})`];
         writeProc.running = true;
+    }
+    // Volver al valor por defecto (y olvidar el guardado)
+    function reset() {
+        set(root.fallback);
+        if (root.persist) Config.hyprForget(root.option);
     }
 
     Component.onCompleted: root.refresh()
+    // Al aplicar Config los valores guardados (al arrancar), se relee
+    Connections {
+        target: Config
+        function onHyprApplied() {
+            root.refresh();
+        }
+    }
 
     Process {
         id: readProc
@@ -48,10 +66,18 @@ Item {
                 try {
                     const d = JSON.parse(this.text);
                     if ("bool" in d) root.boolValue = !!d.bool;
-                    else if ("int" in d) root.intValue = d.int;
-                    else if ("css" in d) {
+                    else if ("int" in d) {
+                        root.intValue = d.int;
+                        root.realValue = d.int;
+                    } else if ("float" in d) {
+                        root.realValue = d.float;
+                        root.intValue = Math.round(d.float);
+                    } else if ("css" in d) {
                         const n = parseInt(d.css);
-                        if (!isNaN(n)) root.intValue = n;
+                        if (!isNaN(n)) {
+                            root.intValue = n;
+                            root.realValue = n;
+                        }
                     }
                 } catch (e) {}
             }

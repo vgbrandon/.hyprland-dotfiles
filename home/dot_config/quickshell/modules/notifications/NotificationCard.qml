@@ -39,9 +39,11 @@ Rectangle {
     }
 
     implicitHeight: content.implicitHeight + 24
-    // Superficie sólida con el canto del vidrio (diseño Velure)
+    // Como aviso emergente, el fondo del tema con el material de los paneles (translúcido
+    // si está activado; Hyprland desenfoca la capa quickshell:notifications); dentro del
+    // centro de notificaciones, un escalón por encima del panel (superficie sólida)
     radius: Design.radiusMd
-    color: Design.surface1
+    color: popup ? Design.alpha(Design.glassTint, Design.glassOpacity) : Design.surface1
     border.color: entry.urgency === NotificationUrgency.Critical ? Design.error : Design.border
     border.width: 1
 

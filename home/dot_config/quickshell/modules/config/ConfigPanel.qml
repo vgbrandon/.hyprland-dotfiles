@@ -25,6 +25,14 @@ SidePanel {
     HyprOption { id: shadows; option: "decoration:shadow:enabled" }
     HyprOption { id: gapsIn; option: "general:gaps_in"; max: 20; fallback: 5 }
     HyprOption { id: gapsOut; option: "general:gaps_out"; max: 30; fallback: 10 }
+    // Desenfoque de Hyprland detrás de lo translúcido: se guarda y se aplica al arrancar
+    // (fallback: los de hyprland.lua o, si no los cambia, los de Hyprland)
+    HyprOption { id: blurSize; option: "decoration:blur:size"; min: 1; max: 20; fallback: 6; persist: true }
+    HyprOption { id: blurPasses; option: "decoration:blur:passes"; min: 1; max: 6; fallback: 3; persist: true }
+    HyprOption { id: blurBrightness; option: "decoration:blur:brightness"; decimal: true; min: 0.3; max: 1.5; fallback: 0.3; persist: true }
+    HyprOption { id: blurContrast; option: "decoration:blur:contrast"; decimal: true; min: 0.3; max: 1.6; fallback: 0.3; persist: true }
+    HyprOption { id: blurVibrancy; option: "decoration:blur:vibrancy"; decimal: true; min: 0; max: 1; fallback: 0; persist: true }
+    HyprOption { id: blurNoise; option: "decoration:blur:noise"; decimal: true; min: 0; max: 0.1; fallback: 0; persist: true }
 
     readonly property BluetoothAdapter bt: Bluetooth.defaultAdapter
 
@@ -289,6 +297,30 @@ SidePanel {
             checked: Config.translucent
             onToggled: Config.setTranslucent(!Config.translucent)
         }
+        // Ajustes de la translucidez (en vivo): cuánto tapa el color del tema y cómo
+        // desenfoca Hyprland lo de detrás
+        ColumnLayout {
+            visible: Config.translucent
+            Layout.fillWidth: true
+            Layout.leftMargin: 26
+            spacing: 2
+
+            SliderRow {
+                text: "Opacidad"
+                valueWidth: 38
+                value: (Config.translucentOpacity - 0.3) / 0.7
+                valueText: Math.round(Config.translucentOpacity * 100) + " %"
+                resettable: Math.abs(Config.translucentOpacity - 0.7) > 0.001
+                onMoved: f => Config.setTranslucentOpacity(0.3 + f * 0.7)
+                onReset: Config.setTranslucentOpacity(0.7)
+            }
+            BlurRow { text: "Desenfoque"; opt: blurSize; decimals: 0 }
+            BlurRow { text: "Pasadas"; opt: blurPasses; decimals: 0 }
+            BlurRow { text: "Brillo"; opt: blurBrightness; decimals: 2 }
+            BlurRow { text: "Contraste"; opt: blurContrast; decimals: 2 }
+            BlurRow { text: "Viveza"; opt: blurVibrancy; decimals: 2 }
+            BlurRow { text: "Grano"; opt: blurNoise; decimals: 3 }
+        }
         SwitchRow {
             icon: Theme.iShadow
             text: "Sombras"
@@ -491,6 +523,19 @@ SidePanel {
             checked: idle.on
             onToggled: Idle.setEnabled(idle.what, !idle.on)
         }
+    }
+
+    // Un ajuste del desenfoque de Hyprland (una HyprOption con su rango y su valor por defecto)
+    component BlurRow: SliderRow {
+        id: br
+        required property var opt
+        property int decimals: 0
+        valueWidth: 38
+        value: (opt.realValue - opt.min) / (opt.max - opt.min)
+        valueText: opt.realValue.toFixed(decimals).replace(".", ",")
+        resettable: Math.abs(opt.realValue - opt.fallback) > Math.pow(10, -decimals) / 2
+        onMoved: f => opt.set(opt.min + f * (opt.max - opt.min))
+        onReset: opt.reset()
     }
 
     // Ajuste con deslizador: icono, texto, barra, valor y botón de restablecer

@@ -119,14 +119,20 @@ Singleton {
     // Transparencia de Windows 11, casi opaca para que se lea con cualquier fondo.
     // Mica (barra, fondos grandes), con el tinte del fondo
     readonly property color micaTint: background
-    property real micaOpacity: Config.translucent ? 0.88 : 1
+    property real micaOpacity: Config.translucent ? Config.translucentOpacity : 1
     // Acrílico (paneles y menús flotantes): el mismo fondo que la barra; lo de dentro
     // se distingue por los tonos elevados (raised, surface1…3) y hundidos (sunken)
     readonly property color glassTint: background
-    property real glassOpacity: Config.translucent ? 0.9 : 1
+    property real glassOpacity: Config.translucent ? Config.translucentOpacity : 1
     Behavior on micaOpacity { NumberAnimation { duration: 250 } }
     Behavior on glassOpacity { NumberAnimation { duration: 250 } }
     readonly property real blur: 1.0
+    // El vidrio que pinta Quickshell (Surface con backdrop) sigue el desenfoque de
+    // Ajustes, como el de Hyprland; con los valores por defecto queda como siempre
+    readonly property real backdropBlurMax: Math.max(8, Math.min(128, 64 * Config.blurSize * Config.blurPasses / 12))
+    readonly property real backdropBrightness: Math.max(-1, Math.min(1, (Config.blurBrightness - 1) * 0.5))
+    readonly property real backdropContrast: Math.max(-1, Math.min(1, (Config.blurContrast - 0.8916) * 0.6))
+    readonly property real backdropSaturation: Math.max(-1, Math.min(1, 0.2 + (Config.blurVibrancy - 0.1696) * 1.5))
     // Canto del vidrio: borde de 1 px y un brillo algo más claro arriba
     readonly property color border: alpha("#ffffff", 0.08)
     // Sin brillo arriba (GlassEdge queda invisible)

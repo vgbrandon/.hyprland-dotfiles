@@ -157,7 +157,7 @@ Item {
                 material: "glass"
                 backdrop: wallpaper
                 radius: parent.radius
-                tintOpacity: 0.78
+                tintOpacity: Design.glassOpacity
                 bordered: false
                 elevation: 0
                 // Se recoloca al moverse (entrada, temblor)
@@ -217,7 +217,7 @@ Item {
             material: "glass"
             backdrop: wallpaper
             radius: parent.radius
-            tintOpacity: 0.78
+            tintOpacity: Design.glassOpacity
             bordered: false
             elevation: 0
             // Se recoloca al moverse (entrada, temblor)
@@ -522,7 +522,7 @@ Item {
             material: "glass"
             backdrop: wallpaper
             radius: parent.radius
-            tintOpacity: 0.6
+            tintOpacity: Design.glassOpacity
             bordered: false
             elevation: 0
             // Se recoloca al moverse (entrada, temblor)
