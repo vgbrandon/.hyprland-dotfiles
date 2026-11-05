@@ -73,17 +73,28 @@ Las rutas son relativas a `~/.config/quickshell/` (en este repo,
 
 | Material | Tinte | Opacidad | Dónde |
 | --- | --- | --- | --- |
-| Mica | `micaTint` (`background`) | `micaOpacity` 0.88 | Barra, fondos grandes |
-| Acrílico | `glassTint` (`background`, el mismo que la barra) | `glassOpacity` 0.9 | Paneles, menús, notificaciones, avisos |
+| Mica | `micaTint` (`background`) | `micaOpacity`: la de Ajustes (0.70) | Barra, fondos grandes |
+| Acrílico | `glassTint` (`background`, el mismo que la barra) | `glassOpacity`: la misma | Paneles, menús, notificaciones, avisos, ventanas grandes, bloqueo e inicio de sesión |
 | Sólido | `surface1` | 1 | Contenido, tarjetas dentro de un panel |
 
 Las opacidades solo se aplican con **Ajustes → Barra y paneles translúcidos**
-encendido; apagado, todos los materiales son opacos (`micaOpacity` y `glassOpacity`
-valen 1).
+encendido (por defecto está apagado); apagado, todos los materiales son opacos
+(`micaOpacity` y `glassOpacity` valen 1).
+
+Debajo de esa opción, **Ajustes → Apariencia** cambia en vivo la opacidad y el
+desenfoque de Hyprland (tamaño, pasadas, brillo, contraste, viveza y grano). Lo cambiado
+se guarda en los ajustes de Quickshell (`Config.hypr`) y se vuelve a aplicar al
+arrancar, sin tocar `hyprland.lua`; cada ajuste vuelve con su botón al valor por
+defecto. Por defecto: opacidad 70 %, tamaño 6, 3 pasadas, brillo 0,3, contraste 0,3,
+viveza 0 y grano 0 (cristal oscuro y sobrio). El vidrio que pinta Quickshell
+(`Surface` con `backdrop`: bloqueo e inicio de sesión) traduce esos mismos ajustes, y el
+greeter los recibe en el `theme.json` compartido.
 
 La misma opción vuelve translúcido el **fondo** de las apps que lo permiten, con el
-texto nítido y el desenfoque de Hyprland detrás, al 88 % como la barra (`opacity` en
-`translucent.sh`).
+texto nítido y el desenfoque de Hyprland detrás, con la misma opacidad que la barra
+(`translucent.sh` la lee de `~/.local/state/velure/opacity`, que escribe Quickshell). En
+cada app se pinta **una sola capa** de color (la ventana): si cada zona tuviera la suya,
+se sumarían y quedaría opaca.
 
 - kitty (`background_opacity`).
 - Zed: el tema Velure con `background.appearance: blurred`. Necesita reiniciarse
@@ -125,6 +136,12 @@ exactamente los mismos colores). `Theme.setWallpaper` ejecuta `paleta aplicar <f
 3. Rellena las plantillas de `~/.config/velure/config.toml` (`[templates.*]` con
    `{{colors.ROL.default.hex}}` e `{{image}}`) y ejecuta sus ganchos: kitty, Zed, GTK3
    y GTK4 (tema «Velure»), iconos, Starship, eza, Firefox y Tidal.
+   El paso 9 de la guía de estilo, **Aplicado a las apps**, enseña cada app con sus
+   colores de ahora y una tabla de qué papel usa cada plantilla (la saca de las
+   plantillas mismas, `scripts/template-roles.py`). eza y Tidal aún usan los nombres de
+   Material.
+
+   ![Aplicado a las apps: la terminal, Zed, Thunar, Firefox y fastfetch con los papeles de la paleta, y la tabla de qué papel usa cada plantilla](img/velure-apps.png)
 4. Devuelve la paleta: los nombres de Material (`primary`, `surface_container`…) para lo
    que ya los usa, y los papeles propios con prefijo `p_` (`p_background`, `p_accent2`,
    `p_gradient_0`…), que `Design.qml` usa primero (`Design.p()`).
