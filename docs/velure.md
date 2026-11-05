@@ -28,14 +28,16 @@ Las rutas son relativas a `~/.config/quickshell/` (en este repo,
 1. **Elegante: contención.** El fondo de todo es un tono muy oscuro y apagado del color
    del fondo de pantalla; las superficies suben desde él con un poco de blanco. **Un
    solo acento**, el primario oscurecido y desaturado (burdeos, petróleo…, nunca
-   pastel), y solo para la acción principal, el interruptor encendido y lo lleno de
-   deslizadores y barras. Lo demás que se resalta (escritorio activo, mosaicos
-   encendidos, casillas, insignias) va en **blanco roto** (`hi`, `AccentFill {
-   secondary: true }`) y lo elegido, en un velo blanco discreto (`selection`). Sin
+   pastel), y solo para la acción principal, el interruptor encendido, el borde de la
+   ventana con foco y lo lleno de deslizadores y barras. Lo demás que se resalta
+   (escritorio activo, mosaicos encendidos, casillas, insignias) va en **blanco roto**
+   (`hi`, `AccentFill { secondary: true }`) y lo elegido, en un velo blanco discreto
+   (`selection`). Sin
    brillos ni resplandores. `Theme.primary` apunta al mismo acento.
 2. **Transparencia de Windows 11.** **Mica** para la barra y los fondos grandes y
    **acrílico** para lo que flota (paneles, menús, avisos), los dos casi opacos para
-   que se lean con cualquier fondo. La barra va pegada al borde, no flota.
+   que se lean con cualquier fondo. La barra va pegada al borde; flota solo si se elige
+   en Ajustes.
 3. **Detalles finos.** Borde de 1 px semitransparente y el canto del vidrio
    (`GlassEdge`: brillo especular de 1 px arriba), sombras
    amplias y suaves solo en lo que flota, títulos ligeros y grandes, controles finos y
@@ -185,7 +187,13 @@ Números que cambian (hora, porcentajes, contadores): `font.features: { "tnum": 
 ### Forma, espacio, elevación y movimiento
 
 - Radios: `radiusXs` 3, `radiusSm` 6 (botones, filas, casillas), `radiusMd` 10
-  (paneles, mosaicos), `radiusLg` 12.
+  (paneles, mosaicos), `radiusLg` 12. Los radios que no son un token van con
+  `Design.corner(r)`: con Ajustes → Esquinas redondeadas apagado todo vale 0, también
+  el `rounding` de las ventanas de Hyprland. No cambian los círculos puros (avatares,
+  puntos de estado), los interruptores, los deslizadores, las barras de progreso ni los
+  escritorios.
+- Ventanas: borde de 2 px solo en la que tiene el foco, con el acento
+  (`Theme.applyBorder`).
 - Espacios: múltiplos de 4 (`Design.space`: 0, 4, 8, 12, 16, 20, 24, 32).
 - Elevación (`Design.elevation[0..3]`): 0 en lo que va pegado (barra), 1 en tarjetas,
   2 en paneles y avisos, 3 en lo más alto (centro de control).
@@ -264,6 +272,8 @@ tokens de `Design` con la API de siempre:
 
 - De Mica, pegada a un borde de lado a lado (Ajustes → Barra: arriba, abajo o un
   lateral), con los elementos sueltos sobre ella: nada de píldoras.
+- Ajustes → Barra apegada al borde: al apagarlo flota a 8 px de los bordes, con
+  `radiusLg` y canto alrededor. Los clics en el hueco pasan a lo que hay detrás.
 - Escritorios como puntos (`Workspaces.qml`), sin números: solo los que tienen
   ventanas y el activo, en orden. El activo se alarga en el acento; los puntos nuevos
   crecen al aparecer.
