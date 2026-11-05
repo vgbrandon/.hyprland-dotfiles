@@ -193,7 +193,7 @@ Números que cambian (hora, porcentajes, contadores): `font.features: { "tnum": 
   puntos de estado), los interruptores, los deslizadores, las barras de progreso ni los
   escritorios.
 - Ventanas: borde de 2 px solo en la que tiene el foco, con el acento
-  (`Theme.applyBorder`).
+  (`Theme.applyBorder`). Se quita en Ajustes → Borde de la ventana con foco.
 - Espacios: múltiplos de 4 (`Design.space`: 0, 4, 8, 12, 16, 20, 24, 32).
 - Elevación (`Design.elevation[0..3]`): 0 en lo que va pegado (barra), 1 en tarjetas,
   2 en paneles y avisos, 3 en lo más alto (centro de control).

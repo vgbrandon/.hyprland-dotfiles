@@ -293,6 +293,12 @@ SidePanel {
             onToggled: Config.setRounded(!Config.rounded)
         }
         SwitchRow {
+            icon: Theme.iRegion
+            text: "Borde de la ventana con foco"
+            checked: Config.focusBorder
+            onToggled: Config.setFocusBorder(!Config.focusBorder)
+        }
+        SwitchRow {
             icon: Theme.iAnimation
             text: "Animaciones"
             checked: animations.boolValue

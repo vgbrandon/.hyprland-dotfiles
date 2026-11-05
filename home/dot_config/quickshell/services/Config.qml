@@ -46,6 +46,21 @@ Singleton {
     Process {
         id: roundingProc
     }
+    // Borde de la ventana con foco, encendido o apagado (su color: Theme.applyBorder).
+    // El grosor encendido es el de hyprland.lua
+    readonly property bool focusBorder: settings.focusBorder
+    function setFocusBorder(on) {
+        settings.focusBorder = on;
+        settingsFile.writeAdapter();
+    }
+    onFocusBorderChanged: if (settingsLoaded) applyFocusBorder()
+    function applyFocusBorder() {
+        focusBorderProc.command = ["hyprctl", "eval", `hl.config(${hyprLua("general:border_size", focusBorder ? 2 : 0)})`];
+        focusBorderProc.running = true;
+    }
+    Process {
+        id: focusBorderProc
+    }
     // Hyprland vuelve a lo de hyprland.lua al recargar su configuración
     Connections {
         target: Hyprland
@@ -53,6 +68,7 @@ Singleton {
             if (event.name !== "configreloaded") return;
             root.applyHypr();
             if (!root.rounded) root.applyRounding();
+            if (!root.focusBorder) root.applyFocusBorder();
         }
     }
     // 0 = barra visible, 1 = escondida fuera de su borde. Empieza escondida:
@@ -244,6 +260,7 @@ Singleton {
             applyTranslucentApps();
             applyHypr();
             if (!rounded) applyRounding();
+            if (!focusBorder) applyFocusBorder();
         }
     }
 
@@ -363,6 +380,8 @@ Singleton {
             property bool barFloating: false
             // Esquinas redondeadas en la shell y las ventanas (false = rectas)
             property bool rounded: true
+            // Borde en la ventana con foco
+            property bool focusBorder: true
             // Selector de fondos: "carousel" o "grid"
             property string wallpaperPicker: "carousel"
             // Monitor principal elegido en el módulo de pantallas ("" = automático)
