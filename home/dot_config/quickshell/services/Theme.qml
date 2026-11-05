@@ -271,6 +271,7 @@ Singleton {
     readonly property string iPlus: String.fromCodePoint(0xF0415)
     readonly property string iMinus: String.fromCodePoint(0xF0374)
     readonly property string iClipboard: String.fromCodePoint(0xF0147)
+    readonly property string iSticker: String.fromCodePoint(0xF0785)
     readonly property string iSend: String.fromCodePoint(0xF048A)
     readonly property string iStop: String.fromCodePoint(0xF04DB)
     readonly property string iCopy: String.fromCodePoint(0xF018F)

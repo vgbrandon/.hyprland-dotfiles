@@ -451,6 +451,14 @@ hl.window_rule({
 	center = true,
 })
 
+-- Editor de stickers (quickshell ipc call stickers toggle)
+hl.window_rule({
+	match = { class = "^org.quickshell$", title = "^Stickers$" },
+	float = true,
+	size = { 1180, 780 },
+	center = true,
+})
+
 -- Guía de paletas (quickshell ipc call paletas toggle)
 hl.window_rule({
 	match = { class = "^org.quickshell$", title = "^Paletas$" },

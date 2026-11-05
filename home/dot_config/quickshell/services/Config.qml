@@ -145,6 +145,7 @@ Singleton {
         { key: "wallpaper", label: "Fondos", icon: Theme.iImage },
         { key: "picker", label: "Selector de color", icon: Theme.iPicker },
         { key: "clipboard", label: "Portapapeles", icon: Theme.iClipboard },
+        { key: "stickers", label: "Stickers", icon: Theme.iSticker },
         { key: "record", label: "Grabar", icon: Theme.iVideo },
         { key: "screenshot", label: "Captura", icon: Theme.iCamera },
         { key: "pomodoro", label: "Pomodoro", icon: Theme.iCoffee },

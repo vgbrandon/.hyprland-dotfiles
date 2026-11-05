@@ -307,6 +307,12 @@ PanelWindow {
                 onClicked: Clipboard.toggle()
                 BarShow { id: showClipboard; key: "clipboard" }
             }
+            BarIcon {
+                visible: showStickers.on
+                icon: Theme.iSticker
+                onClicked: Stickers.toggle()
+                BarShow { id: showStickers; key: "stickers" }
+            }
             // Grabación y pomodoro (con su menú y su panel)
             HoverBox {
                 visible: showRecord.on
