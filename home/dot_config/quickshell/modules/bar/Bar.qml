@@ -118,10 +118,19 @@ PanelWindow {
             // Dónde cae el centro del reloj dentro del grupo (sin reloj, el del grupo)
             readonly property real pivotX: clockBox.visible ? clockBox.x + clockBox.width / 2 : width / 2
             readonly property real pivotY: clockBox.visible ? clockBox.y + clockBox.height / 2 : height / 2
-            x: bar.vertical ? Math.round((parent.width - width) / 2)
-                : Math.round(Math.max(left.x + left.width + 16, Math.min(parent.width / 2 - pivotX, right.x - width - 16)))
-            y: !bar.vertical ? Math.round((parent.height - height) / 2)
-                : Math.round(Math.max(left.y + left.height + 16, Math.min(parent.height / 2 - pivotY, right.y - height - 16)))
+            // La posición no es un enlace: leer el ancho del grupo y dónde cae el reloj obliga
+            // a Qt a recolocarlo en mitad del cálculo, y eso vuelve a disparar el enlace
+            // (bucle). Se recalcula después de cada cambio, con todo ya colocado.
+            function place() {
+                x = bar.vertical ? Math.round((parent.width - width) / 2)
+                    : Math.round(Math.max(left.x + left.width + 16, Math.min(parent.width / 2 - pivotX, right.x - width - 16)));
+                y = !bar.vertical ? Math.round((parent.height - height) / 2)
+                    : Math.round(Math.max(left.y + left.height + 16, Math.min(parent.height / 2 - pivotY, right.y - height - 16)));
+            }
+            readonly property var placeDeps: [bar.vertical, parent.width, parent.height, width, height, pivotX, pivotY,
+                left.x, left.y, left.width, left.height, right.x, right.y, right.width, right.height]
+            onPlaceDepsChanged: Qt.callLater(place)
+            Component.onCompleted: Qt.callLater(place)
             columns: bar.vertical ? 1 : -1
             rowSpacing: 8
             columnSpacing: 14
