@@ -56,6 +56,36 @@ BarPopup {
         color: Theme.subtext
     }
 
+    // --- El llavero bloqueado ---
+    Rectangle {
+        visible: GitHub.locked
+        Layout.fillWidth: true
+        implicitHeight: lockCol.implicitHeight + 24
+        radius: Design.radiusMd
+        color: Design.alpha(Design.warning, 0.1)
+        border.color: Design.alpha(Design.warning, 0.4)
+        ColumnLayout {
+            id: lockCol
+            x: 12
+            y: 12
+            width: parent.width - 24
+            spacing: 10
+            Label {
+                Layout.fillWidth: true
+                text: "gh guarda tu sesión en el llavero del sistema, que está bloqueado. Desbloquéalo con tu contraseña para continuar."
+                wrapMode: Text.Wrap
+                color: Theme.subtext
+            }
+            TextButton {
+                Layout.fillWidth: true
+                accent: true
+                icon: Theme.iShieldLock
+                text: GitHub.unlocking ? "¿No sale? Volver a pedirla" : "Desbloquear el llavero"
+                onClicked: GitHub.unlock()
+            }
+        }
+    }
+
     // --- Cuenta activa ---
     Rectangle {
         visible: GitHub.loggedIn && !GitHub.loggingIn
@@ -221,7 +251,7 @@ BarPopup {
     // --- Iniciar sesión ---
     ColumnLayout {
         // Mientras se comprueba la sesión por primera vez no se ofrece iniciarla
-        visible: GitHub.available && (GitHub.loggingIn || (!GitHub.loggedIn && !(GitHub.loading && GitHub.accounts.length === 0)))
+        visible: GitHub.available && !GitHub.locked && (GitHub.loggingIn || (!GitHub.loggedIn && !(GitHub.loading && GitHub.accounts.length === 0)))
         Layout.fillWidth: true
         spacing: 12
 

@@ -7,7 +7,9 @@ import Quickshell.Io
 // Cuentas de GitHub a través de gh (GitHub CLI): iniciar sesión (flujo de dispositivo:
 // un código que se pega en github.com/login/device), cambiar de cuenta y cerrar sesión.
 // La sesión es la misma que usan gh y git en la terminal. El panel está en modules/github
-// (se abre desde el icono de la barra).
+// (se abre desde el icono de la barra). gh guarda el token en el llavero del sistema y,
+// bloqueado, se queda esperando: se mira antes y el panel ofrece desbloquearlo
+// (scripts/keyring-unlock.py, con el diálogo de contraseña).
 //   quickshell ipc call github toggle
 Singleton {
     id: root
@@ -24,6 +26,9 @@ Singleton {
     property var user: null
     property bool loading: false
     property string error: ""
+    property bool locked: false         // el llavero está bloqueado
+    property bool unlocking: false
+    readonly property string noResponse: "gh no respondió. Inténtalo de nuevo."
 
     function refresh() {
         loading = true;
@@ -32,14 +37,27 @@ Singleton {
 
     Process {
         id: statusProc
-        command: ["gh", "auth", "status", "--json", "hosts"]
+        command: ["sh", "-c", `
+            if busctl --user get-property org.freedesktop.secrets /org/freedesktop/secrets/aliases/default \
+                org.freedesktop.Secret.Collection Locked 2>/dev/null | grep -q true; then
+                echo __BLOQUEADO__; exit 75
+            fi
+            exec timeout 20 gh auth status --json hosts`]
         stdout: StdioCollector {
             onStreamFinished: {
+                root.locked = this.text.includes("__BLOQUEADO__");
+                if (root.locked) {
+                    root.accounts = [];
+                    root.user = null;
+                    root.loading = false;
+                    return;
+                }
                 try {
                     const hosts = JSON.parse(this.text).hosts ?? {};
                     root.accounts = (hosts["github.com"] ?? []).map(a => ({
                         login: a.login, active: a.active, scopes: a.scopes ?? "", state: a.state
                     }));
+                    if (root.error === root.noResponse) root.error = "";
                 } catch (e) {
                     root.accounts = [];
                 }
@@ -55,11 +73,14 @@ Singleton {
                 }
             }
         }
-        onExited: (code, status) => { if (code === 127) root.available = false; }
+        onExited: (code, status) => {
+            if (code === 127) root.available = false;
+            else if (code === 124) root.error = root.noResponse;
+        }
     }
     Process {
         id: userProc
-        command: ["gh", "api", "user", "--jq", "{login,name,avatar_url,bio,html_url,public_repos,followers,following,created_at}"]
+        command: ["timeout", "20", "gh", "api", "user", "--jq", "{login,name,avatar_url,bio,html_url,public_repos,followers,following,created_at}"]
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
@@ -193,7 +214,7 @@ Singleton {
         activityProc.offset = newest;
         activityProc.months = keys;
         activityProc.ok = false;
-        activityProc.command = ["gh", "api", "graphql", "-f",
+        activityProc.command = ["timeout", "60", "gh", "api", "graphql", "-f",
             "query=query($from:DateTime!,$to:DateTime!){viewer{contributionsCollection(from:$from,to:$to){contributionCalendar{weeks{contributionDays{date contributionCount contributionLevel}}}}}}",
             "-f", "from=" + new Date(a.year, a.month, 1).toISOString(),
             "-f", "to=" + new Date(b.year, b.month + 1, 1, 0, 0, -1).toISOString()];
@@ -358,6 +379,45 @@ Singleton {
     // Otra cuenta: su caché
     onActiveChanged: loadCache()
 
+    // --- Desbloquear el llavero (diálogo de contraseña) ---
+    // Pulsar otra vez mientras espera relanza el diálogo (si el anterior no llegó a salir)
+    function unlock() {
+        error = "";
+        if (unlocking) {
+            relaunch = true;
+            unlockProc.running = false;
+            return;
+        }
+        unlocking = true;
+        unlockProc.running = true;
+    }
+    property bool relaunch: false
+    Timer {
+        id: relaunchTimer
+        interval: 300
+        onTriggered: {
+            root.unlocking = true;
+            unlockProc.running = true;
+        }
+    }
+    Process {
+        id: unlockProc
+        command: ["python3", Quickshell.shellPath("scripts/keyring-unlock.py")]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                root.unlocking = false;
+                if (root.relaunch) {
+                    root.relaunch = false;
+                    relaunchTimer.start();
+                    return;
+                }
+                const r = this.text.trim();
+                if (r === "desbloqueado" || r === "ya estaba desbloqueado") root.refresh();
+                else root.error = r === "cancelado" ? "Desbloqueo cancelado" : "El llavero no respondió";
+            }
+        }
+    }
+
     // --- Iniciar sesión (flujo de dispositivo) ---
     // gh muestra un código (y lo copia al portapapeles) y espera a que se autorice en
     // el navegador; al terminar, git usa esta cuenta (gh auth setup-git).
@@ -366,7 +426,7 @@ Singleton {
     property string deviceUrl: "https://github.com/login/device"
 
     function login() {
-        if (loggingIn) return;
+        if (loggingIn || locked) return;
         error = "";
         deviceCode = "";
         loggingIn = true;
