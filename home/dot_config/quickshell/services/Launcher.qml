@@ -49,6 +49,7 @@ Singleton {
         { title: "Perfil", icon: Theme.iPencil, keywords: "perfil foto nombre contraseña usuario", run: () => Profile.toggle() },
         { title: "Siguiente distribución de teclado", icon: Theme.iKeyboard, keywords: "teclado idioma layout distribución", run: () => KeyboardLayout.next() },
         { title: "Pomodoro: empezar o pausar", icon: Theme.iTimer, keywords: "pomodoro temporizador enfoque", run: () => Pomodoro.toggle() },
+        { title: "VPN: conectar o desconectar", icon: Theme.iShieldCheck, keywords: "vpn proton conectar desconectar privacidad", run: () => Vpn.toggle() },
         { title: "Guía de estilo", icon: Theme.iStar, keywords: "diseño velure estilo guía", run: () => Design.guideOpen = true },
         { title: "Bloquear la pantalla", icon: Theme.iLock, keywords: "bloquear lock", bind: "Sistema: Bloquear la pantalla", featured: true, run: () => Lock.lock() },
         { title: "Menú de energía", icon: Theme.iPower, keywords: "energía apagar reiniciar power", bind: "Sistema: Menú de energía", run: () => PowerMenu.toggle() },

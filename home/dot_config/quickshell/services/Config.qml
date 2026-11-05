@@ -153,6 +153,7 @@ Singleton {
         { key: "updates", label: "Actualizaciones", icon: Theme.iPacman },
         { key: "bitwarden", label: "Bitwarden", icon: Theme.iBitwarden },
         { key: "keyboard", label: "Teclado", icon: Theme.iKeyboard },
+        { key: "vpn", label: "VPN", icon: Theme.iShieldCheck },
         { key: "network", label: "Red", icon: Theme.iWifi },
         { key: "bluetooth", label: "Bluetooth", icon: Theme.iBt },
         { key: "servers", label: "Servidores", icon: Theme.iServer },

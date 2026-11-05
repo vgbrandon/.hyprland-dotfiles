@@ -20,6 +20,7 @@ import qs.modules.network
 import qs.modules.servers
 import qs.modules.system
 import qs.modules.updates
+import qs.modules.vpn
 import qs.services
 
 // Barra (diseño Velure, ver docs/velure.md): de Mica, pegada a un borde de lado a
@@ -449,6 +450,27 @@ PanelWindow {
                     target: KeyboardLayout
                     function onPanelRequested() {
                         kbPanel.toggleOnMainScreen();
+                    }
+                }
+            }
+
+            // VPN (Proton): clic = panel, clic derecho = conectar/desconectar
+            BarIcon {
+                id: vpnIcon
+                visible: showVpn.on
+                BarShow { id: showVpn; key: "vpn" }
+                icon: Vpn.locked ? Theme.iShieldLock : Vpn.busy ? Theme.iShieldSync : Vpn.connected ? Theme.iShieldCheck : Theme.iShieldOff
+                iconColor: Vpn.connected ? Design.accent : Design.onSurfaceVariant
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: button => button === Qt.RightButton ? Vpn.toggle() : vpnPanel.toggle()
+                VpnPanel {
+                    id: vpnPanel
+                    anchorItem: vpnIcon
+                }
+                Connections {
+                    target: Vpn
+                    function onPanelRequested() {
+                        vpnPanel.toggleOnMainScreen();
                     }
                 }
             }
