@@ -239,6 +239,14 @@ SidePanel {
             }
         }
 
+        // Apegada al borde o flotante, separada de él
+        SwitchRow {
+            icon: Theme.iWindow
+            text: "Barra apegada al borde"
+            checked: !Config.savedFloating
+            onToggled: Config.setBarFloating(!Config.savedFloating)
+        }
+
         // Selector de fondos: carrusel o cuadrícula a pantalla completa
         RowLayout {
             Layout.leftMargin: 6

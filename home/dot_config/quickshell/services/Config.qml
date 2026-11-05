@@ -20,6 +20,16 @@ Singleton {
     readonly property string savedPosition: ["top", "bottom", "left", "right"].includes(settings.barPosition) ? settings.barPosition : "top"
     property string barPosition: "top"
     readonly property bool barVertical: barPosition === "left" || barPosition === "right"
+    // Apegada al borde (false) o flotante, separada por barGap y con las esquinas
+    // redondeadas. Como con la posición, savedFloating es la elegida y barFloating, la
+    // que se ve: cambia a mitad de la animación.
+    readonly property bool savedFloating: settings.barFloating
+    property bool barFloating: false
+    readonly property int barGap: barFloating ? 8 : 0
+    function setBarFloating(on) {
+        settings.barFloating = on;
+        settingsFile.writeAdapter();
+    }
     // 0 = barra visible, 1 = escondida fuera de su borde. Empieza escondida:
     // al iniciar la sesión entra deslizándose (introAnim)
     property real barHide: 1
@@ -230,17 +240,19 @@ Singleton {
         onTriggered: root.introReady = true
     }
 
-    // Al cambiar la posición (desde el panel o editando el archivo):
-    // sale por su borde, cambia de lado y entra por el nuevo
+    // Al cambiar la posición o el apegado (desde el panel o editando el archivo):
+    // sale por su borde, cambia y vuelve a entrar
+    function moveBar() {
+        if (!settingsLoaded) return;
+        if (savedPosition !== barPosition || savedFloating !== barFloating || moveAnim.running) {
+            introAnim.stop();
+            moveAnim.restart();
+        }
+    }
     Connections {
         target: settings
-        function onBarPositionChanged() {
-            if (!root.settingsLoaded) return;
-            if (root.savedPosition !== root.barPosition || moveAnim.running) {
-                introAnim.stop();
-                moveAnim.restart();
-            }
-        }
+        function onBarPositionChanged() { root.moveBar(); }
+        function onBarFloatingChanged() { root.moveBar(); }
     }
 
     // Entrada al iniciar la sesión, junto con el fundido del fondo (ver introReady)
@@ -266,7 +278,12 @@ Singleton {
             duration: 200
             easing.type: Easing.InCubic
         }
-        ScriptAction { script: root.barPosition = root.savedPosition }
+        ScriptAction {
+            script: {
+                root.barPosition = root.savedPosition;
+                root.barFloating = root.savedFloating;
+            }
+        }
         // Deja que la barra se recoloque en el borde nuevo antes de entrar
         PauseAnimation { duration: 100 }
         NumberAnimation {
@@ -281,7 +298,7 @@ Singleton {
     // Espacio que ocupa la barra en un borde del monitor (0 si no está ahí).
     // Los paneles que ignoran la zona exclusiva lo suman a su margen.
     function reserve(edge) {
-        return barPosition === edge ? Theme.barHeight : 0;
+        return barPosition === edge ? Theme.barHeight + barGap : 0;
     }
 
     // Posición de un popup de la barra, en coordenadas de la ventana de la barra:
@@ -308,6 +325,7 @@ Singleton {
         onLoaded: {
             if (root.settingsLoaded) return;
             root.barPosition = root.savedPosition;
+            root.barFloating = root.savedFloating;
             root.settingsLoaded = true;
         }
         onLoadFailed: root.settingsLoaded = true
@@ -315,6 +333,8 @@ Singleton {
         JsonAdapter {
             id: settings
             property string barPosition: "top"
+            // Barra separada del borde en vez de apegada
+            property bool barFloating: false
             // Selector de fondos: "carousel" o "grid"
             property string wallpaperPicker: "carousel"
             // Monitor principal elegido en el módulo de pantallas ("" = automático)

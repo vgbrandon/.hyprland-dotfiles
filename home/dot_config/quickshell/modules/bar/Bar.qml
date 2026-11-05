@@ -24,8 +24,9 @@ import qs.modules.vpn
 import qs.services
 
 // Barra (diseño Velure, ver docs/velure.md): de Mica, pegada a un borde de lado a
-// lado, con los elementos sueltos sobre ella. Arriba, abajo o en un lateral (Ajustes →
-// Barra); en los laterales va en columna y sin lo que no cabe (títulos, CPU y RAM).
+// lado o flotando separada de él, con los elementos sueltos sobre ella. Arriba, abajo o
+// en un lateral (Ajustes → Barra); en los laterales va en columna y sin lo que no cabe
+// (títulos, CPU y RAM).
 //   Inicio: lanzador, escritorios y ventana activa
 //   Centro: la hora siempre al medio (clic = calendario) y lo que suena antes
 //   Final: CPU y RAM, herramientas, bandeja, estado del sistema, volumen y energía
@@ -46,15 +47,31 @@ PanelWindow {
         left: edge !== "right"
         right: edge !== "left"
     }
-    implicitHeight: Theme.barHeight
-    implicitWidth: Theme.barHeight
+    // Flotante, la ventana sigue llegando al borde con el hueco por dentro: así la barra
+    // sale de la pantalla al esconderse y los paneles se colocan igual. Los clics en el
+    // hueco pasan a lo de detrás (mask)
+    implicitHeight: Theme.barHeight + Config.barGap
+    implicitWidth: Theme.barHeight + Config.barGap
     color: "transparent"
+    mask: Region { item: frame }
     WlrLayershell.namespace: "quickshell:bar"
+
+    // Dónde está la barra, sin el hueco. Va aparte del contenido porque el mask se calcula
+    // con su desplazamiento y no se recalcula cuando acaba: si siguiera al contenido, tras
+    // la animación quedaría fuera de la ventana y la barra no recibiría clics
+    Item {
+        id: frame
+        anchors.fill: parent
+        anchors.topMargin: bar.edge !== "bottom" ? Config.barGap : 0
+        anchors.bottomMargin: bar.edge !== "top" ? Config.barGap : 0
+        anchors.leftMargin: bar.edge !== "right" ? Config.barGap : 0
+        anchors.rightMargin: bar.edge !== "left" ? Config.barGap : 0
+    }
 
     // Todo el contenido: se desliza fuera de su borde al cambiar de posición
     Item {
         id: content
-        anchors.fill: parent
+        anchors.fill: frame
         transform: Translate {
             x: Config.barHide * (bar.edge === "left" ? -bar.width : bar.edge === "right" ? bar.width : 0)
             y: Config.barHide * (bar.edge === "top" ? -bar.height : bar.edge === "bottom" ? bar.height : 0)
@@ -64,9 +81,17 @@ PanelWindow {
         Rectangle {
             anchors.fill: parent
             color: Design.alpha(Design.micaTint, Design.micaOpacity)
+            // Flotante: canto alrededor y esquinas redondeadas
+            radius: Config.barFloating ? Design.radiusLg : 0
+            Behavior on radius {
+                NumberAnimation { duration: Design.normal }
+            }
+            border.color: Design.border
+            border.width: Config.barFloating ? 1 : 0
         }
-        // Canto hacia el escritorio
+        // Apegada: canto solo hacia el escritorio
         Rectangle {
+            visible: !Config.barFloating
             x: bar.edge === "left" ? parent.width - 1 : 0
             y: bar.edge === "top" ? parent.height - 1 : 0
             width: bar.vertical ? 1 : parent.width
