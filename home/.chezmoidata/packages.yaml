@@ -5,6 +5,7 @@ packages:
     - curl # descarga de archivos desde terminal
     - base-devel # herramientas básicas de compilación
     - go # toolchain para compilar software en Go
+    - rust # toolchain para compilar velure, el generador del tema (post/velure)
     - stow # ya no se usa para aplicar dotfiles, pero puede quedar como dependencia general
 
   pacman:

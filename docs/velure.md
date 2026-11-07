@@ -133,8 +133,10 @@ nueva con material transparente necesita su namespace en esa regla.
 
 ### La paleta
 
-Los colores salen de `~/.local/bin/velure` (proyecto `~/mis-proyectos/velure`; se instala
-con `cargo build --release` e `install -m 755 target/release/velure ~/.local/bin/velure`).
+Los colores salen de `~/.local/bin/velure` ([repo](https://github.com/vgbrandon/velure)).
+Lo compila e instala `post/run_onchange_after_velure.sh`, fijado a un commit (`VELURE_REF`)
+para que el binario vaya a la par con `~/.config/velure/config.toml`; al cambiar ese
+commit, `chezmoi apply` lo vuelve a compilar.
 `Theme.setWallpaper` ejecuta `velure aplicar <fondo>`:
 
 1. Saca de la imagen sus colores dominantes en OKLab y detecta su armonía con las
