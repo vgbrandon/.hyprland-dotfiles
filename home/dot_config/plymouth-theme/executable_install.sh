@@ -17,9 +17,9 @@ fi
 
 # --- Imágenes con los colores del tema (los que comparte Quickshell) ---
 color() { python3 -I -c "import json,sys
-try: print(json.load(open('$shared'))['scheme'][sys.argv[1]])
+try: print(json.load(open('$shared'))['tokens'][sys.argv[1]])
 except Exception: print(sys.argv[2])" "$1" "$2"; }
-text="$(color on_surface '#e6e1e5')"
+text="$(color text '#e6e1e5')"
 
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT

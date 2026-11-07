@@ -21,7 +21,7 @@ import qs.modules.power
 import qs.modules.profile
 import qs.modules.screenshot
 import qs.modules.shortcuts
-import qs.modules.styleguide
+import qs.modules.velureguide
 import qs.modules.visualizer
 import qs.modules.wallpaper
 import qs.services
@@ -81,7 +81,7 @@ ShellRoot {
     DisplaysWindow {}
     KeyboardWindow {}
     LayoutMapWindow {}
-    StyleGuideWindow {}
+    VelureGuideWindow {}
     PaletteGuideWindow {}
     StickerWindow {}
     IconEditor {}

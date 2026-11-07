@@ -2,12 +2,12 @@ import QtQuick
 import QtQuick.Layouts
 import qs.services
 
-// Un grupo de papeles del tema: [clave, nombre] o [clave, nombre, token de Design]
+// Un grupo de tokens: [token, nombre] o [token, nombre, propiedad de Design]
 ColumnLayout {
     id: group
     property string label
     property var roles: []
-    // Los papeles de paleta (roles: background, accent…)
+    // Los tokens (bg, primary…)
     property var source: null
     spacing: 8
     GuideLabel { text: group.label }

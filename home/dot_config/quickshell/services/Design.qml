@@ -5,33 +5,29 @@ import Quickshell
 import Quickshell.Io
 
 // Diseño Velure, «Elegante»: contención. Fondo profundo teñido del color del fondo de
-// pantalla (paleta), un único acento oscuro y desaturado (nunca pastel) solo para lo
+// pantalla (velure), un único acento oscuro y desaturado (nunca pastel) solo para lo
 // principal, lo demás que se resalta en blanco roto; sin brillos ni resplandores,
 // títulos ligeros, controles finos. Transparencia de Windows 11 (Mica en la barra,
 // acrílico en los paneles, casi opacos), bordes de 1 px, sombras amplias, esquinas
 // contenidas y movimiento suave, sin rebotes.
-// Lo usan la guía de estilo (modules/styleguide), los componentes de components/design
-// y toda la shell (la barra, los paneles…). Documentado en docs/velure.md de los dotfiles.
-//   quickshell ipc call styleguide toggle
+// Lo usan los componentes de components/design y toda la shell (la barra, los paneles…).
+// Documentado en docs/velure.md de los dotfiles.
 Singleton {
     id: root
 
+    // La guía de velure (modules/velureguide): quickshell ipc call guia toggle
     property bool guideOpen: false
-    // Desplaza la guía (para revisarla con capturas): quickshell ipc call styleguide scrollTo 900
+    // La imagen que explica la guía; vacía, el fondo actual
+    property string guideImage: ""
+    // Desplaza la guía (para revisarla con capturas): quickshell ipc call guia scrollTo 900
     signal guideScroll(int y)
-    // Guarda una captura de la guía: quickshell ipc call styleguide capture /tmp/guia.png
+    // Guarda una captura de la guía entera: quickshell ipc call guia capture /tmp/guia.png
     signal guideCapture(string path)
-    // Y solo el paso de las apps, entero: quickshell ipc call styleguide captureApps /tmp/apps.png
-    signal guideCaptureApps(string path)
 
-    function c(name, fallback) {
-        return Theme.scheme[name] ?? fallback;
-    }
-    // Un papel de la paleta (paleta aplicar: p_background, p_accent…) o, mientras no hay
-    // paleta cargada, lo de la fórmula
-    function p(name, otherwise) {
-        const v = Theme.scheme["p_" + name];
-        return v !== undefined ? Qt.color(v) : otherwise;
+    // Un token de velure o, mientras no los hay, un gris neutro
+    function t(name, otherwise) {
+        const v = Theme.tokens[name];
+        return Qt.color(v !== undefined ? v : otherwise);
     }
     function alpha(color, a) {
         const q = Qt.tint(color, "transparent");
@@ -42,48 +38,38 @@ Singleton {
         b = Qt.color(b);
         return Qt.rgba(a.r + (b.r - a.r) * t, a.g + (b.g - a.g) * t, a.b + (b.b - a.b) * t, 1);
     }
-    // El color hacia su gris (t = 1: sin color)
-    function neutral(color, t) {
-        const q = Qt.color(color);
-        const g = 0.2126 * q.r + 0.7152 * q.g + 0.0722 * q.b;
-        return Qt.rgba(q.r + (g - q.r) * t, q.g + (g - q.g) * t, q.b + (g - q.b) * t, 1);
-    }
-
-    // --- Color: roles tonales ---
-    // El fondo de todo: un tono muy oscuro y apagado del color del fondo de pantalla.
-    // Las superficies suben desde él con un poco de blanco
-    readonly property color background: p("background", mix(neutral(c("primary_container", "#4f378b"), 0.45), "#000000", 0.74))
-    readonly property color surface0: p("surface0", mix(background, "#ffffff", 0.035))
-    readonly property color surface1: p("surface1", mix(background, "#ffffff", 0.06))
-    readonly property color surface2: p("surface2", mix(background, "#ffffff", 0.09))
-    readonly property color surface3: p("surface3", mix(background, "#ffffff", 0.13))
-    // Texto: blanco roto y gris suave
-    readonly property color onSurface: p("text", mix(neutral(c("on_surface", "#e6e1e5"), 0.7), "#ffffff", 0.2))
-    readonly property color onSurfaceVariant: p("subtext", alpha(neutral(c("on_surface_variant", "#c9c4cc"), 0.6), 0.75))
-    readonly property color muted: alpha(onSurfaceVariant, 0.6)
-    // Acento: el primario oscurecido y algo desaturado (burdeos, petróleo…), solo para
-    // la acción principal, el interruptor encendido y lo lleno de deslizadores y barras
-    readonly property color accent: p("accent", mix(neutral(c("primary", "#d0bcff"), 0.3), c("primary_container", "#4f378b"), 0.55))
+    // --- Color: tokens de velure ---
+    readonly property color background: t("bg", "#17161a")
+    readonly property color surface0: t("surface_low", "#1d1c20")
+    readonly property color surface1: t("surface", "#232226")
+    readonly property color surface2: t("surface_high", "#29282c")
+    readonly property color surface3: t("overlay", "#2f2e33")
+    // Texto
+    readonly property color onSurface: t("text", "#dedde1")
+    readonly property color onSurfaceVariant: t("subtext", "#b4b3b8")
+    readonly property color muted: t("muted", "#8f8e94")
+    // Acento: solo para la acción principal, el interruptor encendido y lo lleno de
+    // deslizadores y barras
+    readonly property color accent: t("primary", "#a9a8b0")
     // (con Binding: declarada con su valor, QML la deja en negro al llamarse on + otra propiedad)
     property color onAccent
-    Binding { target: root; property: "onAccent"; value: p("onAccent", Qt.color("#ffffff")) }
-    // Acentos 2 y 3 de la paleta propia (lo que suena, recursos…) y el degradado del
-    // visualizador
-    readonly property color second: p("accent2", Qt.color(c("secondary", "#ccc2dc")))
-    readonly property color third: p("accent3", Qt.color(c("tertiary", "#efb8c8")))
+    Binding { target: root; property: "onAccent"; value: t("on_primary", "#141416") }
+    // Acentos 2 y 3 (lo que suena, recursos…) y el degradado del visualizador
+    readonly property color second: t("secondary", "#9c9ba3")
+    readonly property color third: t("tertiary", "#8f8e96")
     readonly property var gradient: {
         const g = [];
-        for (let i = 0; Theme.scheme["p_gradient_" + i] !== undefined; i++) g.push(Qt.color(Theme.scheme["p_gradient_" + i]));
+        for (let i = 0; Theme.tokens["gradient_" + i] !== undefined; i++) g.push(Qt.color(Theme.tokens["gradient_" + i]));
         return g.length > 0 ? g : [accent, second];
     }
     // Igual que el acento: sin degradado (se mantiene por compatibilidad)
     readonly property color accent2: accent
     // Énfasis secundario (escritorio activo, mosaicos encendidos, casillas, insignias):
     // blanco roto (AccentFill { secondary: true })
-    readonly property color hi: p("hi", onSurface)
+    readonly property color hi: t("emphasis", "#d8d8dc")
     // (con Binding: declarada con su valor, QML la deja en negro al llamarse on + otra propiedad)
     property color onHi
-    Binding { target: root; property: "onHi"; value: Qt.color("#0e0e10") }
+    Binding { target: root; property: "onHi"; value: t("on_emphasis", "#101012") }
     // Selección: un velo blanco discreto
     readonly property color selection: alpha("#ffffff", 0.06)
     readonly property color selectionBorder: alpha("#ffffff", 0.12)
@@ -92,22 +78,22 @@ Singleton {
     // (con Binding: declarada con su valor, QML la deja en negro al llamarse on + otra propiedad)
     property color onTonal
     Binding { target: root; property: "onTonal"; value: onSurface }
-    readonly property color accentContainer: p("container", alpha(accent, 0.35))
+    readonly property color accentContainer: t("primary_container", "#3a393f")
     // (con Binding: declarada con su valor, QML la deja en negro al llamarse on + otra propiedad)
     property color onAccentContainer
-    Binding { target: root; property: "onAccentContainer"; value: p("onContainer", onSurface) }
+    Binding { target: root; property: "onAccentContainer"; value: t("on_primary_container", "#e6e5ea") }
     // Contorno y separadores
-    readonly property color outline: p("outline", neutral(c("outline", "#938f99"), 0.6))
-    readonly property color outlineVariant: p("outlineVariant", alpha("#ffffff", 0.1))
-    // Estados (armonizados con el fondo)
-    readonly property color error: p("error", c("error", "#ffb4ab"))
+    readonly property color outline: t("outline", "#716f76")
+    readonly property color outlineVariant: t("border", "#46454b")
+    // Estados
+    readonly property color error: t("error", "#c98078")
     // (con Binding: declarada con su valor, QML la deja en negro al llamarse on + otra propiedad)
     property color onError
-    Binding { target: root; property: "onError"; value: c("on_error", "#690005") }
-    readonly property color errorContainer: c("error_container", "#93000a")
-    readonly property color success: p("success", c("green", "#98c379"))
-    readonly property color warning: p("warning", c("yellow", "#e5c07b"))
-    readonly property color info: p("info", c("blue", "#61afef"))
+    Binding { target: root; property: "onError"; value: t("on_error", "#1d0c0a") }
+    readonly property color errorContainer: t("error_container", "#502d29")
+    readonly property color success: t("success", "#9cc9a4")
+    readonly property color warning: t("warning", "#c9b574")
+    readonly property color info: t("info", "#7a9cc6")
     // Capas de estado (encima de cualquier color): pasar el ratón y pulsar
     readonly property color hoverLayer: alpha(onSurface, 0.08)
     readonly property color pressLayer: alpha(onSurface, 0.12)
@@ -188,13 +174,14 @@ Singleton {
     readonly property int springDuration: 320
 
     IpcHandler {
-        target: "styleguide"
+        target: "guia"
 
         function toggle(): void { root.guideOpen = !root.guideOpen; }
         function open(): void { root.guideOpen = true; }
         function close(): void { root.guideOpen = false; }
+        // Abre la guía con otra imagen, sin cambiar el fondo: quickshell ipc call guia ver /ruta.jpg
+        function ver(path: string): void { root.guideImage = path; root.guideOpen = true; }
         function scrollTo(y: int): void { root.guideScroll(y); }
         function capture(path: string): void { root.guideCapture(path); }
-        function captureApps(path: string): void { root.guideCaptureApps(path); }
     }
 }

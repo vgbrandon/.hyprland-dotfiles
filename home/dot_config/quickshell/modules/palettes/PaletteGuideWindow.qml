@@ -10,8 +10,8 @@ import qs.services
 // Guía de paletas: el recorrido del color de tu fondo actual, en tres pasos.
 //   1. Del generador: la imagen y lo que saca de ella `paleta` (10 colores, acentos y
 //      degradados, apagados, escalas clara y oscura).
-//   2. El tema: cada papel (fondo, texto, acentos…) con el color del generador del que
-//      sale (o «calculado»), en armonía análoga y con la regla 60-30-10.
+//   2. El tema: cada token (fondo, texto, acentos…) con el color de la imagen del que
+//      sale (o «calculado»), con la armonía de la imagen y la regla 60-30-10.
 //   3. Aplicado a Velure: los componentes reales de la shell con la paleta aplicada.
 // No cambia nada de la shell.
 //   quickshell ipc call paletas toggle | refresh | capture /tmp/paletas.png | scrollTo 900
@@ -26,7 +26,7 @@ FloatingWindow {
     implicitHeight: 880
     color: "#0c0c0e"
 
-    // Los datos (paleta roles sobre el fondo actual), compartidos con la guía de estilo
+    // Los datos (velure tokens sobre el fondo actual)
     PaletteData {
         id: pdata
         active: win.visible
@@ -92,7 +92,7 @@ FloatingWindow {
                     GuideText {
                         Layout.fillWidth: true
                         wrapMode: Text.Wrap
-                        text: "Cómo pasa el color de la imagen al escritorio: lo que saca el generador, el papel que le da el tema y cómo se ve aplicado."
+                        text: "Cómo pasa el color de la imagen al escritorio: lo que saca velure, el token que le da el tema y cómo se ve aplicado."
                         color: "#9a9aa2"
                     }
                 }
@@ -110,7 +110,7 @@ FloatingWindow {
 
             GuideText {
                 visible: !win.d
-                text: pdata.running ? "Generando…" : "Sin datos: ¿está instalado ~/.local/bin/paleta?"
+                text: pdata.running ? "Generando…" : "Sin datos: ¿está instalado ~/.local/bin/velure?"
                 color: "#9a9aa2"
             }
 
@@ -122,7 +122,7 @@ FloatingWindow {
 
             GuideArrow {
                 visible: !!win.d
-                text: "Se reparte en papeles: un solo tono (el «base») con sus vecinos análogos y la regla 60-30-10, con la luminosidad fijada para que todo se lea"
+                text: "Se deriva en tokens: los acentos siguen la armonía detectada en la imagen, con la regla 60-30-10 y la luminosidad fijada para que todo se lea"
             }
 
             // ============ 2 · El tema ============

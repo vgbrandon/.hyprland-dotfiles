@@ -51,7 +51,7 @@ Singleton {
         { title: "Pomodoro: empezar o pausar", icon: Theme.iTimer, keywords: "pomodoro temporizador enfoque", run: () => Pomodoro.toggle() },
         { title: "VPN: conectar o desconectar", icon: Theme.iShieldCheck, keywords: "vpn proton conectar desconectar privacidad", run: () => Vpn.toggle() },
         { title: "Crear un sticker", icon: Theme.iSticker, keywords: "sticker stickers whatsapp gif meme texto", run: () => Stickers.open = true },
-        { title: "Guía de estilo", icon: Theme.iStar, keywords: "diseño velure estilo guía", run: () => Design.guideOpen = true },
+        { title: "Guía de velure", icon: Theme.iStar, keywords: "diseño velure estilo guía color tema paleta", run: () => Design.guideOpen = true },
         { title: "Bloquear la pantalla", icon: Theme.iLock, keywords: "bloquear lock", bind: "Sistema: Bloquear la pantalla", featured: true, run: () => Lock.lock() },
         { title: "Menú de energía", icon: Theme.iPower, keywords: "energía apagar reiniciar power", bind: "Sistema: Menú de energía", run: () => PowerMenu.toggle() },
         { title: "Suspender", icon: Theme.iSleep, keywords: "suspender dormir sleep", run: () => Quickshell.execDetached(["systemctl", "suspend"]) },

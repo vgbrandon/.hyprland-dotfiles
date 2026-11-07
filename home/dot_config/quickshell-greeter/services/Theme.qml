@@ -12,7 +12,7 @@ Singleton {
 
     readonly property string shared: Quickshell.env("QS_GREETER_SHARED") || "/var/lib/qs-greeter"
 
-    property var scheme: ({})
+    property var tokens: ({})
     property string wallpaper: ""
     property string user: ""
     // Nombre que se muestra y foto del perfil de ese usuario (los comparte la sesión)
@@ -30,8 +30,8 @@ Singleton {
     property real blurContrast: 0.3
     property real blurVibrancy: 0
 
-    function pick(name, fallback) {
-        return scheme[name] ?? fallback;
+    function token(name, fallback) {
+        return tokens[name] ?? fallback;
     }
 
     function withAlpha(c, a) {
@@ -39,15 +39,15 @@ Singleton {
         return Qt.rgba(q.r, q.g, q.b, a);
     }
 
-    readonly property color panelBg: pick("surface", "#121214")
-    readonly property color surface: pick("surface_container", "#1f1e22")
-    readonly property color surfaceHigh: pick("surface_container_highest", "#2b2a30")
-    readonly property color primary: pick("primary", "#d6d4dc")
-    readonly property color primaryFg: pick("on_primary", "#1c1b1f")
-    readonly property color text: pick("on_surface", "#e6e1e5")
-    readonly property color subtext: pick("on_surface_variant", "#9e9aa3")
-    readonly property color dot: scheme.outline_variant ? Qt.lighter(scheme.outline_variant, 1.25) : "#5a5860"
-    readonly property color error: pick("error", "#ffb4ab")
+    readonly property color panelBg: token("bg", "#121214")
+    readonly property color surface: token("surface", "#1f1e22")
+    readonly property color surfaceHigh: token("overlay", "#2b2a30")
+    readonly property color primary: token("primary", "#d6d4dc")
+    readonly property color primaryFg: token("on_primary", "#1c1b1f")
+    readonly property color text: token("text", "#e6e1e5")
+    readonly property color subtext: token("subtext", "#9e9aa3")
+    readonly property color dot: tokens.border ? Qt.lighter(tokens.border, 1.25) : "#5a5860"
+    readonly property color error: token("error", "#ffb4ab")
 
     FileView {
         path: root.shared + "/theme.json"
@@ -56,7 +56,7 @@ Singleton {
         onLoaded: {
             try {
                 const d = JSON.parse(text());
-                root.scheme = d.scheme ?? {};
+                root.tokens = d.tokens ?? {};
                 root.user = d.user ?? "";
                 root.name = d.name ?? "";
                 if (d.avatar) root.avatar = "file://" + root.shared + "/avatar";

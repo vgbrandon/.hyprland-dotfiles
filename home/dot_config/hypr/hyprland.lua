@@ -445,9 +445,9 @@ hl.window_rule({
 	center = true,
 })
 
--- Guía de estilo del diseño nuevo de Quickshell (quickshell ipc call styleguide toggle)
+-- Guía de velure de Quickshell (quickshell ipc call guia toggle)
 hl.window_rule({
-	match = { class = "^org.quickshell$", title = "^Guía de estilo$" },
+	match = { class = "^org.quickshell$", title = "^Guía de velure$" },
 	float = true,
 	size = { 1280, 880 },
 	center = true,

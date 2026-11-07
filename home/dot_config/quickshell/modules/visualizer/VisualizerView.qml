@@ -9,7 +9,7 @@ import qs.services
 //   circle   barras alrededor de un aro   ring    aro que ondula
 //   blob     burbuja que late con los graves
 // Color: "theme" (el principal del tema), "gradient" (el degradado de la paleta: del acento a
-// su vecino análogo, Design.gradient) o "white". Los datos llegan de services/Visualizer.qml.
+// sus tonos vecinos, Design.gradient) o "white". Los datos llegan de services/Visualizer.qml.
 //   VisualizerView { anchors.fill: parent; style: "ring"; colorMode: "gradient" }
 Item {
     id: root
@@ -54,7 +54,7 @@ Item {
 
     // Color en la posición t (0–1) del dibujo
     // (Qt.tint convierte el texto "#rrggbb" del tema en un color con sus componentes)
-    // El degradado de la paleta (del acento a su vecino análogo)
+    // El degradado de la paleta (del acento a sus tonos vecinos)
     readonly property var palette: Design.gradient.map(c => Qt.tint(c, "transparent"))
     function colorAt(t) {
         // Un color (no el texto "#ffffff"): el lienzo usa sus componentes .r .g .b

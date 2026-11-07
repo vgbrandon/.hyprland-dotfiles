@@ -2,14 +2,14 @@ import QtQuick
 import QtQuick.Layouts
 import qs.services
 
-// Del generador → al tema: el color de origen (o «calculado»), una flecha y el papel
+// De la imagen → al tema: el color de origen (o «calculado»), una flecha y el token
 Rectangle {
     id: card
     property var from
     property string to
     property string name
     property string detail
-    // Opcional: el token de Design que lo usa
+    // Opcional: la propiedad de Design que lo usa
     property string token
     implicitHeight: 78
     radius: Design.corner(10)
@@ -30,7 +30,7 @@ Rectangle {
                 border.color: "#55555e"
                 GuideText { anchors.centerIn: parent; visible: !card.from; text: "calc."; size: 9; color: "#8a8a92" }
             }
-            GuideText { text: card.from ? "generador" : "calculado"; size: 9; color: "#77777f" }
+            GuideText { text: card.from ? "imagen" : "calculado"; size: 9; color: "#77777f" }
         }
         GuideText { text: "→"; size: 20; color: "#5a5a64" }
         Rectangle {

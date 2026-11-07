@@ -8,14 +8,13 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    // Paleta generada por paleta (~/.local/bin/paleta) a partir del fondo de pantalla: nombres
-    // planos (los de Material y los papeles p_* que usa Design).
-    // Mientras no haya paleta se usan los grises originales.
-    property var scheme: ({})
+    // Tokens de color que deriva velure (~/.local/bin/velure) del fondo de pantalla: un nombre
+    // por color (bg, primary, on_primary…). Mientras no los haya se usan grises.
+    property var tokens: ({})
     property string wallpaper: ""
 
-    function pick(name, fallback) {
-        return scheme[name] ?? fallback;
+    function token(name, fallback) {
+        return tokens[name] ?? fallback;
     }
 
     function withAlpha(c, a) {
@@ -24,17 +23,16 @@ Singleton {
     }
 
     // Colores (cambian con una transición suave al cambiar el fondo)
-    property color panelBg: pick("surface", "#121214")
-    property color surface: pick("surface_container", "#1f1e22")
-    property color surfaceHigh: pick("surface_container_highest", "#2b2a30")
+    property color panelBg: token("bg", "#121214")
+    property color surface: token("surface", "#1f1e22")
+    property color surfaceHigh: token("overlay", "#2b2a30")
     // El acento del diseño (Design.accent)
     property color primary: Design.accent
     property color primaryFg: Design.onAccent
-    property color text: pick("on_surface", "#e6e1e5")
-    property color subtext: pick("on_surface_variant", "#9e9aa3")
-    property color dot: scheme.outline_variant ? Qt.lighter(scheme.outline_variant, 1.25) : "#5a5860"
-    // Estados: los de la paleta (Design: sobrios, acercados al tono del fondo), no los
-    // amarillo y azul vivos de los colores de terminal
+    property color text: token("text", "#e6e1e5")
+    property color subtext: token("subtext", "#9e9aa3")
+    property color dot: tokens.border ? Qt.lighter(tokens.border, 1.25) : "#5a5860"
+    // Estados: los de Design
     property color error: Design.error
     property color warning: Design.warning
     property color blue: Design.info
@@ -51,11 +49,10 @@ Singleton {
     Behavior on warning { ColorAnimation { duration: 600 } }
     Behavior on blue { ColorAnimation { duration: 600 } }
 
-    // Genera la paleta para un fondo nuevo (lo llama Wallpaper) con la paleta propia,
-    // ~/.local/bin/paleta (de ~/generador-de-paleta/rust): saca los colores de la imagen,
-    // los reparte en papeles y rellena las plantillas de ~/.config/velure/config.toml
-    // (Zed, kitty, GTK, Firefox…) con sus ganchos.
-    readonly property string paleta: Quickshell.env("HOME") + "/.local/bin/paleta"
+    // Genera la paleta para un fondo nuevo (lo llama Wallpaper) con el CLI propio,
+    // ~/.local/bin/velure (de ~/mis-proyectos/velure): saca los colores de la imagen, deriva
+    // sus tokens y rellena las plantillas activas de ~/.config/velure/config.toml.
+    readonly property string velureBin: Quickshell.env("HOME") + "/.local/bin/velure"
     // Vuelve a generar y aplicar la paleta del fondo actual:
     //   quickshell ipc call palette apply
     function applyPalette() {
@@ -70,38 +67,39 @@ Singleton {
     function setWallpaper(path) {
         if (path === "" || path === wallpaper) return;
         wallpaper = path;
-        paletaProc.command = [paleta, "aplicar", path];
-        paletaProc.running = true;
+        velureProc.command = [velureBin, "aplicar", path];
+        velureProc.running = true;
     }
 
     Process {
-        id: paletaProc
+        id: velureProc
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
-                    const s = JSON.parse(this.text).scheme;
-                    if (!s) return;
-                    root.scheme = s;
-                    cache.setText(JSON.stringify({ wallpaper: root.wallpaper, scheme: s }));
+                    const t = JSON.parse(this.text).tokens;
+                    if (!t) return;
+                    root.tokens = t;
+                    cache.setText(JSON.stringify({ wallpaper: root.wallpaper, tokens: t }));
                     root.shareWithGreeter();
                 } catch (e) {
-                    console.warn("paleta:", e);
+                    console.warn("velure:", e);
                 }
             }
         }
-        onExited: code => { if (code !== 0) console.warn("paleta: terminó con", code); }
+        onExited: code => { if (code !== 0) console.warn("velure: terminó con", code); }
     }
 
-    // Última paleta guardada: se aplica al iniciar sin esperar a paleta
+    // Última paleta guardada: se aplica al iniciar sin esperar a velure
     FileView {
         id: cache
         path: Quickshell.statePath("theme.json")
         onLoaded: {
             try {
                 const d = JSON.parse(text());
-                if (root.wallpaper === "") {
+                // Sin tokens es de otro formato: se deja vacío para que se regenere
+                if (root.wallpaper === "" && d.tokens) {
                     root.wallpaper = d.wallpaper;
-                    root.scheme = d.scheme;
+                    root.tokens = d.tokens;
                     root.shareWithGreeter();
                 }
             } catch (e) {}
@@ -114,7 +112,7 @@ Singleton {
     function shareWithGreeter() {
         if (wallpaper === "") return;
         const data = JSON.stringify({ wallpaper: true, user: Quickshell.env("USER"), name: Profile.name,
-            avatar: Profile.hasAvatar, radius: radius, rounded: Config.rounded, primary: Displays.primary, scheme: scheme,
+            avatar: Profile.hasAvatar, radius: radius, rounded: Config.rounded, primary: Displays.primary, tokens: tokens,
             translucent: Config.translucent, opacity: Config.translucentOpacity,
             blur: { size: Config.blurSize, passes: Config.blurPasses, brightness: Config.blurBrightness,
                 contrast: Config.blurContrast, vibrancy: Config.blurVibrancy } });

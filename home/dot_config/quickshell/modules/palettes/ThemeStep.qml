@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 
-// Paso «El tema»: cada papel y de qué color del generador sale (o «calculado»), en
-// armonía análoga y con la regla 60-30-10. Con tokens: true, cada papel dice también qué
-// token de Design lo usa (lo muestra la guía de estilo).
+// Paso «El tema»: cada token y de qué color de la imagen sale (o «calculado»), con
+// la armonía de la imagen y la regla 60-30-10. Con tokens: true, cada uno dice también qué
+// propiedad de Design lo usa.
 GuideStep {
     id: step
     // Un PaletteData
@@ -18,7 +18,7 @@ GuideStep {
 
     visible: !!r
     title: "El tema"
-    subtitle: "Cada papel y de qué color del generador sale. «Calculado» = la imagen no tenía un color ahí y se deriva del tono base."
+    subtitle: "Cada token y de qué color de la imagen sale. «Calculado» = la imagen no tenía un color ahí y se deriva de la armonía."
 
     GuideLabel { text: "Los tonos (10 %: lo que destaca)" }
     RowLayout {
@@ -26,9 +26,9 @@ GuideStep {
         spacing: 18
         Repeater {
             model: step.r && step.org ? [
-                { from: step.org.base, to: step.r.accent, n: "Acento", d: "Lo principal: botones, interruptores, lo lleno", t: "accent" },
-                { from: step.org.second, to: step.r.accent2, n: "Acento 2", d: "Vecino análogo, más apagado: lo que suena", t: "second" },
-                { from: step.org.third, to: step.r.accent3, n: "Acento 3", d: "El otro vecino: recursos, enlaces", t: "third" }
+                { from: step.org.primary, to: step.r.primary, n: "Primario", d: "Lo principal: botones, interruptores, lo lleno", t: "accent" },
+                { from: step.org.secondary, to: step.r.secondary, n: "Secundario", d: "Según la armonía de la imagen: lo que suena", t: "second" },
+                { from: step.org.tertiary, to: step.r.tertiary, n: "Terciario", d: "Según la armonía de la imagen: recursos, enlaces", t: "third" }
             ] : []
             FromCard {
                 required property var modelData
@@ -51,8 +51,8 @@ GuideStep {
             source: step.r
             label: "Neutros (60 %) · del tono base, casi grises"
             roles: step.r ? [
-                step.role("background", "Fondo", "background"), step.role("surface1", "Superficie", "surface1"),
-                step.role("surface3", "Elevado", "surface3"), step.role("outlineVariant", "Separador", "outlineVariant"),
+                step.role("bg", "Fondo", "background"), step.role("surface", "Superficie", "surface1"),
+                step.role("overlay", "Elevado", "surface3"), step.role("border", "Separador", "outlineVariant"),
                 step.role("outline", "Contorno", "outline"), step.role("subtext", "Texto 2.º", "onSurfaceVariant"),
                 step.role("text", "Texto", "onSurface")
             ] : []
@@ -62,14 +62,14 @@ GuideStep {
             source: step.r
             label: "Profundo (30 %) · lo encendido"
             roles: step.r ? [
-                step.role("container", "Contenedor", "accentContainer"), step.role("onContainer", "Sobre él", "onAccentContainer"),
-                step.role("hi", "Énfasis suave", "hi")
+                step.role("primary_container", "Contenedor", "accentContainer"), step.role("on_primary_container", "Sobre él", "onAccentContainer"),
+                step.role("emphasis", "Énfasis suave", "hi")
             ] : []
         }
         RoleGroup {
             Layout.preferredWidth: 300
             source: step.r
-            label: "Estados · apagados, hacia el tono base"
+            label: "Estados · reconocibles y separados de los acentos"
             roles: step.r ? [
                 step.role("error", "Error", "error"), step.role("warning", "Aviso", "warning"),
                 step.role("success", "Éxito", "success"), step.role("info", "Info", "info")
@@ -77,11 +77,11 @@ GuideStep {
         }
     }
 
-    GuideLabel { text: "Degradado del visualizador (vecino 3 → acento → vecino 2, de profundo a claro)" + (step.tokens ? "  ·  Design.gradient" : "") }
+    GuideLabel { text: "Degradado del visualizador (hacia el terciario → primario → hacia el secundario, de profundo a claro)" + (step.tokens ? "  ·  Design.gradient" : "") }
     Row {
         spacing: 0
         Repeater {
-            model: step.r ? step.r.gradient : []
+            model: step.r ? Array.from({ length: 8 }, (_, i) => step.r["gradient_" + i]) : []
             Rectangle { required property string modelData; width: 72; height: 22; color: modelData }
         }
     }
