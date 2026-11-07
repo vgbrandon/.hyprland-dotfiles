@@ -20,7 +20,7 @@ for base in "$HOME/.config/mozilla/firefox" "$HOME/.mozilla/firefox"; do
         mkdir -p "$dir/chrome"
         target="$dir/chrome/userChrome.css"
         # No pisar un userChrome.css propio (solo el generado lleva la marca "velure")
-        if [ -f "$target" ] && ! head -n 3 "$target" | grep -q -E 'velure|matugen'; then
+        if [ -f "$target" ] && ! head -n 3 "$target" | grep -q 'velure'; then
             echo "firefox.sh: $target no es de Velure, no se toca" >&2
             continue
         fi

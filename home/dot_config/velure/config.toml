@@ -1,94 +1,56 @@
-# Velure: plantillas que paleta (~/.local/bin/paleta) rellena con los colores del fondo
-# de pantalla. Quickshell la ejecuta cada vez que cambia el fondo.
-[config]
+# Qué escribe velure (~/.local/bin/velure) con los colores del fondo de pantalla.
+# Quickshell lo ejecuta cada vez que cambia el fondo.
 
-[templates.zed]
-input_path = '~/.config/velure/templates/zed.json'
-output_path = '~/.config/zed/themes/velure.json'
-# Fondo translúcido si está activado en Quickshell (ver scripts/translucent.sh)
-post_hook = 'sh ~/.config/velure/scripts/translucent.sh'
+# Cada app la escribe velure: él sabe qué color va en cada sitio y dónde se escribe.
+# Aquí solo se elige cuáles, y la salida o el gancho si hace falta.
+# Zed: ~/.config/zed/themes/velure.json. Translúcido si está activado en Quickshell
+[apps.zed]
+gancho = 'sh ~/.config/velure/scripts/translucent.sh zed'
 
-# kitty: los colores se cargan con "globinclude velure.conf" en kitty.conf.
-# SIGUSR1 hace que las ventanas de kitty abiertas recarguen la config al instante.
-[templates.kitty]
-input_path = '~/.config/velure/templates/kitty.conf'
-output_path = '~/.config/kitty/velure.conf'
-post_hook = 'pkill -USR1 -x kitty || true'
+# kitty: ~/.config/kitty/velure.conf, cargado con "globinclude velure.conf" en kitty.conf.
+# SIGUSR1 hace que las ventanas abiertas recarguen la config al instante.
+[apps.kitty]
+gancho = 'pkill -USR1 -x kitty || true'
 
-# fish: los colores del resaltado (lo que se escribe, el completado) en color real, sin
-# ANSI. config.fish lo carga; el aviso de starship.sh (abajo) hace que las terminales
-# abiertas lo vuelvan a cargar, por eso va antes.
-[templates.fish]
-input_path = '~/.config/velure/templates/fish-colors.fish'
-output_path = '~/.config/fish/velure-colors.fish'
+# fish: ~/.config/fish/velure-colors.fish, el resaltado (lo que se escribe, el completado).
+# config.fish lo carga; el aviso de starship (abajo) hace que las terminales abiertas lo
+# vuelvan a cargar, por eso va antes.
+[apps.fish]
 
-# starship: la paleta se une con starship.toml (ver scripts/starship.sh).
-# Starship lee la config en cada prompt, así que el cambio se ve al instante.
-[templates.starship]
-input_path = '~/.config/velure/templates/starship-palette.toml'
-output_path = '~/.config/starship/palette-velure.toml'
-post_hook = 'sh ~/.config/velure/scripts/starship.sh --notify'
+# starship: la paleta ~/.config/starship/palette-velure.toml, que starship.sh une con
+# starship.toml. Starship lee la config en cada prompt, así que el cambio se ve al instante.
+[apps.starship]
+gancho = 'sh ~/.config/velure/scripts/starship.sh --notify'
 
-# fastfetch: su configuración, con los iconos en el acento (la plantilla es la que se edita)
-[templates.fastfetch]
-input_path = '~/.config/velure/templates/fastfetch.jsonc'
-output_path = '~/.config/fastfetch/config.jsonc'
+# fastfetch: config.jsonc a partir de ~/.config/fastfetch/base.jsonc (los módulos son tuyos;
+# velure pone el logo y las claves en el primario)
+[apps.fastfetch]
 
-# eza (ls): tema de colores; los iconos toman el color de cada tipo de archivo
-[templates.eza]
-input_path = '~/.config/velure/templates/eza-theme.yml'
-output_path = '~/.config/eza/theme.yml'
+# eza (ls): ~/.config/eza/theme.yml. Color solo para lo que significa algo; los iconos toman
+# el color de cada tipo de archivo
+[apps.eza]
 
-# GTK3: tema propio "Velure" (adw-gtk3-dark + colores). gtk-reload.sh hace que las
-# apps GTK3 abiertas lo recarguen (saltando a su copia gemela, sin pasar por otro tema).
-[templates.gtk3]
-input_path = '~/.config/velure/templates/gtk3-theme.css'
-output_path = '~/.local/share/themes/Velure/gtk-3.0/gtk.css'
+# GTK3: los colores del tema "Velure" (~/.local/share/themes/Velure/gtk-3.0/colors.css; su
+# gtk.css, que importa adw-gtk3-dark, está en los dotfiles). gtk-reload.sh hace que las apps
+# abiertas lo recarguen (saltando a su copia gemela, sin pasar por otro tema).
+[apps.gtk3]
+gancho = 'sh ~/.config/velure/scripts/gtk-reload.sh gtk'
 
-[templates.gtk3-colors]
-input_path = '~/.config/velure/templates/gtk.css'
-output_path = '~/.local/share/themes/Velure/gtk-3.0/colors.css'
-post_hook = 'sh ~/.config/velure/scripts/gtk-reload.sh gtk'
+# GTK4/libadwaita: ~/.config/gtk-4.0/gtk.css, que cada app lee al abrirse
+[apps.gtk4]
 
-# GTK4/libadwaita: lee ~/.config/gtk-4.0/gtk.css al abrir cada app
-[templates.gtk4]
-input_path = '~/.config/velure/templates/gtk.css'
-output_path = '~/.config/gtk-4.0/gtk.css'
+# Iconos: tema "Velure" (Adwaita con las carpetas en el tono del primario). gtk-reload.sh
+# hace que las apps abiertas los recarguen, igual que el tema GTK3.
+[apps.iconos]
+gancho = 'sh ~/.config/velure/scripts/gtk-reload.sh icons'
 
-# Iconos: tema "Velure" (Adwaita con carpetas del color del fondo). gtk-reload.sh
-# hace que las apps GTK abiertas los recarguen, igual que el tema GTK3.
-[templates.icons]
-input_path = '~/.config/velure/templates/icons-color'
-output_path = '~/.local/share/icons/Velure/.color'
-post_hook = 'python3 ~/.config/velure/scripts/icons.py && sh ~/.config/velure/scripts/gtk-reload.sh icons'
+# Firefox: los CSS del marco, de las páginas internas y sus versiones translúcidas, en
+# ~/.cache/velure. velure.cfg carga el marco en vivo; firefox.sh lleva las páginas al
+# perfil y translucent.sh aplica la translucidez si está activada en Quickshell.
+[apps.firefox]
+gancho = 'sh ~/.config/velure/scripts/firefox.sh && sh ~/.config/velure/scripts/translucent.sh firefox'
 
-# Firefox: las páginas internas (nueva pestaña, ajustes…) con los colores de la paleta;
-# firefox.sh lo pone en userContent.css del perfil (antes que el marco, para que el
-# gancho de abajo ya lo encuentre)
-[templates.firefox-content]
-input_path = '~/.config/velure/templates/firefox-userContent.css'
-output_path = '~/.cache/velure/firefox-userContent.css'
-
-# Firefox: el marco (userChrome.css) con los colores de la paleta (ver scripts/firefox.sh)
-[templates.firefox]
-input_path = '~/.config/velure/templates/firefox-userChrome.css'
-output_path = '~/.cache/velure/firefox-userChrome.css'
-post_hook = 'sh ~/.config/velure/scripts/firefox.sh'
-
-# Firefox translúcido (marco y nueva pestaña) si está activado en Quickshell:
-# translucent.sh copia estos dos al perfil (ver scripts/translucent.sh)
-[templates.firefox-translucent]
-input_path = '~/.config/velure/templates/firefox-translucent.css'
-output_path = '~/.cache/velure/firefox-translucent.css'
-
-[templates.firefox-translucent-content]
-input_path = '~/.config/velure/templates/firefox-translucent-content.css'
-output_path = '~/.cache/velure/firefox-translucent-content.css'
-post_hook = 'sh ~/.config/velure/scripts/translucent.sh'
-
-# tidal-hifi: tema "velure" (seleccionado en su config como user:velure.css).
-# Tidal lo aplica al cargar la página: si está abierto se recarga (Ctrl+R).
-[templates.tidal]
-input_path = '~/.config/velure/templates/tidal.css'
-output_path = '~/.config/tidal-hifi/themes/velure.css'
-post_hook = 'sh ~/.config/velure/scripts/tidal.sh'
+# tidal-hifi: tema "velure" (seleccionado en su config como user:velure.css). Tidal lo
+# aplica al cargar la página: si está abierto, tidal.sh lo recarga (Ctrl+R).
+[apps.tidal]
+gancho = 'sh ~/.config/velure/scripts/tidal.sh'

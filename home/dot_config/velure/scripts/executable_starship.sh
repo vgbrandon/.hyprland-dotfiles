@@ -1,7 +1,7 @@
 #!/bin/sh
-# Starship no permite "include": se une tu starship.toml con la paleta que genera
-# velure en starship-velure.toml (fish usa ese archivo si existe).
-# Con --notify (lo usa paleta) además avisa a las terminales fish abiertas para
+# Starship no permite "include": se une tu starship.toml con la paleta que escribe
+# velure (palette-velure.toml) en starship-velure.toml (fish usa ese archivo si existe).
+# Con --notify (lo usa velure) además avisa a las terminales fish abiertas para
 # que repinten el prompt con los colores nuevos.
 dir="$HOME/.config/starship"
 [ -f "$dir/palette-velure.toml" ] || exit 0

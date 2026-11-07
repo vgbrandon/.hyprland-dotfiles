@@ -4,20 +4,23 @@
 # parte de las apps de "Barra y paneles translúcidos" de Quickshell (Ajustes →
 # Apariencia).
 #   translucent.sh on|off   lo guarda y lo aplica (lo llama Quickshell)
-#   translucent.sh          vuelve a aplicar lo guardado (lo llama paleta al
-#                           regenerar los temas de Zed y Firefox)
+#   translucent.sh          vuelve a aplicar lo guardado en todas las apps
+#   translucent.sh zed      lo mismo, solo en Zed (lo llama velure al regenerar su tema)
+#   translucent.sh firefox  lo mismo, solo en Firefox (lo llama velure al regenerar el suyo)
 state="${XDG_STATE_HOME:-$HOME/.local/state}/velure/translucent"
 # Opacidad del fondo de las apps: la misma que la barra de Quickshell (Mica, 88 %)
 # La opacidad la elige Ajustes (Quickshell la escribe ahí); por defecto, la de la barra (70 %)
 opacity=$(cat "${XDG_STATE_HOME:-$HOME/.local/state}/velure/opacity" 2>/dev/null)
 case "$opacity" in 0.[0-9]*|1|1.0*) ;; *) opacity=0.7 ;; esac
-# La misma en hexadecimal, para los CSS de Firefox (paleta los genera con "e0")
+# La misma en hexadecimal, para los CSS de Firefox (velure los genera con "e0")
 alpha=$(awk "BEGIN { printf \"%02x\", $opacity * 255 + 0.5 }")
 
 case "$1" in
     on|off) mkdir -p "$(dirname "$state")" && echo "$1" > "$state" ;;
 esac
 mode=$(cat "$state" 2>/dev/null || echo off)
+
+if [ "$1" != zed ] && [ "$1" != firefox ]; then
 
 # kitty: kitty.conf incluye translucent.conf; con SIGUSR1 las ventanas abiertas
 # recargan la config (background_opacity necesita dynamic_background_opacity)
@@ -64,8 +67,12 @@ CSS
     sh ~/.config/velure/scripts/gtk-reload.sh gtk 2>/dev/null
 fi
 
+fi
+
+if [ "$1" != zed ]; then
+
 # Firefox: el marco (pestañas, barras y barra lateral) y la nueva pestaña, con los CSS
-# que genera paleta con la paleta (templates/firefox-translucent*.css).
+# que escribe velure (~/.cache/velure/firefox-translucent*.css).
 # - Marco: se copia a ~/.local/state/velure/firefox-translucent.css (vacío si está
 #   apagado) y el autoconfig de Velure (velure.cfg) lo carga en vivo.
 # - Nueva pestaña: al final de userContent.css entre marcas (ahí @import no se aplica);
@@ -112,6 +119,10 @@ for base in "$HOME/.config/mozilla/firefox" "$HOME/.mozilla/firefox"; do
     done
 done
 
+fi
+
+if [ "$1" != firefox ]; then
+
 # Zed: el tema Velure con la ventana desenfocada y una sola capa de color, el fondo
 # translúcido. Las zonas del mismo color (editor, paneles, pestañas…) van transparentes:
 # con una capa por zona se sumaban (el editor sobre el panel sobre la superficie) y con
@@ -145,7 +156,7 @@ for i, theme in enumerate(data.get("themes", [])):
         except (OSError, ValueError):
             pass
     if mode == "on" and not blurred:
-        # Los colores opacos (recién generados por paleta) se guardan para volver
+        # Los colores opacos (recién generados por velure) se guardan para volver
         orig = {k: st[k] for k in ["background"] + layers if k in st}
         os.makedirs(os.path.dirname(saved), exist_ok=True)
         with open(saved, "w") as f:
@@ -178,3 +189,5 @@ if changed:
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
 PY
+
+fi
