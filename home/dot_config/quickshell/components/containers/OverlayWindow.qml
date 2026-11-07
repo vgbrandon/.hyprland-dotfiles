@@ -5,7 +5,7 @@ import Quickshell.Wayland
 import qs.components.design
 import qs.services
 
-// Ventana a pantalla completa en el monitor principal, por encima de todo: fondo
+// Ventana a pantalla completa en el monitor enfocado, por encima de todo: fondo
 // oscurecido y una tarjeta con el contenido (en columna). Clic fuera de la tarjeta
 // o Esc (si nada dentro lo usa) = closeRequested().
 //   OverlayWindow { open: Servicio.open; onCloseRequested: Servicio.open = false; cardWidth: 600; … }
@@ -39,7 +39,11 @@ PanelWindow {
     }
 
     visible: open || shown > 0
-    screen: Hypr.mainScreen
+    // En el monitor enfocado al abrir; se queda ahí mientras está abierta aunque el
+    // foco pase a otro monitor
+    property ShellScreen openScreen: Hypr.focusedScreen
+    onOpenChanged: if (open) openScreen = Hypr.focusedScreen
+    screen: openScreen ?? Hypr.mainScreen
     anchors {
         top: true
         bottom: true
