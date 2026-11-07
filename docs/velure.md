@@ -6,20 +6,20 @@ que dejan ver el fondo como a través de un velo.
 
 Junta lo funcional de **Material You**, el acabado de **macOS** y el material de
 **Windows 11**. Los colores salen siempre del fondo de pantalla con el generador propio,
-**paleta** (ver [La paleta](#la-paleta)), así que todo cambia con el fondo.
+**velure** (ver [La paleta](#la-paleta)), así que todo cambia con el fondo.
 
-![La guía de estilo de Velure: lo que saca el generador del fondo y el papel que le da el tema, con su token de Design](img/velure-guia.png)
+![La guía de velure: el recorrido de una imagen hasta el tema, con sus colores, su armonía, los tokens y las apps](img/velure-guia.png)
 
-La guía de estilo en vivo se abre con `quickshell ipc call styleguide toggle` (o «Guía de
-estilo» en el lanzador).
+La guía de velure se abre con `quickshell ipc call guia toggle` (o «Guía de velure» en el
+lanzador). Ver [La guía de velure](#la-guía-de-velure).
 
 Las rutas son relativas a `~/.config/quickshell/` (en este repo,
 `home/dot_config/quickshell/`); las del greeter, a `~/.config/quickshell-greeter/`.
 
 - Tokens: `services/Design.qml`
 - Componentes: `components/design/`
-- Guía de estilo (todos los tokens y componentes con ejemplos que se pueden usar):
-  `quickshell ipc call styleguide toggle` (`modules/styleguide/`)
+- Guía de velure (cómo una imagen se convierte en el tema, con cualquier imagen):
+  `quickshell ipc call guia toggle` (`modules/velureguide/`)
 - Toda la shell lo usa: la barra (`modules/bar/`), los paneles, las ventanas y las
   pantallas de bloqueo e inicio de sesión. Ver [Cómo se aplica](#cómo-se-aplica-al-resto-de-la-shell).
 
@@ -51,25 +51,35 @@ Las rutas son relativas a `~/.config/quickshell/` (en este repo,
 
 ### Color
 
-| Token | Respaldo (nombre Material) | Uso |
+Cada propiedad de `Design` lee un token de velure. Sin tokens cargados, usa un gris neutro.
+
+| Propiedad | Token de velure | Uso |
 | --- | --- | --- |
-| `background` | `surface_dim` | Lo más bajo; tinte de la Mica y del vidrio |
-| `surface0` | `surface_container_low` | Campos de texto (hundidos) |
-| `surface1` | `surface_container` | Tarjetas (contrastan sobre el vidrio) |
-| `surface2` | `surface_container_high` | Mosaicos, segmentado, elementos sobre tarjetas |
-| `surface3` | `surface_container_highest` | Pistas de interruptores y deslizadores |
-| `onSurface` / `onSurfaceVariant` / `muted` | `on_surface` / `on_surface_variant` | Texto principal / secundario / apagado |
-| `accent` / `onAccent` | `primary` oscurecido y desaturado / blanco | Acción principal, encendido, lo lleno |
-| `hi` / `onHi` | blanco roto / casi negro | Énfasis secundario: escritorio activo, mosaicos, casillas |
+| `background` | `bg` | Lo más bajo; tinte de la Mica y del vidrio |
+| `surface0` | `surface_low` | Campos de texto (hundidos) |
+| `surface1` | `surface` | Tarjetas (contrastan sobre el vidrio) |
+| `surface2` | `surface_high` | Mosaicos, segmentado, elementos sobre tarjetas |
+| `surface3` | `overlay` | Pistas de interruptores y deslizadores |
+| `onSurface` / `onSurfaceVariant` / `muted` | `text` / `subtext` / `muted` | Texto principal / secundario / apagado |
+| `accent` / `onAccent` | `primary` / `on_primary` | Acción principal, encendido, lo lleno |
+| `second` / `third` | `secondary` / `tertiary` | Lo que suena, recursos |
+| `hi` / `onHi` | `emphasis` / `on_emphasis` | Énfasis secundario: escritorio activo, mosaicos, casillas |
+| `gradient` | `gradient_0` a `gradient_7` | Visualizador |
+| `accentContainer` / `onAccentContainer` | `primary_container` / `on_primary_container` | Mosaicos encendidos, avatar |
+| `outline` / `outlineVariant` | `outline` / `border` | Bordes de casillas y campos / separadores |
+| `error`, `success`, `warning`, `info` | los mismos | Estados |
+| `onError` / `errorContainer` | `on_error` / `error_container` | Sobre el error / fondo de error |
+| `tonal` / `onTonal` | `surface3` / `onSurface` | Lo activo y lo seleccionado |
 | `accent2` | = `accent` | Se mantiene por compatibilidad (ya no hay degradado) |
+
+Estas propiedades no son tokens, sino capas que `Design` calcula encima:
+
+| Propiedad | Valor | Uso |
+| --- | --- | --- |
 | `selection` / `selectionBorder` | blanco al 6 % / 12 % | Lo elegido: filas, opciones, mosaicos encendidos |
-| `sunken` / `raised` | negro al 22 % / blanco al 9 % | Campos y pistas (hundido) / botones tonales (elevado) |
-| `accentContainer` / `onAccentContainer` | `primary_container` | Mosaicos encendidos, avatar |
-| `tonal` / `onTonal` | `secondary_container` | Lo activo y lo seleccionado |
-| `outline` / `outlineVariant` | `outline` / `outline_variant` | Bordes de casillas y campos / separadores |
-| `error`, `success`, `warning`, `info` | `error`, `green`, `yellow`, `blue` | Estados (armonizados con el fondo) |
-| `hoverLayer` / `pressLayer` | `on_surface` al 8 % / 12 % | Capa de estado encima de cualquier color |
-| `border` / `borderHighlight` | `on_surface` al 10 % / 32 % | Borde de 1 px y brillo del canto |
+| `sunken` / `raised` | negro al 22 % / blanco al 7 % | Campos y pistas (hundido) / botones tonales (elevado) |
+| `hoverLayer` / `pressLayer` | `onSurface` al 8 % / 12 % | Capa de estado encima de cualquier color |
+| `border` / `borderHighlight` | blanco al 8 % / transparente | Borde de 1 px y brillo del canto |
 
 ### Materiales
 
@@ -115,7 +125,7 @@ se sumarían y quedaría opaca.
   colores del sistema, opacos.
 
 Lo hace `~/.config/velure/scripts/translucent.sh`. Lo llaman Quickshell al cambiar la
-opción y paleta al regenerar los temas.
+opción y velure al regenerar los temas.
 
 El desenfoque de verdad lo hace Hyprland: la regla de capa de `hyprland.lua` desenfoca
 los namespaces `quickshell:(bar|config-panel|notification-center|ai|osd)`. Una ventana
@@ -123,33 +133,33 @@ nueva con material transparente necesita su namespace en esa regla.
 
 ### La paleta
 
-Los colores salen de `~/.local/bin/paleta` (proyecto `~/generador-de-paleta`: el
-generador en JavaScript, réplica de gradients.app, y su port a Rust en `rust/`, que da
-exactamente los mismos colores). `Theme.setWallpaper` ejecuta `paleta aplicar <fondo>`:
+Los colores salen de `~/.local/bin/velure` (proyecto `~/mis-proyectos/velure`; se instala
+con `cargo build --release` e `install -m 755 target/release/velure ~/.local/bin/velure`).
+`Theme.setWallpaper` ejecuta `velure aplicar <fondo>`:
 
-1. Saca de la imagen sus secciones: 10 colores, acentos y degradados, apagados y escalas
-   clara y oscura.
-2. Las reparte en papeles con la luminosidad fijada en OKLCH (`roles.rs`, modo
-   **armónico**, el de por defecto): un solo tono (el color que más ocupa en la imagen, contando que tenga color: presencia × croma; el orden del generador, por viveza, favorece los claros) con
-   armonía análoga (acentos 2 y 3 = sus vecinos en el círculo cromático, más apagados) y
-   la regla 60-30-10 (neutros con un toque del tono, el tono en profundo para lo
-   encendido, poco acento); saturación contenida y estados apagados. `--modo libre`:
-   cada acento de un color distinto de la imagen. Imagen gris: acento de respaldo. El degradado del visualizador abre el abanico análogo (acento 3 → acento → acento 2) con una rampa de luz, de profundo a claro.
-3. Rellena las plantillas de `~/.config/velure/config.toml` (`[templates.*]` con
-   `{{colors.ROL.default.hex}}` e `{{image}}`) y ejecuta sus ganchos: kitty, Zed, GTK3
-   y GTK4 (tema «Velure»), iconos, Starship, eza, Firefox y Tidal.
-   El paso 9 de la guía de estilo, **Aplicado a las apps**, enseña cada app con sus
-   colores de ahora y una tabla de qué papel usa cada plantilla (la saca de las
-   plantillas mismas, `scripts/template-roles.py`). eza y Tidal aún usan los nombres de
-   Material.
-
-   ![Aplicado a las apps: la terminal, Zed, Thunar, Firefox y fastfetch con los papeles de la paleta, y la tabla de qué papel usa cada plantilla](img/velure-apps.png)
-4. Devuelve la paleta: los nombres de Material (`primary`, `surface_container`…) para lo
-   que ya los usa, y los papeles propios con prefijo `p_` (`p_background`, `p_accent2`,
-   `p_gradient_0`…), que `Design.qml` usa primero (`Design.p()`).
+1. Saca de la imagen sus colores dominantes en OKLab y detecta su armonía con las
+   plantillas de Matsuda (monocromática, análoga, complementaria, dividida, ortogonal o
+   triádica).
+2. Los reparte en una paleta oscura con la luminosidad fijada en OKLCH: el primario, el
+   secundario y el terciario siguen esa armonía, los neutros llevan un toque del tono con
+   la regla 60-30-10 y los estados se apartan de los acentos para no confundirse. Comprueba
+   contraste (WCAG y APCA) y daltonismo. Imagen gris: acento de respaldo.
+3. Deriva de esa paleta los **tokens** del escritorio (`src/tokens.rs`): un nombre por
+   color, con una regla para cada uno y el contraste mínimo de cada par declarado en
+   `CONTRAST_RULES`. La tabla completa está en el README de velure.
+4. Escribe el tema de cada app que pide `~/.config/velure/config.toml` (`[apps.*]`: Zed,
+   kitty, fish, Starship, fastfetch, eza, GTK3, GTK4, iconos, Firefox y Tidal) y ejecuta
+   sus ganchos. Cada tema va dentro de velure, con sus decisiones de color probadas allí;
+   los CSS de Firefox y Tidal también. Para algo propio de este escritorio quedan las
+   plantillas (`[plantillas.*]` con `entrada`, `salida` y `gancho`; dentro, `{{primary}}`
+   es un token e `{{imagen}}` la ruta del fondo), aunque ahora no hay ninguna.
+   La guía de velure enseña cada app con los tokens que más usa y dónde escribe su tema
+   (lo dice `velure uso`).
+5. Devuelve los tokens por stdout (`{image, achromatic, tokens}`). `Theme.qml` los guarda y
+   `Design.qml` los expone a la shell con `Design.t()`.
 
 Volver a aplicarla al fondo actual: `quickshell ipc call palette apply`. Comparar cómo quedaría con otros fondos:
-`quickshell ipc call paletas toggle` (`paleta roles`).
+`quickshell ipc call paletas toggle` (`velure tokens`).
 
 ### Tipografía
 
@@ -236,20 +246,27 @@ Reglas al usarlos:
   `scrollY` (p. ej. `card.x + card.y`) para que se recoloque. En el escritorio se deja
   `backdrop` vacío y desenfoca Hyprland.
 
-## La guía de estilo
+## La guía de velure
 
-`quickshell ipc call styleguide toggle` abre una ventana flotante que recorre, como la
-guía de paletas y con sus mismas piezas (`modules/palettes`: `PaletteData`,
-`GeneratorStep`, `ThemeStep`, `GuideStep`, `GuideArrow`…), cómo el color del fondo se
-convierte en el diseño: 1) lo que saca el generador de la imagen, 2) el tema: cada papel,
-de qué color del generador sale y qué token de `Design` lo usa, 3–5) materiales,
-tipografía y forma, 6–7) botones y controles, 8) aplicado a la shell (lista, ajustes
-rápidos, notificación, aviso de volumen). Los materiales y los ejemplos de vidrio van
-sobre una franja con el fondo de pantalla (`Stage.qml`, paneles `GlassCard.qml`), para
-que se vea la transparencia. Es el sitio para
-probar cambios del diseño antes de aplicarlos: al tocar `Design.qml` o un componente,
-la guía se actualiza. `quickshell ipc call styleguide scrollTo <y>` la desplaza (para
-capturas).
+`quickshell ipc call guia toggle` abre una ventana flotante (`modules/velureguide/`) que
+recorre, con datos reales, cómo una imagen se convierte en el tema del escritorio:
+
+0. El recorrido: fondo nuevo → `velure aplicar` → paleta → tokens → apps → ganchos → shell.
+1. La imagen y sus colores dominantes, marcando de cuál sale cada acento.
+2. La armonía: el círculo cromático en OKLCH con los tonos de la imagen y los tres acentos.
+3. La paleta de 17 colores: neutros, acentos y estados.
+4. Los tokens por grupos y cuatro reglas con los colores de la imagen (punto medio,
+   contraste mínimo, separación del código y texto sobre un relleno).
+5. Pares de texto y fondo con su contraste medido.
+6. Las apps, cada una con su archivo y los tokens que más usa.
+
+Por defecto explica el fondo actual. Arriba se elige otra imagen: uno de los fondos de
+`~/Pictures` (miniaturas), «Otra imagen…» (zenity) o
+`quickshell ipc call guia ver /ruta.jpg`. Ver una imagen no cambia el fondo; «Usar como
+fondo» sí. La ventana se pinta con los tokens de la imagen que explica, así que también
+sirve de vista previa del tema. Los datos salen de `velure tokens <imagen>` y de
+`velure uso`. `quickshell ipc call guia scrollTo <y>` la desplaza y `capture <ruta>` la
+guarda entera como imagen.
 
 ## Cómo se aplica al resto de la shell
 
@@ -301,7 +318,7 @@ una mini barra abajo (reproductor o sesión, y energía).
   cuando cambian.
 
 **Probarlas sin bloquear:** copiar `~/.config/quickshell` a `/tmp`, y en la copia
-hacer que `Theme` lea el `theme.json` real y no ejecute paleta ni escriba para el
+hacer que `Theme` lea el `theme.json` real y no ejecute velure ni escriba para el
 greeter (`setWallpaper` y `shareWithGreeter` sin efecto) y que `Wallpaper` no elija
 fondo al arrancar. Después, un `shell.qml` con un `FloatingWindow` que muestre
 `LockContent` y ejecutarlo con `quickshell -p /tmp/…/shell.qml`. Para el greeter,
