@@ -29,19 +29,15 @@ import qs.services
 // Solo instancia la interfaz: la lógica está en services/ y cada ventana en modules/.
 // Las ventanas usan sus servicios, así que estos se crean (y registran su IPC) al iniciar.
 ShellRoot {
-    // Por monitor: fondo (con el reloj del escritorio) y barra
+    // Por monitor: fondo (con el reloj del escritorio)
     Variants {
         model: Quickshell.screens
 
         WallpaperWindow {}
     }
-    Variants {
-        model: Quickshell.screens
-
-        Bar {
-            required property var modelData
-            screen: modelData
-        }
+    // La barra solo en el monitor principal: los demás son extensiones
+    Bar {
+        screen: Hypr.mainScreen
     }
 
     // Capturas y selector de color (uno por monitor). La capa que oculta el cursor
