@@ -7,7 +7,7 @@ set -euo pipefail
 # tienen que ir a la par. Para actualizarlo, cambia VELURE_REF por el commit nuevo
 # del repo; al cambiar este archivo, chezmoi vuelve a ejecutar el script.
 VELURE_REPO="https://github.com/vgbrandon/velure.git"
-VELURE_REF="a0c04f9d17868116b0d5180906b4ecc77980de44"
+VELURE_REF="95d26f291f47c015c4f2911e86637c83232f8bc3"
 
 if ! command -v cargo >/dev/null 2>&1; then
   echo "[ERROR] Falta cargo (paquete rust en .chezmoidata/packages.yaml)." >&2
